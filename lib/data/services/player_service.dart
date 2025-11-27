@@ -4,13 +4,13 @@ import 'dart:math';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 
+import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/constants.dart' show TableNames;
 import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, WhereOrNull;
 import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/music_track.dart';
 
 class PlayerService extends BaseAudioHandler {
   // Streams
@@ -160,7 +160,7 @@ class PlayerService extends BaseAudioHandler {
 
     assert(songID >= 0, 'Invalid song ID: $songID');
 
-    MusicTrack song = Globals.allSongs.firstWhere((e) => e.id == songID);
+    Song song = Globals.allSongs.firstWhere((e) => e.id == songID);
 
     _logService.log('Switching song: (${song.id}) ${song.name}');
     duration = await _player.setAudioSource(

@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/music_track.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 
 extension WidgetWithContext on BuildContext {
@@ -126,7 +126,7 @@ extension WidgetWithContext on BuildContext {
     required int songID,
     required List<Widget> options,
   }) async {
-    MusicTrack song = Globals.allSongs.firstWhere((e) => e.id == songID);
+    Song song = Globals.allSongs.firstWhere((e) => e.id == songID);
     await getBottomSheet(
       Text(song.name, style: bottomSheetTitle, textAlign: .center, softWrap: true),
       options,

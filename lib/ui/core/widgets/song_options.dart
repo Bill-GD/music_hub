@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/ui/app/songs/song_info.dart';
 import 'package:music_hub/ui/core/widgets/action_dialog.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/music_track.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 
@@ -59,7 +59,7 @@ class DeleteSongOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MusicTrack song = Globals.allSongs.firstWhere((e) => e.id == songID);
+    Song song = Globals.allSongs.firstWhere((e) => e.id == songID);
 
     return ListTile(
       shape: RoundedRectangleBorder(

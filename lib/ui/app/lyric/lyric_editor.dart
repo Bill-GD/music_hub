@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
@@ -14,7 +15,6 @@ import 'package:music_hub/ui/app/lyric/type_lyric.dart';
 import 'package:music_hub/ui/core/widgets/action_dialog.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/music_track.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 
 class LyricEditor extends StatefulWidget {
@@ -28,7 +28,7 @@ class LyricEditor extends StatefulWidget {
 
 class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStateMixin {
   late final AnimationController animController;
-  late final MusicTrack song;
+  late final Song song;
   late final Lyric lyric;
 
   final lineEditController = TextEditingController();

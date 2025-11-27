@@ -159,7 +159,7 @@ Future<void> downloadSoundCloudMP3(
       showToast(context, 'Finished downloading');
     }
   } on Exception catch (e) {
-    LogService.log(e.toString(), LogLevel.error);
+    LogService.log(e.toString(), .error);
     if (context.mounted) {
       showErrorPopup(context, e.toString());
     }

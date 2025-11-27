@@ -13,7 +13,7 @@ class LogService {
     log('Log init');
   }
 
-  void log(String content, [LogLevel level = LogLevel.info]) {
+  Future<void> log(String content, [LogLevel level = .info]) async {
     final prefix = level.name[0].toUpperCase();
     final time = DateTime.now();
     _logFile.writeAsStringSync('[$time] [$prefix] $content\n', mode: FileMode.append);

@@ -55,10 +55,6 @@ Future<bool> checkInternetConnection([List<ConnectivityResult>? result]) async {
   return isInternetConnected;
 }
 
-bool hasSong(int id) {
-  return Globals.allSongs.firstWhereOrNull((e) => e.id == id) != null;
-}
-
 /// [start] and [end] are inclusive
 List<int> range(int start, int end) {
   return List<int>.generate(end - start + 1, (i) => i + start);

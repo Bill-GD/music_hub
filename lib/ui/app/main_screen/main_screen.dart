@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/data/services/backup_service.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
@@ -16,7 +17,6 @@ import 'package:music_hub/ui/app/search/search.dart';
 import 'package:music_hub/ui/app/songs/artist_songs.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/music_track.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 

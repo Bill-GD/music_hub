@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
 import 'package:music_hub/ui/app/songs/add_album_song.dart';
@@ -13,7 +14,6 @@ import 'package:music_hub/ui/core/widgets/action_dialog.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/music_track.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 
@@ -28,7 +28,7 @@ class AlbumSongs extends StatefulWidget {
 
 class _AlbumSongsState extends State<AlbumSongs> {
   late Album album;
-  List<MusicTrack> songs = [];
+  List<Song> songs = [];
   late int totalSongCount;
 
   void getSongs() {
@@ -306,7 +306,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
     );
   }
 
-  ListTile songTile(MusicTrack song, int songIndex) {
+  ListTile songTile(Song song, int songIndex) {
     return ListTile(
       key: ValueKey(song.id),
       contentPadding: const EdgeInsets.symmetric(horizontal: 4),

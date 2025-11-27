@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 
+import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
@@ -20,7 +21,6 @@ import 'package:music_hub/ui/core/widgets/playlist_sheet.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/music_track.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 
@@ -55,7 +55,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
   final List<StreamSubscription> subs = [];
   late final AnimationController animController;
   late final TabController tabController;
-  late MusicTrack song;
+  late Song song;
   late Lyric lyric;
   Image? coverImage;
 

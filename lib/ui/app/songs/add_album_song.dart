@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/music_track.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 
@@ -17,7 +17,7 @@ class AddAlbumSong extends StatefulWidget {
 
 class _AddAlbumSongState extends State<AddAlbumSong> {
   late final Album album;
-  late final List<MusicTrack> availableSongs;
+  late final List<Song> availableSongs;
   late final List<int> order;
   final searchController = TextEditingController();
   bool canAdd = false;

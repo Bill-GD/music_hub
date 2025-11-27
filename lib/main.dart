@@ -13,6 +13,7 @@ import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart' show Constants, Paths;
@@ -59,10 +60,17 @@ void main() async {
     ),
   );
   GetIt.I.registerSingleton(LyricService(GetIt.I()));
+  GetIt.I.registerSingleton(
+    SongService(
+      logService: GetIt.I(),
+      configService: GetIt.I(),
+      databaseService: GetIt.I(),
+    ),
+  );
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   PlatformDispatcher.instance.onError = (e, s) {
-    GetIt.I<LogService>().log(e.toString(), LogLevel.error);
+    GetIt.I<LogService>().log(e.toString(), .error);
     final curContext = navigatorKey.currentContext;
     if (curContext == null) return false;
 
