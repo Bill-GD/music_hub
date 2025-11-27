@@ -8,6 +8,7 @@ import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/constants.dart' show TableNames;
 import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, WhereOrNull;
 import 'package:music_hub/utils/globals/globals.dart';
@@ -61,14 +62,17 @@ class PlayerService extends BaseAudioHandler {
   final LogService _logService;
   final ConfigService _configService;
   final DatabaseService _databaseService;
+  final SongService _songService;
 
   PlayerService({
     required LogService logService,
     required ConfigService configService,
     required DatabaseService databaseService,
+    required SongService songService,
   }) : _logService = logService,
        _configService = configService,
-       _databaseService = databaseService {
+       _databaseService = databaseService,
+       _songService = songService {
     _logService.log('Audio Handler init');
     onSongChange = _onSongChangeController.stream;
     onPlayingChange = _onPlayingChangeController.stream;
@@ -112,8 +116,8 @@ class PlayerService extends BaseAudioHandler {
             _listenedDuration += interval;
           }
           if (!_listened && _listenedDuration >= _minTime) {
-            Globals.allSongs
-                .firstWhere((e) => e.id == Globals.currentSongID)
+            _songService.allSongs
+                .firstWhere((e) => e.id == _songService.currentSongID)
                 .incrementTimePlayed();
             _listened = true;
           }
@@ -155,26 +159,26 @@ class PlayerService extends BaseAudioHandler {
     if (songID < 0) {
       throw ArgumentError('Tried to set song of ID -1');
     }
-    if (!Globals.setDuplicate && songID == Globals.currentSongID) return;
+    if (!Globals.setDuplicate && songID == _songService.currentSongID) return;
     if (Globals.setDuplicate) Globals.setDuplicate = false;
 
     assert(songID >= 0, 'Invalid song ID: $songID');
 
-    Song song = Globals.allSongs.firstWhere((e) => e.id == songID);
+    Song song = _songService.allSongs.firstWhere((e) => e.id == songID);
 
     _logService.log('Switching song: (${song.id}) ${song.name}');
     duration = await _player.setAudioSource(
       AudioSource.uri(Uri.parse(Uri.encodeComponent(song.fullPath))),
     );
 
-    Globals.currentSongID = songID;
+    _songService.currentSongID = songID;
     Globals.showMinimizedPlayer = true;
 
     String imgPath = song.imagePath;
     if (imgPath.isEmpty) {
       imgPath =
-          Globals.albums
-              .firstWhereOrNull((e) => e.name == Globals.savedPlaylistName)
+          _songService.albums
+              .firstWhereOrNull((e) => e.name == _songService.savedPlaylistName)
               ?.imagePath ??
           '';
     }
@@ -252,13 +256,13 @@ class PlayerService extends BaseAudioHandler {
       'Recovered playlist (${res[0]['list_name']}): $songList, current: $currentID',
     );
 
-    Globals.savedPlaylistName = '${res[0]['list_name']}'.trim();
-    Globals.currentSongID = currentID;
+    _songService.savedPlaylistName = '${res[0]['list_name']}'.trim();
+    _songService.currentSongID = currentID;
     Globals.showMinimizedPlayer = true;
     Globals.setDuplicate = true;
 
     await registerPlaylist(
-      Globals.savedPlaylistName!,
+      _songService.savedPlaylistName!,
       songList,
       currentID,
       saveList: false,
@@ -269,7 +273,7 @@ class PlayerService extends BaseAudioHandler {
   void savePlaylist(int currentID) {
     _databaseService.db.delete(TableNames.playlistTable).then((_) {
       _logService.log('Saving playlist ($playlistName): $playlist, current: $currentID');
-      Globals.savedPlaylistName = playlistName;
+      _songService.savedPlaylistName = playlistName;
 
       final data = _playlist.map(
         (e) => <String, Object?>{
@@ -286,7 +290,7 @@ class PlayerService extends BaseAudioHandler {
   }
 
   Future<void> updateSavedPlaylist(int oldID, int newID) async {
-    if (playlistName != Globals.savedPlaylistName) return savePlaylist(newID);
+    if (playlistName != _songService.savedPlaylistName) return savePlaylist(newID);
 
     _logService.log('Update current ID of saved: $oldID -> $newID');
 
@@ -306,11 +310,11 @@ class PlayerService extends BaseAudioHandler {
 
   /// Returns the current song duration in milliseconds
   int get currentDuration =>
-      Globals.currentSongID >= 0 ? _player.position.inMilliseconds : 0;
+      _songService.currentSongID >= 0 ? _player.position.inMilliseconds : 0;
 
   /// Returns the current song duration in milliseconds
   int get totalDuration =>
-      Globals.currentSongID >= 0 ? _player.duration?.inMilliseconds ?? 1 : 1;
+      _songService.currentSongID >= 0 ? _player.duration?.inMilliseconds ?? 1 : 1;
 
   void _shufflePlaylist({
     bool currentToStart = true,
@@ -330,7 +334,7 @@ class PlayerService extends BaseAudioHandler {
       }
     }
     _logService.log(
-      'Current playlist song index: ${_playlist.indexWhere((e) => e == Globals.currentSongID)}',
+      'Current playlist song index: ${_playlist.indexWhere((e) => e == _songService.currentSongID)}',
     );
   }
 
@@ -341,14 +345,14 @@ class PlayerService extends BaseAudioHandler {
 
     int songIdx = _playlist.removeAt(from);
     _playlist.insert(to, songIdx);
-    savePlaylist(Globals.currentSongID);
+    savePlaylist(_songService.currentSongID);
   }
 
   Future<void> addMediaItem(MediaItem item) async => mediaItem.add(item);
 
   Future<void> updateNotificationInfo({required int songID, Duration? duration}) async {
     if (mediaItem.value == null) return;
-    final song = Globals.allSongs.firstWhereOrNull((e) => e.id == songID);
+    final song = _songService.allSongs.firstWhereOrNull((e) => e.id == songID);
     _logService.log('Updating media item of $songID');
 
     if (song == null) {
@@ -358,8 +362,8 @@ class PlayerService extends BaseAudioHandler {
     String imgPath = song.imagePath;
     if (imgPath.isEmpty) {
       imgPath =
-          Globals.albums
-              .firstWhereOrNull((e) => e.name == Globals.savedPlaylistName)
+          _songService.albums
+              .firstWhereOrNull((e) => e.name == _songService.savedPlaylistName)
               ?.imagePath ??
           '';
     }
@@ -379,7 +383,7 @@ class PlayerService extends BaseAudioHandler {
 
   @override
   Future<void> play() async {
-    if (Globals.currentSongID < 0) return;
+    if (_songService.currentSongID < 0) return;
 
     if (_player.processingState == .completed) {
       seek(0.ms);
@@ -392,7 +396,7 @@ class PlayerService extends BaseAudioHandler {
   void changeShuffleMode() {
     _shuffle = isShuffled ? .none : .all;
 
-    if (isShuffled) _shufflePlaylist(beginSongID: Globals.currentSongID);
+    if (isShuffled) _shufflePlaylist(beginSongID: _songService.currentSongID);
     _logService.log('Changed shuffle: $isShuffled');
     _configService.saveConfig();
   }
@@ -443,7 +447,7 @@ class PlayerService extends BaseAudioHandler {
       return _logService.log('Playlist only has one song, skipping action');
     }
 
-    int currentIndex = _playlist.indexWhere((e) => e == Globals.currentSongID);
+    int currentIndex = _playlist.indexWhere((e) => e == _songService.currentSongID);
 
     if (currentIndex < 0) {
       pause();
@@ -502,7 +506,7 @@ class PlayerService extends BaseAudioHandler {
       return _logService.log('Playlist only contains one song, skipping action');
     }
 
-    int currentIndex = _playlist.indexWhere((e) => e == Globals.currentSongID);
+    int currentIndex = _playlist.indexWhere((e) => e == _songService.currentSongID);
 
     if (currentIndex < 0) {
       pause();
@@ -511,7 +515,7 @@ class PlayerService extends BaseAudioHandler {
 
     final newIndex = (currentIndex == 0 ? _playlist.length : currentIndex) - 1;
 
-    await updateSavedPlaylist(Globals.currentSongID, _playlist[newIndex]);
+    await updateSavedPlaylist(_songService.currentSongID, _playlist[newIndex]);
     await setPlayerSong(_playlist[newIndex]);
 
     _skipping = false;

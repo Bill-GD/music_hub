@@ -37,7 +37,13 @@ void main() async {
   GetIt.I.registerSingleton(
     await DatabaseService.create(path: Paths.dbPath, logService: GetIt.I()),
   );
-
+  GetIt.I.registerSingleton(
+    SongService(
+      logService: GetIt.I(),
+      configService: GetIt.I(),
+      databaseService: GetIt.I(),
+    ),
+  );
   GetIt.I.registerSingleton(
     await (() async {
       final handler = await AudioService.init(
@@ -45,6 +51,7 @@ void main() async {
           logService: GetIt.I(),
           configService: GetIt.I(),
           databaseService: GetIt.I(),
+          songService: GetIt.I(),
         ),
         config: const AudioServiceConfig(
           androidNotificationChannelId: 'com.billgd.music_hub.channel.audio',
@@ -62,13 +69,6 @@ void main() async {
     ),
   );
   GetIt.I.registerSingleton(LyricService(GetIt.I()));
-  GetIt.I.registerSingleton(
-    SongService(
-      logService: GetIt.I(),
-      configService: GetIt.I(),
-      databaseService: GetIt.I(),
-    ),
-  );
   GetIt.I.registerSingleton(
     Dio(BaseOptions(connectTimeout: 10.seconds, validateStatus: (_) => true)),
   );
