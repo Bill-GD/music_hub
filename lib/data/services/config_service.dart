@@ -35,7 +35,7 @@ class ConfigService {
   /// Current sorting order of the song list, default [SortOptions.name].
   SortOptions currentSortOption = .name;
 
-  ConfigService(this._logService);
+  ConfigService({required LogService logService}) : _logService = logService;
 
   String getSortOptionString() {
     return switch (currentSortOption) {

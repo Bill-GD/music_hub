@@ -28,10 +28,21 @@ void main() async {
     'App version: ${Constants.appVersion}, isDev: ${Constants.isDev}',
   );
 
+  GetIt.I.registerSingleton(ConfigService(logService: GetIt.I()));
+  await GetIt.I<ConfigService>().loadConfig();
+
+  GetIt.I.registerSingleton(
+    await DatabaseService.create(path: Paths.dbPath, logService: GetIt.I()),
+  );
+
   GetIt.I.registerSingleton(
     await (() async {
       final handler = await AudioService.init(
-        builder: () => PlayerService(GetIt.I()),
+        builder: () => PlayerService(
+          logService: GetIt.I(),
+          configService: GetIt.I(),
+          databaseService: GetIt.I(),
+        ),
         config: const AudioServiceConfig(
           androidNotificationChannelId: 'com.billgd.music_hub.channel.audio',
           androidNotificationChannelName: Constants.appName,
@@ -40,11 +51,6 @@ void main() async {
       return handler;
     })(),
   );
-  GetIt.I.registerSingleton(
-    await DatabaseService.create(path: Paths.dbPath, logService: GetIt.I()),
-  );
-  GetIt.I.registerSingleton(ConfigService(GetIt.I())..loadConfig());
-
   GetIt.I.registerSingleton(
     BackupService(
       logService: GetIt.I(),

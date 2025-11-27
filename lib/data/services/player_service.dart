@@ -57,10 +57,18 @@ class PlayerService extends BaseAudioHandler {
   // Skip cooldown
   bool _skipping = false;
 
-  // Others
+  // Services
   final LogService _logService;
+  final ConfigService _configService;
+  final DatabaseService _databaseService;
 
-  PlayerService(this._logService) {
+  PlayerService({
+    required LogService logService,
+    required ConfigService configService,
+    required DatabaseService databaseService,
+  }) : _logService = logService,
+       _configService = configService,
+       _databaseService = databaseService {
     _logService.log('Audio Handler init');
     onSongChange = _onSongChangeController.stream;
     onPlayingChange = _onPlayingChangeController.stream;
@@ -69,7 +77,7 @@ class PlayerService extends BaseAudioHandler {
 
     _player = AudioPlayer();
     _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
-    setVolume(ConfigService.volume);
+    setVolume(_configService.volume);
 
     _player.processingStateStream.listen((state) async {
       if (state == .completed) {
@@ -96,7 +104,7 @@ class PlayerService extends BaseAudioHandler {
       if (_listened) return;
 
       // Longer than length limit, to be safe
-      if (totalMilliseconds >= ConfigService.lengthLimitMilliseconds) {
+      if (totalMilliseconds >= _configService.lengthLimitMilliseconds) {
         int interval = position.inMilliseconds - _prevPos.inMilliseconds;
         // If rewind, skip
         if (interval > 0) {
@@ -200,7 +208,7 @@ class PlayerService extends BaseAudioHandler {
       _logService.log('Min listen time: $_minTime / ${_totalDuration.inMilliseconds} ms');
     }
 
-    if (shouldPlay && ConfigService.autoPlayNewSong) {
+    if (shouldPlay && _configService.autoPlayNewSong) {
       play();
     } else {
       pause();
@@ -227,7 +235,7 @@ class PlayerService extends BaseAudioHandler {
   }
 
   Future<void> recoverSavedPlaylist() async {
-    final res = await DatabaseService.db.query(TableNames.playlistTable, orderBy: 'id');
+    final res = await _databaseService.db.query(TableNames.playlistTable, orderBy: 'id');
     if (res.isEmpty) {
       return _logService.log('No saved playlist');
     }
@@ -259,7 +267,7 @@ class PlayerService extends BaseAudioHandler {
   }
 
   void savePlaylist(int currentID) {
-    DatabaseService.db.delete(TableNames.playlistTable).then((_) {
+    _databaseService.db.delete(TableNames.playlistTable).then((_) {
       _logService.log('Saving playlist ($playlistName): $playlist, current: $currentID');
       Globals.savedPlaylistName = playlistName;
 
@@ -272,7 +280,7 @@ class PlayerService extends BaseAudioHandler {
       );
 
       for (final e in data) {
-        DatabaseService.db.insert(TableNames.playlistTable, e);
+        _databaseService.db.insert(TableNames.playlistTable, e);
       }
     });
   }
@@ -282,13 +290,13 @@ class PlayerService extends BaseAudioHandler {
 
     _logService.log('Update current ID of saved: $oldID -> $newID');
 
-    DatabaseService.db.update(
+    _databaseService.db.update(
       TableNames.playlistTable,
       {'is_current': 0},
       where: 'song_id = ?',
       whereArgs: [oldID],
     );
-    DatabaseService.db.update(
+    _databaseService.db.update(
       TableNames.playlistTable,
       {'is_current': 1},
       where: 'song_id = ?',
@@ -386,7 +394,7 @@ class PlayerService extends BaseAudioHandler {
 
     if (isShuffled) _shufflePlaylist(beginSongID: Globals.currentSongID);
     _logService.log('Changed shuffle: $isShuffled');
-    ConfigService.saveConfig();
+    _configService.saveConfig();
   }
 
   /// Only from player
@@ -399,7 +407,7 @@ class PlayerService extends BaseAudioHandler {
     };
 
     _logService.log('Change repeat: ${_repeat.name}');
-    ConfigService.saveConfig();
+    _configService.saveConfig();
   }
 
   @override
@@ -445,10 +453,10 @@ class PlayerService extends BaseAudioHandler {
       );
     }
 
-    if (shouldDelay && ConfigService.delayMilliseconds > 0) {
+    if (shouldDelay && _configService.delayMilliseconds > 0) {
       await Future.delayed(
-        ConfigService.delayMilliseconds.ms,
-        () => _logService.log('Delayed for ${ConfigService.delayMilliseconds}ms'),
+        _configService.delayMilliseconds.ms,
+        () => _logService.log('Delayed for ${_configService.delayMilliseconds}ms'),
       );
     }
 
@@ -515,7 +523,7 @@ class PlayerService extends BaseAudioHandler {
   }
 
   void loadConfig(bool? shuffle, String? repeat) {
-    setVolume(ConfigService.volume);
+    setVolume(_configService.volume);
     _shuffle = shuffle == true ? .all : .none;
     _repeat = switch (repeat) {
       'all' => .all,
