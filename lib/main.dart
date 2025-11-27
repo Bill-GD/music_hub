@@ -11,6 +11,7 @@ import 'package:music_hub/data/services/backup_service.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
@@ -42,8 +43,7 @@ void main() async {
   GetIt.I.registerSingleton(
     await DatabaseService.create(path: Paths.dbPath, logService: GetIt.I()),
   );
-  GetIt.I.registerSingleton(ConfigService(GetIt.I()));
-  await GetIt.I<ConfigService>().loadConfig();
+  GetIt.I.registerSingleton(ConfigService(GetIt.I())..loadConfig());
 
   GetIt.I.registerSingleton(
     BackupService(
@@ -52,6 +52,7 @@ void main() async {
       databaseService: GetIt.I(),
     ),
   );
+  GetIt.I.registerSingleton(LyricService(GetIt.I()));
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   PlatformDispatcher.instance.onError = (e, s) {

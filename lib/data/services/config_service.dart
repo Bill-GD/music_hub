@@ -48,6 +48,7 @@ class ConfigService {
 
   Future<void> saveConfig() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final playerService = GetIt.I<PlayerService>();
 
     await prefs.setBool('backupOnLaunch', backupOnLaunch);
     await prefs.setBool('enableSongFiltering', enableSongFiltering);
@@ -58,8 +59,8 @@ class ConfigService {
     await prefs.setDouble('volume', volume);
     await prefs.setInt('backupCount', backupCount);
     await prefs.setString('currentSortOption', currentSortOption.name);
-    await prefs.setBool('isShuffled', GetIt.I<PlayerService>().isShuffled);
-    await prefs.setString('repeatMode', GetIt.I<PlayerService>().repeatMode.name);
+    await prefs.setBool('isShuffled', playerService.isShuffled);
+    await prefs.setString('repeatMode', playerService.repeatMode.name);
     _logService.log('Config saved');
   }
 
