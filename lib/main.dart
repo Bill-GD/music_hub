@@ -14,7 +14,7 @@ import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/constants.dart' show Constants, Paths;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +45,13 @@ void main() async {
   GetIt.I.registerSingleton(ConfigService(GetIt.I()));
   await GetIt.I<ConfigService>().loadConfig();
 
-  BackupService.init();
+  GetIt.I.registerSingleton(
+    BackupService(
+      logService: GetIt.I(),
+      configService: GetIt.I(),
+      databaseService: GetIt.I(),
+    ),
+  );
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   PlatformDispatcher.instance.onError = (e, s) {

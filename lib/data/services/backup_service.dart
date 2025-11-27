@@ -4,81 +4,92 @@ import 'dart:io';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/utils/constants.dart' show Paths, TableNames;
 
 class BackupService {
-  static void init() {
-    final buDir = Directory(Globals.backupPath);
+  final ConfigService _configService;
+  final LogService _logService;
+  final DatabaseService _databaseService;
+
+  BackupService({
+    required ConfigService configService,
+    required LogService logService,
+    required DatabaseService databaseService,
+  }) : _configService = configService,
+       _logService = logService,
+       _databaseService = databaseService {
+    final buDir = Directory(Paths.backupPath);
     if (!buDir.existsSync()) buDir.createSync();
   }
 
-  static void _cleanUpBackup() {
+  void _cleanUpBackup() {
     final backupFiles = getBackups();
-    if (backupFiles.length <= ConfigService.backupCount) return;
+    if (backupFiles.length <= _configService.backupCount) return;
 
-    LogService.log('Cleaning up backup files');
-    while (backupFiles.length > ConfigService.backupCount) {
+    _logService.log('Cleaning up backup files');
+    while (backupFiles.length > _configService.backupCount) {
       final f = backupFiles.removeLast();
-      LogService.log('Deleting backup file: ${f.path}');
+      _logService.log('Deleting backup file: ${f.path}');
       f.deleteSync();
     }
   }
 
-  static Future<void> backupData() async {
-    File bu =
-        File('${Globals.backupPath}${Uri.encodeFull(DateTime.now().toIso8601String().replaceAll(':', "-"))}.json');
+  Future<void> backupData() async {
+    File bu = File(
+      '${Paths.backupPath}'
+      '${Uri.encodeFull(DateTime.now().toIso8601String().replaceAll(':', "-"))}'
+      '.json',
+    );
     if (bu.existsSync()) {
-      LogService.log('Backup file with same name already exists, deleting');
+      _logService.log('Backup file with same name already exists, deleting');
       bu.deleteSync();
     } else {
       bu.createSync();
     }
 
-    LogService.log('Backing up data to: ${bu.path}');
+    _logService.log('Backing up data to: ${bu.path}');
     final data = {
-      'songs': await DatabaseService.db.query(Globals.songTable),
-      'albums': await DatabaseService.db.query(Globals.albumTable),
-      'album_songs': await DatabaseService.db.query(Globals.albumSongsTable),
+      'songs': await _databaseService.db.query(TableNames.songTable),
+      'albums': await _databaseService.db.query(TableNames.albumTable),
+      'album_songs': await _databaseService.db.query(TableNames.albumSongsTable),
     };
 
     bu.writeAsStringSync(jsonEncode(data));
     _cleanUpBackup();
   }
 
-  static List<FileSystemEntity> getBackups() {
-    final backupFiles = Directory(Globals.backupPath) //
-        .listSync()
-        .where((f) => f is File && f.path.endsWith('.json'))
-        .toList();
+  List<FileSystemEntity> getBackups() {
+    final backupFiles = Directory(
+      Paths.backupPath,
+    ).listSync().where((f) => f is File && f.path.endsWith('.json')).toList();
     backupFiles.sort((a, b) => b.statSync().changed.compareTo(a.statSync().changed));
     return backupFiles;
   }
 
-  static Future<void> recoverBackup(File bu) async {
-    // final bu = getBackups().last;
-    LogService.log('Recovering backup data from: ${bu.path}');
+  Future<void> recoverBackup(File bu) async {
+    _logService.log('Recovering backup data from: ${bu.path}');
 
-    if (!File(Globals.dbPath).existsSync()) {
-      LogService.log('Database files should exists after app launched.', LogLevel.error);
+    if (!File(Paths.dbPath).existsSync()) {
+      _logService.log('Database files should exists after app launched.', .error);
       // DatabaseHandler.init(); // may init again, will see
     }
 
-    final backupContent = bu //
+    final backupContent = bu
         .readAsStringSync()
         .replaceAll('timeAdded', 'time_added')
         .replaceAll('timeListened', 'time_listened');
 
     final json = jsonDecode(backupContent) as Map<String, dynamic>;
 
-    await DatabaseService.clearAllData();
+    await _databaseService.clearAllData();
     for (final o in json['songs']!) {
-      await DatabaseService.db.insert(Globals.songTable, o);
+      await _databaseService.db.insert(TableNames.songTable, o);
     }
     for (final o in json['albums']!) {
-      await DatabaseService.db.insert(Globals.albumTable, o);
+      await _databaseService.db.insert(TableNames.albumTable, o);
     }
     for (final o in json['album_songs']!) {
-      await DatabaseService.db.insert(Globals.albumSongsTable, o);
+      await _databaseService.db.insert(TableNames.albumSongsTable, o);
     }
   }
 }
