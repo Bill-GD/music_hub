@@ -23,22 +23,28 @@ void main() async {
   await Paths.init();
 
   GetIt.I.registerSingleton(LogService(logPath: Paths.logPath));
-  GetIt.I.registerSingleton(await (() async {
-    final handler = await AudioService.init(
-      builder: () => PlayerService(),
-      config: const AudioServiceConfig(
-        androidNotificationChannelId: 'com.billgd.music_hub.channel.audio',
-        androidNotificationChannelName: Constants.appName,
-      ),
-    );
-    return handler;
-  })());
+  GetIt.I.registerSingleton(
+    await (() async {
+      final handler = await AudioService.init(
+        builder: () => PlayerService(GetIt.I()),
+        config: const AudioServiceConfig(
+          androidNotificationChannelId: 'com.billgd.music_hub.channel.audio',
+          androidNotificationChannelName: Constants.appName,
+        ),
+      );
+      return handler;
+    })(),
+  );
+  GetIt.I.registerSingleton(
+    await DatabaseService.create(path: Paths.dbPath, logService: GetIt.I()),
+  );
 
   await ConfigService.loadConfig();
-  await DatabaseService.init();
   BackupService.init();
 
-  GetIt.I<LogService>().log('App version: ${Constants.appVersion}, isDev: ${Constants.isDev}');
+  GetIt.I<LogService>().log(
+    'App version: ${Constants.appVersion}, isDev: ${Constants.isDev}',
+  );
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   PlatformDispatcher.instance.onError = (e, s) {
