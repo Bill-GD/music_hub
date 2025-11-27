@@ -5,12 +5,12 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:music_hub/data/services/backup_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/ui/app/main_screen/album_list.dart';
 import 'package:music_hub/ui/app/main_screen/drawer.dart';
 import 'package:music_hub/ui/app/main_screen/song_list.dart';
 import 'package:music_hub/ui/app/permission/storage_permission.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
-import 'package:music_hub/ui/app/player/player_utils.dart';
 import 'package:music_hub/ui/app/search/search.dart';
 import 'package:music_hub/ui/app/songs/artist_songs.dart';
 import 'package:music_hub/utils/config.dart';

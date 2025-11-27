@@ -2,42 +2,47 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:music_hub/ui/core/theme/extensions.dart';
-import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/app.dart';
 import 'package:music_hub/data/services/backup_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/ui/app/player/player_utils.dart';
+import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/ui/core/theme/extensions.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/config.dart';
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/utils/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load();
+  await Paths.init();
 
-  Globals.storagePath = (await getExternalStorageDirectory())?.parent.path ?? '';
+  GetIt.I.registerSingleton(LogService(logPath: Paths.logPath));
+  GetIt.I.registerSingleton(await (() async {
+    final handler = await AudioService.init(
+      builder: () => PlayerService(),
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'com.billgd.music_hub.channel.audio',
+        androidNotificationChannelName: Constants.appName,
+      ),
+    );
+    return handler;
+  })());
 
-  Globals.logPath = '${Globals.storagePath}/files/log.txt';
-  Globals.jsonPath = '${Globals.storagePath}/files/tracks.json';
-  Globals.dbPath = '${Globals.storagePath}/database/database.db';
-  // Globals.backupPath = '${Globals.storagePath}/music_hub_backup/';
-
-  LogService.init();
-  LogService.log('App version: ${Globals.appVersion}, isDev: $isDev');
-
-  Globals.audioHandler = (await initAudioHandler()) as AudioPlayerHandler;
   await ConfigService.loadConfig();
   await DatabaseService.init();
   BackupService.init();
 
+  GetIt.I<LogService>().log('App version: ${Constants.appVersion}, isDev: ${Constants.isDev}');
+
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   PlatformDispatcher.instance.onError = (e, s) {
-    LogService.log(e.toString(), LogLevel.error);
+    GetIt.I<LogService>().log(e.toString(), LogLevel.error);
     final curContext = navigatorKey.currentContext;
     if (curContext == null) return false;
 

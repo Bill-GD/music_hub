@@ -1,4 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:path_provider/path_provider.dart';
 
 abstract final class Constants {
   static const appName = 'Music Hub';
@@ -24,4 +25,12 @@ abstract final class Paths {
   static late final String jsonPath;
   static late final String dbPath;
   static late final String logPath;
+
+  static Future<void> init() async {
+    storagePath = (await getExternalStorageDirectory())?.parent.path ?? '';
+
+    logPath = '$storagePath/files/log.txt';
+    jsonPath = '$storagePath/files/tracks.json';
+    dbPath = '$storagePath/database/database.db';
+  }
 }

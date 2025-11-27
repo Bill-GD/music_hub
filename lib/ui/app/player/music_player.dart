@@ -11,9 +11,9 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
+import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/ui/app/lyric/lyric_editor.dart';
 import 'package:music_hub/ui/app/lyric/lyric_strip.dart';
-import 'package:music_hub/ui/app/player/player_utils.dart';
 import 'package:music_hub/ui/core/widgets/file_picker.dart';
 import 'package:music_hub/ui/core/widgets/page_indicator.dart';
 import 'package:music_hub/ui/core/widgets/playlist_sheet.dart';

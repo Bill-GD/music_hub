@@ -21,18 +21,7 @@ int getTotalDuration() => Globals.currentSongID >= 0
     ? Globals.audioHandler.player.duration?.inMilliseconds ?? 1 //
     : 1;
 
-Future<AudioHandler> initAudioHandler() async {
-  final handler = await AudioService.init(
-    builder: () => AudioPlayerHandler(),
-    config: const AudioServiceConfig(
-      androidNotificationChannelId: 'com.billgd.music_hub.channel.audio',
-      androidNotificationChannelName: 'Music Hub',
-    ),
-  );
-  return handler;
-}
-
-class AudioPlayerHandler extends BaseAudioHandler {
+class PlayerService extends BaseAudioHandler {
   // Streams
   final _onSongChangeController = StreamController<bool>.broadcast();
   late Stream<bool> onSongChange;
@@ -74,7 +63,7 @@ class AudioPlayerHandler extends BaseAudioHandler {
   // Skip cooldown
   bool _skipping = false;
 
-  AudioPlayerHandler() {
+  PlayerService() {
     LogService.log('Audio Handler init');
     onSongChange = _onSongChangeController.stream;
     onPlayingChange = _onPlayingChangeController.stream;
