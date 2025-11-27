@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/ui/app/main_screen/main_screen.dart';
+import 'package:music_hub/ui/app/home/home_screen.dart';
 import 'package:music_hub/ui/core/widgets/errored_widget.dart';
 
 class MusicHubApp extends StatelessWidget {
@@ -27,15 +28,12 @@ class MusicHubApp extends StatelessWidget {
           data: ThemeData(
             useMaterial3: true,
             fontFamily: 'Nunito',
-            brightness: Brightness.light,
+            brightness: .light,
             sliderTheme: const SliderThemeData(
               activeTickMarkColor: Colors.transparent,
               inactiveTickMarkColor: Colors.transparent,
             ),
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.white,
-              brightness: Brightness.light,
-            ),
+            colorScheme: .fromSeed(seedColor: Colors.white, brightness: .light),
           ),
         ),
         AppTheme(
@@ -44,15 +42,12 @@ class MusicHubApp extends StatelessWidget {
           data: ThemeData(
             useMaterial3: true,
             fontFamily: 'Nunito',
-            brightness: Brightness.dark,
+            brightness: .dark,
             sliderTheme: const SliderThemeData(
               activeTickMarkColor: Colors.transparent,
               inactiveTickMarkColor: Colors.transparent,
             ),
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.grey,
-              brightness: Brightness.dark,
-            ),
+            colorScheme: .fromSeed(seedColor: Colors.grey, brightness: .dark),
           ),
         ),
       ],
@@ -70,7 +65,7 @@ class MusicHubApp extends StatelessWidget {
               },
               theme: ThemeProvider.themeOf(context).data,
               title: 'Music Hub',
-              home: const MainScreen(),
+              home: HomeScreen(viewModel: context.read()),
             );
           },
         ),

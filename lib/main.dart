@@ -6,6 +6,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import 'package:music_hub/app.dart';
 import 'package:music_hub/data/services/backup_service.dart';
@@ -15,6 +16,7 @@ import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
+import 'package:music_hub/ui/app/home/home_view_model.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart' show Constants, Paths;
@@ -92,5 +94,20 @@ void main() async {
     return true;
   };
 
-  runApp(MusicHubApp(navKey: navigatorKey));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => HomeViewModel(
+            playerService: GetIt.I(),
+            songService: GetIt.I(),
+            logService: GetIt.I(),
+            configService: GetIt.I(),
+            backupService: GetIt.I(),
+          ),
+        ),
+      ],
+      child: MusicHubApp(navKey: navigatorKey),
+    ),
+  );
 }
