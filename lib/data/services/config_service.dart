@@ -1,51 +1,52 @@
+import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/data/services/player_service.dart';
 
 /// All user configurations, expose to user in setting page.
 class ConfigService {
+  final LogService _logService;
+
   /// Whether the app should backup data on launch.
-  static bool backupOnLaunch = false;
+  bool backupOnLaunch = false;
 
   /// Should filtering out all short files.
-  static bool enableSongFiltering = true;
+  bool enableSongFiltering = true;
 
   /// Filters out all files shorter than this, default `30` seconds.
-  static int lengthLimitMilliseconds = 30000;
+  int lengthLimitMilliseconds = 30000;
 
   /// Should the player start when choosing a new song, default `true`.
-  static bool autoPlayNewSong = true;
+  bool autoPlayNewSong = true;
 
   /// The delay between song changes, default `0` milliseconds. Range `[0, 500]`.
-  static int delayMilliseconds = 0;
+  int delayMilliseconds = 0;
 
   /// Should the lyric type page show current lyric, default `true`.
-  static bool appendLyric = false;
+  bool appendLyric = false;
 
   /// The base volume of the player, default `1`. Range `[0, 1]`.
-  static double volume = 1;
+  double volume = 1;
 
   /// How many backups to keep. Default `5`.
-  static int backupCount = 5;
+  int backupCount = 5;
 
   /// Current sorting order of the song list, default [SortOptions.name].
-  static SortOptions currentSortOption = .name;
+  SortOptions currentSortOption = .name;
 
-  static String getSortOptionString() {
-    switch (currentSortOption) {
-      case .id:
-        return 'ID';
-      case .name:
-        return 'Name';
-      case .mostPlayed:
-        return 'Most played';
-      case .recentlyAdded:
-        return 'Recently added';
-    }
+  ConfigService(this._logService);
+
+  String getSortOptionString() {
+    return switch (currentSortOption) {
+      .id => 'ID',
+      .name => 'Name',
+      .mostPlayed => 'Most played',
+      .recentlyAdded => 'Recently added',
+    };
   }
 
-  static Future<void> saveConfig() async {
+  Future<void> saveConfig() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool('backupOnLaunch', backupOnLaunch);
@@ -57,12 +58,12 @@ class ConfigService {
     await prefs.setDouble('volume', volume);
     await prefs.setInt('backupCount', backupCount);
     await prefs.setString('currentSortOption', currentSortOption.name);
-    await prefs.setBool('isShuffled', Globals.audioHandler.isShuffled);
-    await prefs.setString('repeatMode', Globals.audioHandler.repeatMode.name);
-    LogService.log('Config saved');
+    await prefs.setBool('isShuffled', GetIt.I<PlayerService>().isShuffled);
+    await prefs.setString('repeatMode', GetIt.I<PlayerService>().repeatMode.name);
+    _logService.log('Config saved');
   }
 
-  static Future<void> loadConfig() async {
+  Future<void> loadConfig() async {
     final prefs = await SharedPreferences.getInstance();
 
     backupOnLaunch = prefs.getBool('backupOnLaunch') ?? false;
@@ -79,11 +80,11 @@ class ConfigService {
       orElse: () => .name,
     );
 
-    Globals.audioHandler.loadConfig(
+    GetIt.I<PlayerService>().loadConfig(
       prefs.getBool('isShuffled'),
       prefs.getString('repeatMode'),
     );
-    LogService.log('Config loaded');
+    _logService.log('Config loaded');
   }
 }
 

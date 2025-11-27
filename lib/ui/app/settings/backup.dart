@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:music_hub/data/services/backup_service.dart';
+import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/widgets/action_dialog.dart';
-import 'package:music_hub/utils/config.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 

@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:music_hub/utils/constants.dart' show TableNames;
 import 'package:sqflite/sqflite.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/utils/constants.dart' show TableNames;
 
 class DatabaseService {
   final String _path;
@@ -125,8 +125,8 @@ class DatabaseService {
 
   Future<void> clearAllData() async {
     _logService.log(
-      'IMPORTANT! Deleted all data! This is irreversible if used without backing up first!',
-      LogLevel.warn,
+      "This deletes all saved data. If used alone, it won't be recoverable.",
+      .warn,
     );
     await _db.delete(TableNames.songTable);
     await _db.delete(TableNames.albumTable);

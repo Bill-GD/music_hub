@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 
 class ErroredWidget extends StatelessWidget {
   final FlutterErrorDetails e;

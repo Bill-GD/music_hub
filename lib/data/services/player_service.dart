@@ -4,11 +4,11 @@ import 'dart:math';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 
+import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/config.dart';
 import 'package:music_hub/utils/constants.dart' show TableNames;
-import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, WhereOrNull;
 import 'package:music_hub/utils/globals/globals.dart';
 import 'package:music_hub/utils/globals/music_track.dart';
 

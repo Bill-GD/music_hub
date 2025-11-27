@@ -8,12 +8,12 @@ import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/app.dart';
 import 'package:music_hub/data/services/backup_service.dart';
+import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/config.dart';
 import 'package:music_hub/utils/constants.dart';
 
 void main() async {
@@ -23,6 +23,10 @@ void main() async {
   await Paths.init();
 
   GetIt.I.registerSingleton(LogService(logPath: Paths.logPath));
+  GetIt.I<LogService>().log(
+    'App version: ${Constants.appVersion}, isDev: ${Constants.isDev}',
+  );
+
   GetIt.I.registerSingleton(
     await (() async {
       final handler = await AudioService.init(
@@ -38,13 +42,10 @@ void main() async {
   GetIt.I.registerSingleton(
     await DatabaseService.create(path: Paths.dbPath, logService: GetIt.I()),
   );
+  GetIt.I.registerSingleton(ConfigService(GetIt.I()));
+  await GetIt.I<ConfigService>().loadConfig();
 
-  await ConfigService.loadConfig();
   BackupService.init();
-
-  GetIt.I<LogService>().log(
-    'App version: ${Constants.appVersion}, isDev: ${Constants.isDev}',
-  );
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   PlatformDispatcher.instance.onError = (e, s) {
