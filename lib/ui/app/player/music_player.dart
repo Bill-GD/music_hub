@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
-import 'package:music_hub/data/services/lyric_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/ui/app/lyric/lyric_editor.dart';
 import 'package:music_hub/ui/app/lyric/lyric_strip.dart';
 import 'package:music_hub/ui/app/player/player_utils.dart';
@@ -60,7 +60,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
   Image? coverImage;
 
   void updateSongInfo([int? songID]) async {
-    LogHandler.log("Updating player's UI");
+    LogService.log("Updating player's UI");
 
     song = Globals.allSongs.firstWhere((e) => e.id == (songID ?? Globals.currentSongID));
     currentDuration = getCurrentDuration();
@@ -71,8 +71,8 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
   }
 
   void updateLyric() {
-    LogHandler.log('Updating lyric');
-    lyric = LyricHandler.getLyric(song.id, Globals.lyricPath + song.lyricPath) ??
+    LogService.log('Updating lyric');
+    lyric = LyricService.getLyric(song.id, Globals.lyricPath + song.lyricPath) ??
         Lyric(
           songId: song.id,
           name: song.name,
@@ -84,10 +84,10 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
   }
 
   void updateCoverImage() {
-    LogHandler.log('Updating cover image');
+    LogService.log('Updating cover image');
     coverImage = null;
     if (File(song.imagePath).existsSync()) {
-      LogHandler.log('Cover image for song found');
+      LogService.log('Cover image for song found');
       coverImage = Image.file(
         File(song.imagePath),
         fit: BoxFit.cover,
@@ -95,7 +95,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
     } else {
       final album = Globals.albums.firstWhereOrNull((e) => e.name == Globals.savedPlaylistName);
       if (album != null && File(album.imagePath).existsSync()) {
-        LogHandler.log('Cover image for album found');
+        LogService.log('Cover image for album found');
         coverImage = Image.file(
           File(album.imagePath),
           fit: BoxFit.cover,
@@ -108,7 +108,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
           if (mounted) showToast(context, 'Image for this song is missing.');
         });
       }
-      LogHandler.log('No cover image found');
+      LogService.log('No cover image found');
     }
     setState(() {});
   }
@@ -289,7 +289,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                                       path = path.split(Globals.lyricPath).last;
                                       if (song.lyricPath == path) return;
 
-                                      LogHandler.log('Chosen new lrc: $path');
+                                      LogService.log('Chosen new lrc: $path');
                                       song.lyricPath = path;
                                       await song.update();
                                       updateLyric();

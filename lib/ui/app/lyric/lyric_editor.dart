@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
-import 'package:music_hub/data/services/lyric_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/ui/app/lyric/timestamp_editor.dart';
 import 'package:music_hub/ui/app/lyric/type_lyric.dart';
 import 'package:music_hub/ui/app/player/player_utils.dart';
@@ -80,7 +80,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
     currentLine = findCurrentLine();
 
     song = Globals.allSongs.firstWhere((e) => e.id == widget.songID);
-    lyric = LyricHandler.getLyric(song.id, Globals.lyricPath + song.lyricPath) ??
+    lyric = LyricService.getLyric(song.id, Globals.lyricPath + song.lyricPath) ??
         Lyric(
           songId: song.id,
           name: song.name,
@@ -105,7 +105,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
       }
     }));
 
-    LogHandler.log('Editing lyric for ${song.id}');
+    LogService.log('Editing lyric for ${song.id}');
     debugPrint('Lyric info \n$lyric');
     setState(() {});
   }
@@ -152,7 +152,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
               ).then(
                 (value) {
                   if (value != true) return;
-                  LogHandler.log('Discarded lyric changes');
+                  LogService.log('Discarded lyric changes');
                   Navigator.of(context).pop();
                 },
               );
@@ -191,7 +191,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                           song.lyricPath = lyric.path;
                           song.update();
                         }
-                        LyricHandler.addLyric(lyric);
+                        LyricService.addLyric(lyric);
                         Globals.lyricChangedController.add(null);
                         setState(() => hasChanged = false);
                         // Navigator.of(context).pop();
@@ -231,7 +231,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                       PageRouteBuilder(
                         pageBuilder: (_, __, ___) {
                           return TypeLyric(
-                            lines: Config.appendLyric
+                            lines: ConfigService.appendLyric
                                 ? []
                                 : lyric.list.map((e) {
                                     String line = e.line;
@@ -258,7 +258,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                           .where((e) => e.isNotEmpty)
                           .toList();
 
-                      if (!Config.appendLyric) {
+                      if (!ConfigService.appendLyric) {
                         final count = min(lines.length, lyric.list.length);
                         final isShorten = count < lyric.list.length;
 

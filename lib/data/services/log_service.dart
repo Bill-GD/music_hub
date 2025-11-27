@@ -7,7 +7,7 @@ import 'package:music_hub/utils/globals/globals.dart';
 
 enum LogLevel { info, warn, error }
 
-class LogHandler {
+class LogService {
   static final _logFile = File(Globals.logPath);
 
   static void init() {
@@ -18,16 +18,11 @@ class LogHandler {
 
   static void log(String content, [LogLevel level = LogLevel.info]) {
     final prefix = level.name[0].toUpperCase();
+    final time = DateTime.now();
     _logFile.writeAsStringSync(
-      '[${_time()}] [$prefix] $content\n',
+      '[$time] [$prefix] $content\n',
       mode: FileMode.append,
     );
-    debugPrint('[${_time()}] [$prefix] $content');
-  }
-
-  static String _time() {
-    final dt = DateTime.now();
-    return '${dt.year}-${dt.month.padIntLeft(2, '0')}-${dt.day.padIntLeft(2, '0')} '
-        '${dt.hour.padIntLeft(2, '0')}:${dt.minute.padIntLeft(2, '0')}:${dt.second.padIntLeft(2, '0')}.${dt.millisecond.padIntLeft(3, '0')}';
+    debugPrint('[$time] [$prefix] $content');
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/settings/version_list.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
@@ -119,9 +119,9 @@ class _AboutScreenState extends State<AboutScreen> {
                       final canLaunch = await canLaunchUrl(uri);
                       launchUrl(uri);
                       if (canLaunch) {
-                        LogHandler.log('The system has found a handler, can launch URL');
+                        LogService.log('The system has found a handler, can launch URL');
                       } else if (context.mounted) {
-                        LogHandler.log(
+                        LogService.log(
                           'URL launcher support query is not specified or can\'t launch URL, but opening regardless',
                         );
                       }
@@ -135,9 +135,9 @@ class _AboutScreenState extends State<AboutScreen> {
                       final canLaunch = await canLaunchUrl(uri);
                       launchUrl(uri);
                       if (canLaunch) {
-                        LogHandler.log('The system has found a handler, can launch URL');
+                        LogService.log('The system has found a handler, can launch URL');
                       } else if (context.mounted) {
-                        LogHandler.log(
+                        LogService.log(
                           'URL launcher support query is not specified or can\'t launch URL, but opening regardless',
                         );
                       }

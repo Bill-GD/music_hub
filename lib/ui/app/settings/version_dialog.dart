@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' show Response;
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 
@@ -27,7 +27,7 @@ class _VersionDialogState extends State<VersionDialog> {
   @override
   void initState() {
     super.initState();
-    LogHandler.log('Getting changelog of: ${widget.tag}');
+    LogService.log('Getting changelog of: ${widget.tag}');
     getChangelog();
   }
 
@@ -52,7 +52,7 @@ class _VersionDialogState extends State<VersionDialog> {
     if (json == null) throw Exception('Rate limited. Please come back later.');
     if (json is! Map) throw Exception('Something is wrong, JSON received is not a map.');
 
-    LogHandler.log('Got release of: t=${widget.tag}, sha=${widget.sha}');
+    LogService.log('Got release of: t=${widget.tag}, sha=${widget.sha}');
     timeUploaded = DateTime.parse(json['published_at'] as String).toDateString();
     return json['body'] as String;
   }
@@ -61,7 +61,7 @@ class _VersionDialogState extends State<VersionDialog> {
     // final filename = widget.dev ? 'release_note.md' : 'dev_changes.md';
     const filename = 'dev_changes.md';
 
-    LogHandler.log('Getting markdown of: t=${widget.tag}, sha=${widget.sha}');
+    LogService.log('Getting markdown of: t=${widget.tag}, sha=${widget.sha}');
     Response res = await apiQuery('/contents/$filename?ref=${widget.sha}');
     dynamic json = jsonDecode(res.body);
 
@@ -69,7 +69,7 @@ class _VersionDialogState extends State<VersionDialog> {
     if (json is! Map) throw Exception('Something is wrong, JSON received is not a map.');
 
     if (json['content'] == null) {
-      LogHandler.log('dev_changes.md not found, getting release instead');
+      LogService.log('dev_changes.md not found, getting release instead');
       return getRelease();
     }
 
@@ -77,7 +77,7 @@ class _VersionDialogState extends State<VersionDialog> {
       (json['content'] as String).replaceAll('\n', ''),
     ));
 
-    LogHandler.log('Getting time of commit (${widget.sha})');
+    LogService.log('Getting time of commit (${widget.sha})');
     res = await apiQuery('/commits/${widget.sha}');
     json = jsonDecode(res.body);
 
@@ -207,9 +207,9 @@ class _VersionDialogState extends State<VersionDialog> {
               final canLaunch = await canLaunchUrl(uri);
               launchUrl(uri);
               if (canLaunch) {
-                LogHandler.log('The system has found a handler, can launch URL');
+                LogService.log('The system has found a handler, can launch URL');
               } else if (context.mounted) {
-                LogHandler.log(
+                LogService.log(
                   'URL launcher support query is not specified or can\'t launch URL, but opening regardless',
                 );
               }

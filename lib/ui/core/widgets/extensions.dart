@@ -163,23 +163,6 @@ extension WidgetWithContext on BuildContext {
     );
   }
 
-  Future<void> showErrorPopup(String error) async {
-    await showActionDialog<void>(
-      barrierDismissible: true,
-      time: 300.ms,
-      icon: Icon(Icons.error_rounded, color: theme.colorScheme.error, size: 30),
-      title: 'Error',
-      titleFontSize: 24,
-      textContent: dedent('''
-            An error occurred while performing the operation.
-            Error: $error'''),
-      contentFontSize: 16,
-      actions: [
-        TextButton(child: const Text('OK'), onPressed: () => Navigator.of(this).pop()),
-      ],
-    );
-  }
-
   Future<void> showPopupMessage({
     Icon? icon,
     required String title,

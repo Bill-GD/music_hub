@@ -1,10 +1,10 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/globals/globals.dart';
 
 /// All user configurations, expose to user in setting page.
-class Config {
+class ConfigService {
   /// Whether the app should backup data on launch.
   static bool backupOnLaunch = false;
 
@@ -30,17 +30,17 @@ class Config {
   static int backupCount = 5;
 
   /// Current sorting order of the song list, default [SortOptions.name].
-  static SortOptions currentSortOption = SortOptions.name;
+  static SortOptions currentSortOption = .name;
 
   static String getSortOptionString() {
     switch (currentSortOption) {
-      case SortOptions.id:
+      case .id:
         return 'ID';
-      case SortOptions.name:
+      case .name:
         return 'Name';
-      case SortOptions.mostPlayed:
+      case .mostPlayed:
         return 'Most played';
-      case SortOptions.recentlyAdded:
+      case .recentlyAdded:
         return 'Recently added';
     }
   }
@@ -59,7 +59,7 @@ class Config {
     await prefs.setString('currentSortOption', currentSortOption.name);
     await prefs.setBool('isShuffled', Globals.audioHandler.isShuffled);
     await prefs.setString('repeatMode', Globals.audioHandler.repeatMode.name);
-    LogHandler.log('Config saved');
+    LogService.log('Config saved');
   }
 
   static Future<void> loadConfig() async {
@@ -74,22 +74,17 @@ class Config {
     volume = (prefs.getDouble('volume') ?? 1).clamp(0, 1);
     backupCount = prefs.getInt('backupCount') ?? 5;
 
-    currentSortOption = SortOptions.values.firstWhere(
+    currentSortOption = .values.firstWhere(
       (option) => option.name == prefs.getString('currentSortOption'),
-      orElse: () => SortOptions.name,
+      orElse: () => .name,
     );
 
     Globals.audioHandler.loadConfig(
       prefs.getBool('isShuffled'),
       prefs.getString('repeatMode'),
     );
-    LogHandler.log('Config loaded');
+    LogService.log('Config loaded');
   }
 }
 
-enum SortOptions {
-  id,
-  name,
-  mostPlayed,
-  recentlyAdded,
-}
+enum SortOptions { id, name, mostPlayed, recentlyAdded }

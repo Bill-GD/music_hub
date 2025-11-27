@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/widgets/hold_gesture.dart';
 import 'package:music_hub/utils/extensions.dart';
 
@@ -184,7 +184,7 @@ class _TimestampEditorState extends State<TimestampEditor> {
         TextButton(
           child: const Text('Save'),
           onPressed: () {
-            LogHandler.log('Edited timestamp: ${widget.timestamp} -> $edit');
+            LogService.log('Edited timestamp: ${widget.timestamp} -> $edit');
             Navigator.of(context).pop(edit);
           },
         ),

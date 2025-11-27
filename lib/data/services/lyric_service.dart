@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
 
-class LyricHandler {
+class LyricService {
   static void addLyric(Lyric lyric) {
     const appName = 'Music Hub';
     const version = Globals.appVersion;
@@ -12,7 +12,7 @@ class LyricHandler {
     final lrcFile = File(Globals.lyricPath + lyric.path);
     if (!lrcFile.existsSync()) lrcFile.createSync(recursive: true);
 
-    LogHandler.log('Writing lyric: p=${lrcFile.path}, id=${lyric.songId}, ve=$version');
+    LogService.log('Writing lyric: p=${lrcFile.path}, id=${lyric.songId}, ve=$version');
 
     lrcFile.writeAsStringSync('');
 
@@ -58,7 +58,7 @@ class LyricHandler {
       for (final t in timeParts) {
         final matches = RegExp(r'[0-9]{2}').allMatches(t);
         if (matches.length != 1) {
-          LogHandler.log('$t match count ${matches.length} -> invalid, skipping...');
+          LogService.log('$t match count ${matches.length} -> invalid, skipping...');
           continue;
         }
         // LogHandler.log(

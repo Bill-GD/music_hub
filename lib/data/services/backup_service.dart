@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:music_hub/data/services/database_handler.dart';
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/database_service.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/config.dart';
 import 'package:music_hub/utils/globals/globals.dart';
 
-class BackupHandler {
+class BackupService {
   static void init() {
     final buDir = Directory(Globals.backupPath);
     if (!buDir.existsSync()) buDir.createSync();
@@ -14,12 +14,12 @@ class BackupHandler {
 
   static void _cleanUpBackup() {
     final backupFiles = getBackups();
-    if (backupFiles.length <= Config.backupCount) return;
+    if (backupFiles.length <= ConfigService.backupCount) return;
 
-    LogHandler.log('Cleaning up backup files');
-    while (backupFiles.length > Config.backupCount) {
+    LogService.log('Cleaning up backup files');
+    while (backupFiles.length > ConfigService.backupCount) {
       final f = backupFiles.removeLast();
-      LogHandler.log('Deleting backup file: ${f.path}');
+      LogService.log('Deleting backup file: ${f.path}');
       f.deleteSync();
     }
   }
@@ -28,17 +28,17 @@ class BackupHandler {
     File bu =
         File('${Globals.backupPath}${Uri.encodeFull(DateTime.now().toIso8601String().replaceAll(':', "-"))}.json');
     if (bu.existsSync()) {
-      LogHandler.log('Backup file with same name already exists, deleting');
+      LogService.log('Backup file with same name already exists, deleting');
       bu.deleteSync();
     } else {
       bu.createSync();
     }
 
-    LogHandler.log('Backing up data to: ${bu.path}');
+    LogService.log('Backing up data to: ${bu.path}');
     final data = {
-      'songs': await DatabaseHandler.db.query(Globals.songTable),
-      'albums': await DatabaseHandler.db.query(Globals.albumTable),
-      'album_songs': await DatabaseHandler.db.query(Globals.albumSongsTable),
+      'songs': await DatabaseService.db.query(Globals.songTable),
+      'albums': await DatabaseService.db.query(Globals.albumTable),
+      'album_songs': await DatabaseService.db.query(Globals.albumSongsTable),
     };
 
     bu.writeAsStringSync(jsonEncode(data));
@@ -56,10 +56,10 @@ class BackupHandler {
 
   static Future<void> recoverBackup(File bu) async {
     // final bu = getBackups().last;
-    LogHandler.log('Recovering backup data from: ${bu.path}');
+    LogService.log('Recovering backup data from: ${bu.path}');
 
     if (!File(Globals.dbPath).existsSync()) {
-      LogHandler.log('Database files should exists after app launched.', LogLevel.error);
+      LogService.log('Database files should exists after app launched.', LogLevel.error);
       // DatabaseHandler.init(); // may init again, will see
     }
 
@@ -70,15 +70,15 @@ class BackupHandler {
 
     final json = jsonDecode(backupContent) as Map<String, dynamic>;
 
-    await DatabaseHandler.clearAllData();
+    await DatabaseService.clearAllData();
     for (final o in json['songs']!) {
-      await DatabaseHandler.db.insert(Globals.songTable, o);
+      await DatabaseService.db.insert(Globals.songTable, o);
     }
     for (final o in json['albums']!) {
-      await DatabaseHandler.db.insert(Globals.albumTable, o);
+      await DatabaseService.db.insert(Globals.albumTable, o);
     }
     for (final o in json['album_songs']!) {
-      await DatabaseHandler.db.insert(Globals.albumSongsTable, o);
+      await DatabaseService.db.insert(Globals.albumSongsTable, o);
     }
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
 import 'package:music_hub/ui/app/songs/add_album_song.dart';
 import 'package:music_hub/ui/app/songs/album_info.dart';
@@ -255,7 +255,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                         nIdx--;
                         if (nIdx > totalSongCount || album.id == 1 || nIdx == oIdx || nIdx < 0) return;
                         final oldSongId = songs[oIdx].id, newSongId = songs[nIdx].id;
-                        LogHandler.log('Reorder album: $oIdx (id=$oldSongId) -> $nIdx (id=$newSongId)');
+                        LogService.log('Reorder album: $oIdx (id=$oldSongId) -> $nIdx (id=$newSongId)');
                         album.songs.insert(nIdx, album.songs.removeAt(oIdx));
                         album.update();
                         setState(getSongs);

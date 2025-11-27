@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
-import 'package:music_hub/data/services/lyric_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/ui/app/lyric/lyric_editor.dart';
 import 'package:music_hub/ui/core/widgets/action_dialog.dart';
 import 'package:music_hub/utils/extensions.dart';
@@ -48,7 +48,7 @@ class _LyricStripState extends State<LyricStrip> {
   void updateLyric() {
     final song = Globals.allSongs.firstWhere((e) => e.id == Globals.currentSongID);
     currentSongID = song.id;
-    lyric = LyricHandler.getLyric(currentSongID, Globals.lyricPath + song.lyricPath) ??
+    lyric = LyricService.getLyric(currentSongID, Globals.lyricPath + song.lyricPath) ??
         Lyric(
           songId: currentSongID,
           name: song.name,
@@ -66,7 +66,7 @@ class _LyricStripState extends State<LyricStrip> {
       }
     }
     lineCount = lines.length;
-    LogHandler.log('Updated lyric for $currentSongID: ${song.lyricPath}');
+    LogService.log('Updated lyric for $currentSongID: ${song.lyricPath}');
     setState(() {});
   }
 
@@ -211,7 +211,7 @@ class _LyricStripState extends State<LyricStrip> {
                     onPressed: () {
                       final song = Globals.allSongs.firstWhereOrNull((e) => e.id == lyric.songId);
                       if (song != null) {
-                        LogHandler.log('Removing lyric for ${song.id}');
+                        LogService.log('Removing lyric for ${song.id}');
                         song.lyricPath = '';
                         song.update();
                       }

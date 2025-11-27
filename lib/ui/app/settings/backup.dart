@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/data/services/backup_handler.dart';
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/backup_service.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/widgets/action_dialog.dart';
 import 'package:music_hub/utils/config.dart';
 import 'package:music_hub/utils/extensions.dart';
@@ -20,7 +20,7 @@ class _BackupScreenState extends State<BackupScreen> {
   List<FileSystemEntity> backupFiles = [];
 
   void updateBackupList() {
-    backupFiles = BackupHandler.getBackups();
+    backupFiles = BackupService.getBackups();
   }
 
   @override
@@ -73,7 +73,7 @@ class _BackupScreenState extends State<BackupScreen> {
                         ],
                       );
                       if (res != true) return;
-                      await BackupHandler.backupData();
+                      await BackupService.backupData();
                       if (context.mounted) showToast(context, 'Data backed up successfully');
                       updateBackupList();
                       setState(() {});
@@ -83,8 +83,8 @@ class _BackupScreenState extends State<BackupScreen> {
                   const SizedBox(width: 20),
                   ElevatedButton(
                     onPressed: () async {
-                      if (BackupHandler.getBackups().isEmpty) {
-                        LogHandler.log('No backup data found');
+                      if (BackupService.getBackups().isEmpty) {
+                        LogService.log('No backup data found');
                         showToast(context, 'No backup data found');
                         return;
                       }
@@ -110,7 +110,7 @@ class _BackupScreenState extends State<BackupScreen> {
                         ],
                       );
                       if (res != true) return;
-                      await BackupHandler.recoverBackup(backupFiles.first as File);
+                      await BackupService.recoverBackup(backupFiles.first as File);
                       if (context.mounted) showToast(context, 'Data recovered successfully');
                       updateBackupList();
                       setState(() {});
@@ -139,7 +139,7 @@ class _BackupScreenState extends State<BackupScreen> {
                     FileStat stat = backupFiles[index].statSync();
                     return ListTile(
                       leading: Text(
-                        '${index + 1}/${Config.backupCount}',
+                        '${index + 1}/${ConfigService.backupCount}',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       title: Text(
@@ -179,7 +179,7 @@ class _BackupScreenState extends State<BackupScreen> {
                                 ],
                               );
                               if (res != true) return;
-                              await BackupHandler.recoverBackup(backupFiles[index] as File);
+                              await BackupService.recoverBackup(backupFiles[index] as File);
                               if (context.mounted) showToast(context, 'Data recovered successfully');
                               updateBackupList();
                               setState(() {});

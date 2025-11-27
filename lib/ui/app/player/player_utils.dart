@@ -4,8 +4,8 @@ import 'dart:math';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
 
-import 'package:music_hub/data/services/database_handler.dart';
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/database_service.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/config.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
@@ -75,7 +75,7 @@ class AudioPlayerHandler extends BaseAudioHandler {
   bool _skipping = false;
 
   AudioPlayerHandler() {
-    LogHandler.log('Audio Handler init');
+    LogService.log('Audio Handler init');
     onSongChange = _onSongChangeController.stream;
     onPlayingChange = _onPlayingChangeController.stream;
 
@@ -83,13 +83,13 @@ class AudioPlayerHandler extends BaseAudioHandler {
 
     _player = AudioPlayer();
     _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
-    setVolume(Config.volume);
+    setVolume(ConfigService.volume);
 
     _player.processingStateStream.listen((state) async {
       if (state == ProcessingState.completed) {
         switch (_repeat) {
           case AudioServiceRepeatMode.one:
-            LogHandler.log('Repeat one, restarting song');
+            LogService.log('Repeat one, restarting song');
             await seek(0.ms);
             break;
           case AudioServiceRepeatMode.all:
@@ -110,7 +110,7 @@ class AudioPlayerHandler extends BaseAudioHandler {
       if (_listened) return;
 
       // Longer than length limit, to be safe
-      if (totalMilliseconds >= Config.lengthLimitMilliseconds) {
+      if (totalMilliseconds >= ConfigService.lengthLimitMilliseconds) {
         int interval = position.inMilliseconds - _prevPos.inMilliseconds;
         // If rewind, skip
         if (interval > 0) {
@@ -168,7 +168,7 @@ class AudioPlayerHandler extends BaseAudioHandler {
 
     MusicTrack song = Globals.allSongs.firstWhere((e) => e.id == songID);
 
-    LogHandler.log('Switching song: (${song.id}) ${song.name}');
+    LogService.log('Switching song: (${song.id}) ${song.name}');
     duration = await _player.setAudioSource(
       AudioSource.uri(Uri.parse(Uri.encodeComponent(song.fullPath))),
     );
@@ -203,12 +203,12 @@ class AudioPlayerHandler extends BaseAudioHandler {
     _onSongChangeController.add(true);
 
     if (_totalDuration.inMilliseconds <= 0) {
-      LogHandler.log('Something is wrong when setting audio source');
+      LogService.log('Something is wrong when setting audio source');
     } else {
-      LogHandler.log('Min listen time: $_minTime / ${_totalDuration.inMilliseconds} ms');
+      LogService.log('Min listen time: $_minTime / ${_totalDuration.inMilliseconds} ms');
     }
 
-    if (shouldPlay && Config.autoPlayNewSong) {
+    if (shouldPlay && ConfigService.autoPlayNewSong) {
       play();
     } else {
       pause();
@@ -231,22 +231,22 @@ class AudioPlayerHandler extends BaseAudioHandler {
     int songCount = _playlist.length;
     playlistName = name;
     if (saveList) savePlaylist(beginSongID);
-    LogHandler.log('Registered playlist: $playlistName ($songCount songs)');
+    LogService.log('Registered playlist: $playlistName ($songCount songs)');
   }
 
   Future<void> recoverSavedPlaylist() async {
-    final res = await DatabaseHandler.db.query(Globals.playlistTable, orderBy: 'id');
+    final res = await DatabaseService.db.query(Globals.playlistTable, orderBy: 'id');
     if (res.isEmpty) {
-      return LogHandler.log('No saved playlist');
+      return LogService.log('No saved playlist');
     }
 
     final currentID = res.firstWhereOrNull((e) => (e['is_current'] as int) == 1)?['song_id'] as int? ?? -1;
     if (currentID < 0) {
-      return LogHandler.log('There is no current song', LogLevel.error);
+      return LogService.log('There is no current song', LogLevel.error);
     }
 
     final songList = res.map((e) => e['song_id'] as int).toList();
-    LogHandler.log('Recovered playlist (${res[0]['list_name']}): $songList, current: $currentID');
+    LogService.log('Recovered playlist (${res[0]['list_name']}): $songList, current: $currentID');
 
     Globals.savedPlaylistName = '${res[0]['list_name']}'.trim();
     Globals.currentSongID = currentID;
@@ -263,9 +263,9 @@ class AudioPlayerHandler extends BaseAudioHandler {
   }
 
   void savePlaylist(int currentID) {
-    DatabaseHandler.db.delete(Globals.playlistTable).then(
+    DatabaseService.db.delete(Globals.playlistTable).then(
       (_) {
-        LogHandler.log('Saving playlist ($playlistName): $playlist, current: $currentID');
+        LogService.log('Saving playlist ($playlistName): $playlist, current: $currentID');
         Globals.savedPlaylistName = playlistName;
 
         final data = _playlist.map(
@@ -277,7 +277,7 @@ class AudioPlayerHandler extends BaseAudioHandler {
         );
 
         for (final e in data) {
-          DatabaseHandler.db.insert(
+          DatabaseService.db.insert(
             Globals.playlistTable,
             e,
           );
@@ -289,15 +289,15 @@ class AudioPlayerHandler extends BaseAudioHandler {
   Future<void> updateSavedPlaylist(int oldID, int newID) async {
     if (playlistName != Globals.savedPlaylistName) return savePlaylist(newID);
 
-    LogHandler.log('Update current ID of saved: $oldID -> $newID');
+    LogService.log('Update current ID of saved: $oldID -> $newID');
 
-    DatabaseHandler.db.update(
+    DatabaseService.db.update(
       Globals.playlistTable,
       {'is_current': 0},
       where: 'song_id = ?',
       whereArgs: [oldID],
     );
-    DatabaseHandler.db.update(
+    DatabaseService.db.update(
       Globals.playlistTable,
       {'is_current': 1},
       where: 'song_id = ?',
@@ -306,24 +306,24 @@ class AudioPlayerHandler extends BaseAudioHandler {
   }
 
   void _shufflePlaylist({bool currentToStart = true, int beginSongID = -1, bool saveList = true}) {
-    LogHandler.log('Shuffling playlist');
+    LogService.log('Shuffling playlist');
     _playlist.shuffle();
 
     if (currentToStart) {
       if (beginSongID < 0) {
-        LogHandler.log('A begin song should be selected', LogLevel.error);
+        LogService.log('A begin song should be selected', LogLevel.error);
       } else {
         _playlist.removeWhere((e) => e == beginSongID);
         _playlist.insert(0, beginSongID);
         if (saveList) savePlaylist(beginSongID);
       }
     }
-    LogHandler.log('Current playlist song index: ${_playlist.indexWhere((e) => e == Globals.currentSongID)}');
+    LogService.log('Current playlist song index: ${_playlist.indexWhere((e) => e == Globals.currentSongID)}');
   }
 
   void moveSong(int from, int to) {
     if (from < 0 || from >= _playlist.length || to < 0 || to >= _playlist.length) {
-      return LogHandler.log('Invalid move song index', LogLevel.error);
+      return LogService.log('Invalid move song index', LogLevel.error);
     }
 
     int songIdx = _playlist.removeAt(from);
@@ -336,10 +336,10 @@ class AudioPlayerHandler extends BaseAudioHandler {
   Future<void> updateNotificationInfo({required int songID, Duration? duration}) async {
     if (mediaItem.value == null) return;
     final song = Globals.allSongs.firstWhereOrNull((e) => e.id == songID);
-    LogHandler.log('Updating media item of $songID');
+    LogService.log('Updating media item of $songID');
 
     if (song == null) {
-      return LogHandler.log('Song not found', LogLevel.error);
+      return LogService.log('Song not found', LogLevel.error);
     }
 
     String imgPath = song.imagePath;
@@ -376,8 +376,8 @@ class AudioPlayerHandler extends BaseAudioHandler {
         : AudioServiceShuffleMode.all;
 
     if (isShuffled) _shufflePlaylist(beginSongID: Globals.currentSongID);
-    LogHandler.log('Changed shuffle: $isShuffled');
-    Config.saveConfig();
+    LogService.log('Changed shuffle: $isShuffled');
+    ConfigService.saveConfig();
   }
 
   /// Only from player
@@ -395,8 +395,8 @@ class AudioPlayerHandler extends BaseAudioHandler {
       default:
         break;
     }
-    LogHandler.log('Change repeat: ${_repeat.name}');
-    Config.saveConfig();
+    LogService.log('Change repeat: ${_repeat.name}');
+    ConfigService.saveConfig();
   }
 
   @override
@@ -420,43 +420,43 @@ class AudioPlayerHandler extends BaseAudioHandler {
   Future<void> skipToNext({bool shouldDelay = false}) async {
     if (_skipping) return;
 
-    LogHandler.log('Skipping to next song');
+    LogService.log('Skipping to next song');
     _skipping = true;
 
     if (_playlist.isEmpty) {
       pause();
-      return LogHandler.log('Playlist is empty, this should not be the case', LogLevel.error);
+      return LogService.log('Playlist is empty, this should not be the case', LogLevel.error);
     }
 
     if (_playlist.length == 1) {
-      return LogHandler.log('Playlist only has one song, skipping action');
+      return LogService.log('Playlist only has one song, skipping action');
     }
 
     int currentIndex = _playlist.indexWhere((e) => e == Globals.currentSongID);
 
     if (currentIndex < 0) {
       pause();
-      return LogHandler.log('Can\'t find song in playlist, this should not be the case', LogLevel.error);
+      return LogService.log('Can\'t find song in playlist, this should not be the case', LogLevel.error);
     }
 
-    if (shouldDelay && Config.delayMilliseconds > 0) {
+    if (shouldDelay && ConfigService.delayMilliseconds > 0) {
       await Future.delayed(
-        Config.delayMilliseconds.ms,
-        () => LogHandler.log('Delayed for ${Config.delayMilliseconds}ms'),
+        ConfigService.delayMilliseconds.ms,
+        () => LogService.log('Delayed for ${ConfigService.delayMilliseconds}ms'),
       );
     }
 
     if (currentIndex == _playlist.length - 1) {
       switch (_repeat) {
         case AudioServiceRepeatMode.all:
-          LogHandler.log('Repeat all');
+          LogService.log('Repeat all');
           if (isShuffled) _shufflePlaylist(currentToStart: false);
           await setPlayerSong(_playlist[0]);
           await updateSavedPlaylist(currentIndex, 0);
           break;
         case AudioServiceRepeatMode.none:
           if (_player.processingState == ProcessingState.completed) {
-            LogHandler.log('Repeat none');
+            LogService.log('Repeat none');
             pause();
           }
           break;
@@ -476,23 +476,23 @@ class AudioPlayerHandler extends BaseAudioHandler {
   Future<void> skipToPrevious() async {
     if (_skipping) return;
 
-    LogHandler.log('Skipping to previous song');
+    LogService.log('Skipping to previous song');
     _skipping = true;
 
     if (_playlist.isEmpty) {
       pause();
-      return LogHandler.log('Playlist is empty, this should not be the case', LogLevel.error);
+      return LogService.log('Playlist is empty, this should not be the case', LogLevel.error);
     }
 
     if (_playlist.length == 1) {
-      return LogHandler.log('Playlist only contains one song, skipping action');
+      return LogService.log('Playlist only contains one song, skipping action');
     }
 
     int currentIndex = _playlist.indexWhere((e) => e == Globals.currentSongID);
 
     if (currentIndex < 0) {
       pause();
-      return LogHandler.log('Current ID is < 0, this should not be the case', LogLevel.error);
+      return LogService.log('Current ID is < 0, this should not be the case', LogLevel.error);
     }
 
     final newIndex = (currentIndex == 0 ? _playlist.length : currentIndex) - 1;
@@ -509,7 +509,7 @@ class AudioPlayerHandler extends BaseAudioHandler {
   }
 
   void loadConfig(bool? shuffle, String? repeat) {
-    setVolume(Config.volume);
+    setVolume(ConfigService.volume);
     _shuffle = shuffle == true ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none;
     _repeat = repeat == 'all'
         ? AudioServiceRepeatMode.all

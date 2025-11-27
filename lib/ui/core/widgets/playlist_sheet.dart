@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
@@ -56,7 +56,7 @@ class _PlaylistSheetState extends State<PlaylistSheet> {
 
                       if (selectedIdx == currentIdx + 1) return;
 
-                      LogHandler.log('Adding song #$selectedIdx to play next');
+                      LogService.log('Adding song #$selectedIdx to play next');
 
                       playlist.insert(currentIdx + 1, sId);
                       playlist.removeAt(selectedIdx > currentIdx ? selectedIdx + 1 : selectedIdx);
@@ -141,7 +141,7 @@ class _PlaylistSheetState extends State<PlaylistSheet> {
                     scrollController: scrollController,
                     onReorder: (oIdx, nIdx) {
                       if (nIdx > oIdx) nIdx--;
-                      LogHandler.log(
+                      LogService.log(
                         'Reorder: old: $oIdx (id=${Globals.audioHandler.playlist[oIdx]}) - new: $nIdx (id=${Globals.audioHandler.playlist[nIdx]})',
                       );
                       Globals.audioHandler.moveSong(oIdx, nIdx);

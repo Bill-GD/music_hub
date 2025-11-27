@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:sqflite/sqflite.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/globals/globals.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 
-class DatabaseHandler {
+class DatabaseService {
   static final String _path = Globals.dbPath;
   static late final Database _db;
 
@@ -23,18 +23,18 @@ class DatabaseHandler {
       version: 4,
       readOnly: false,
       onCreate: (db, version) async {
-        LogHandler.log('Creating tables');
+        LogService.log('Creating tables');
         await _createTables(db, version);
         await _migrateOldData(db);
-        LogHandler.log('Song count: ${(await db.rawQuery('select count(*) count from music_track')).first['count']}');
+        LogService.log('Song count: ${(await db.rawQuery('select count(*) count from music_track')).first['count']}');
       },
       onUpgrade: (db, _, newVersion) async {
-        LogHandler.log('Upgrading database to version $newVersion');
+        LogService.log('Upgrading database to version $newVersion');
         await _createTables(db, newVersion);
         await updateTables(db, newVersion);
       },
       onOpen: (db) async {
-        LogHandler.log('Database opened');
+        LogService.log('Database opened');
       },
     );
   }
@@ -83,21 +83,21 @@ class DatabaseHandler {
 
   static Future<void> updateTables(Database db, int newVersion) async {
     if (newVersion == 3) {
-      LogHandler.log("Adding 'lyric_path' to ${Globals.songTable}, renaming columns to snake_case");
+      LogService.log("Adding 'lyric_path' to ${Globals.songTable}, renaming columns to snake_case");
       await db.execute('alter table ${Globals.songTable} add column lyric_path text not null default "";');
       await db.execute('alter table ${Globals.songTable} rename column "timeAdded" to "time_added";');
       await db.execute('alter table ${Globals.songTable} rename column "timeListened" to "time_listened";');
       await db.execute('alter table ${Globals.albumTable} rename column "timeAdded" to "time_added";');
     }
     if (newVersion == 4) {
-      LogHandler.log('Adding image_path column to ${Globals.songTable}');
+      LogService.log('Adding image_path column to ${Globals.songTable}');
       await db.execute('alter table ${Globals.songTable} add column image_path text not null default "";');
       await db.execute('alter table ${Globals.albumTable} add column image_path text not null default "";');
     }
   }
 
   static Future<void> clearAllData() async {
-    LogHandler.log(
+    LogService.log(
       'IMPORTANT! Deleted all data! This is irreversible if used without backing up first!',
       LogLevel.warn,
     );
@@ -110,7 +110,7 @@ class DatabaseHandler {
     final jsonFile = File(Globals.jsonPath);
     if (!jsonFile.existsSync()) return;
 
-    LogHandler.log('Migrating old json data');
+    LogService.log('Migrating old json data');
 
     final List json = jsonDecode(jsonFile.readAsStringSync());
 
@@ -161,7 +161,7 @@ class DatabaseHandler {
         });
       }
     }
-    LogHandler.log('Finished migrating old json data');
+    LogService.log('Finished migrating old json data');
     // jsonFile.deleteSync(); // not deleting this yet
   }
 }

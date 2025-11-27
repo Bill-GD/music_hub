@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:music_hub/data/services/backup_handler.dart';
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/backup_service.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/main_screen/album_list.dart';
 import 'package:music_hub/ui/app/main_screen/drawer.dart';
 import 'package:music_hub/ui/app/main_screen/song_list.dart';
@@ -40,19 +40,19 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
 
     _checkStoragePermission().then((storagePermissionStatus) async {
       if (storagePermissionStatus.isGranted) {
-        LogHandler.log('Storage permission is granted');
+        LogService.log('Storage permission is granted');
         await updateMusicData();
         sortAllSongs();
 
-        if (Config.backupOnLaunch) {
-          BackupHandler.backupData();
+        if (ConfigService.backupOnLaunch) {
+          BackupService.backupData();
           if (mounted) showToast(context, 'Data backed up successfully');
         }
         await Globals.audioHandler.recoverSavedPlaylist();
         Globals.showMinimizedPlayer = Globals.allSongs.firstWhereOrNull((e) => e.id == Globals.currentSongID) != null;
 
         setState(() => isLoading = false);
-        LogHandler.log('App is ready');
+        LogService.log('App is ready');
       }
     });
     Globals.audioHandler.player.processingStateStream.listen((state) {
@@ -85,11 +85,11 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   Future<PermissionStatus> _checkStoragePermission() async {
     PermissionStatus storagePermissionStatus = await Permission.manageExternalStorage.status;
     if (!storagePermissionStatus.isGranted && context.mounted) {
-      LogHandler.log('Storage permission not granted, redirecting to request page');
+      LogService.log('Storage permission not granted, redirecting to request page');
 
-      if (Config.backupOnLaunch) {
-        Config.backupOnLaunch = false;
-        Config.saveConfig();
+      if (ConfigService.backupOnLaunch) {
+        ConfigService.backupOnLaunch = false;
+        ConfigService.saveConfig();
       }
 
       if (mounted) {

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 
@@ -22,17 +22,17 @@ Future<Map<String, dynamic>?> getSoundCloudSongData(BuildContext context, String
   String url = urlText.split('?').first;
   String author = url.split('/').elementAt(3);
 
-  LogHandler.log('Searching for author: $author');
+  LogService.log('Searching for author: $author');
   http.Response responseAuthor = await http.get(
     Uri.parse('$_url/search/users?q=$author&$clientId'),
   );
 
   switch (responseAuthor.statusCode) {
     case 401:
-      LogHandler.log('${responseAuthor.statusCode} Unauthorized: Invalid client id');
+      LogService.log('${responseAuthor.statusCode} Unauthorized: Invalid client id');
       break;
     case 404:
-      LogHandler.log('${responseAuthor.statusCode} Forbidden');
+      LogService.log('${responseAuthor.statusCode} Forbidden');
       break;
   }
 
@@ -48,7 +48,7 @@ Future<Map<String, dynamic>?> getSoundCloudSongData(BuildContext context, String
 
   // can't find author
   if (resultAuthor.isEmpty) {
-    LogHandler.log("Couldn't find author: $author");
+    LogService.log("Couldn't find author: $author");
     if (context.mounted) {
       showToast(context, "Couldn't find author: $author");
     }
@@ -59,19 +59,19 @@ Future<Map<String, dynamic>?> getSoundCloudSongData(BuildContext context, String
   String authorUsername = '${resultAuthor.first['username']}';
   String trackCount = '${resultAuthor.first['track_count'] * 2}';
 
-  LogHandler.log('Author: $authorUsername (id:$authorId) has $trackCount songs');
+  LogService.log('Author: $authorUsername (id:$authorId) has $trackCount songs');
 
-  LogHandler.log('Searching for track: ${url.split('/').elementAt(4)}');
+  LogService.log('Searching for track: ${url.split('/').elementAt(4)}');
   http.Response responseTracks = await http.get(
     Uri.parse('$_url/users/$authorId/tracks?$clientId&limit=$trackCount'),
   );
 
   switch (responseTracks.statusCode) {
     case 401:
-      LogHandler.log('${responseTracks.statusCode} Unauthorized: Invalid client id');
+      LogService.log('${responseTracks.statusCode} Unauthorized: Invalid client id');
       break;
     case 404:
-      LogHandler.log('${responseTracks.statusCode} Forbidden');
+      LogService.log('${responseTracks.statusCode} Forbidden');
       break;
   }
 
@@ -88,7 +88,7 @@ Future<Map<String, dynamic>?> getSoundCloudSongData(BuildContext context, String
   final Map? trackData = resultTracks.isNotEmpty ? resultTracks.first : null;
   // can't find song
   if (trackData == null) {
-    LogHandler.log("Couldn't find song: ${url.split('/').elementAt(4)}");
+    LogService.log("Couldn't find song: ${url.split('/').elementAt(4)}");
     if (context.mounted) {
       showToast(context, "Couldn't find song: ${url.split('/').elementAt(4)}");
     }
@@ -100,16 +100,16 @@ Future<Map<String, dynamic>?> getSoundCloudSongData(BuildContext context, String
   Duration duration = Duration(milliseconds: trackData['media']['transcodings'][1]['duration']);
   String? artworkUrl = trackData['artwork_url'];
 
-  LogHandler.log('Found track stream url: $trackStreamUrl');
-  LogHandler.log('Getting song media url');
+  LogService.log('Found track stream url: $trackStreamUrl');
+  LogService.log('Getting song media url');
   http.Response responseTrack = await http.get(Uri.parse('$trackStreamUrl?$clientId'));
 
   switch (responseTrack.statusCode) {
     case 401:
-      LogHandler.log('${responseTrack.statusCode} Unauthorized: Invalid client id');
+      LogService.log('${responseTrack.statusCode} Unauthorized: Invalid client id');
       break;
     case 404:
-      LogHandler.log('${responseTrack.statusCode} Forbidden');
+      LogService.log('${responseTrack.statusCode} Forbidden');
       break;
   }
   if (responseTrack.statusCode != 200) {
@@ -141,14 +141,14 @@ Future<void> downloadSoundCloudMP3(
   final file = File('/storage/emulated/0/Download/${sanitizeFilePath(videoTitle)}.mp3');
 
   if (file.existsSync() && file.lengthSync() > 0) {
-    LogHandler.log('Duplicate file name, canceled download');
+    LogService.log('Duplicate file name, canceled download');
     if (context.mounted) {
       showToast(context, 'Duplicate file name, canceled download');
     }
     return;
   }
   try {
-    LogHandler.log('Saving to: ${file.absolute.path}');
+    LogService.log('Saving to: ${file.absolute.path}');
     await dio.download(
       url,
       file.absolute.path,
@@ -159,7 +159,7 @@ Future<void> downloadSoundCloudMP3(
       showToast(context, 'Finished downloading');
     }
   } on Exception catch (e) {
-    LogHandler.log(e.toString(), LogLevel.error);
+    LogService.log(e.toString(), LogLevel.error);
     if (context.mounted) {
       showErrorPopup(context, e.toString());
     }

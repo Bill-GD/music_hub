@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 
 class FilePicker extends StatefulWidget {
@@ -84,7 +84,7 @@ class _FilePickerState extends State<FilePicker> {
   @override
   void initState() {
     super.initState();
-    LogHandler.log('File picker: ${widget.rootDirectory}');
+    LogService.log('File picker: ${widget.rootDirectory}');
     getEntities(widget.rootDirectory);
     getCrumbs();
   }
@@ -98,7 +98,7 @@ class _FilePickerState extends State<FilePicker> {
           .split('/')
           .where((e) => e.isNotEmpty)
     ];
-    LogHandler.log('Parts: $parts');
+    LogService.log('Parts: $parts');
 
     crumbs.clear();
     for (final c in parts) {
@@ -142,7 +142,7 @@ class _FilePickerState extends State<FilePicker> {
     currentRootPath = root.absolute.path;
     if (!currentRootPath.endsWith('/')) currentRootPath += '/';
 
-    LogHandler.log('Getting file entities from $currentRootPath');
+    LogService.log('Getting file entities from $currentRootPath');
 
     for (final entity in entities) {
       fileEntities.add(entity.path.split(currentRootPath).last.split('/').last);

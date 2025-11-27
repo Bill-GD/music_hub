@@ -76,7 +76,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                     color: iconColor(context),
                   ),
                   label: Text(
-                    Config.getSortOptionString(),
+                    ConfigService.getSortOptionString(),
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: iconColor(context),
@@ -102,7 +102,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                           onTap: () {
                             setState(() => sortAllSongs(SortOptions.id));
                             Navigator.pop(context);
-                            Config.saveConfig();
+                            ConfigService.saveConfig();
                           },
                         ),
                         ListTile(
@@ -115,7 +115,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                           onTap: () {
                             setState(() => sortAllSongs(SortOptions.name));
                             Navigator.pop(context);
-                            Config.saveConfig();
+                            ConfigService.saveConfig();
                           },
                         ),
                         ListTile(
@@ -128,7 +128,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                           onTap: () {
                             setState(() => sortAllSongs(SortOptions.mostPlayed));
                             Navigator.pop(context);
-                            Config.saveConfig();
+                            ConfigService.saveConfig();
                           },
                         ),
                         ListTile(
@@ -141,7 +141,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                           onTap: () {
                             setState(() => sortAllSongs(SortOptions.recentlyAdded));
                             Navigator.pop(context);
-                            Config.saveConfig();
+                            ConfigService.saveConfig();
                           },
                         ),
                       ],
@@ -213,7 +213,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Visibility(
-                        visible: Config.currentSortOption == SortOptions.mostPlayed,
+                        visible: ConfigService.currentSortOption == SortOptions.mostPlayed,
                         child: Text('${Globals.allSongs[songIndex].timeListened}'),
                       ),
                       IconButton(

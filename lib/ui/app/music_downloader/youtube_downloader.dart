@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:http/http.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/utils.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
@@ -74,7 +74,7 @@ Future<void> downloadYoutubeMP3(
     final manifest = await yt.videos.streamsClient.getManifest(url);
     final streamInfo = manifest.audioOnly.withHighestBitrate();
 
-    LogHandler.log('Saving to: ${file.absolute.path}');
+    LogService.log('Saving to: ${file.absolute.path}');
 
     await dio.download(
       streamInfo.url.toString(),
@@ -86,7 +86,7 @@ Future<void> downloadYoutubeMP3(
       showToast(context, 'Finished downloading');
     }
   } on Exception catch (e) {
-    LogHandler.log(e.toString(), LogLevel.error);
+    LogService.log(e.toString(), LogLevel.error);
     if (context.mounted) {
       showToast(context, 'An Error occurred while downloading');
     }

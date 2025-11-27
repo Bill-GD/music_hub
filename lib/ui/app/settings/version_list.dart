@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/settings/version_dialog.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
@@ -27,7 +27,7 @@ class _VersionListState extends State<VersionList> {
       shas = value.map((e) => e.$2).toList();
       versionCount = tags.length;
       if (context.mounted) {
-        LogHandler.log('Got $versionCount tags');
+        LogService.log('Got $versionCount tags');
         setState(() => loading = false);
       }
     });
@@ -56,7 +56,7 @@ class _VersionListState extends State<VersionList> {
           shas = res.map((e) => e.$2).toList();
           versionCount = tags.length;
           if (context.mounted) {
-            LogHandler.log('Got $versionCount tags');
+            LogService.log('Got $versionCount tags');
             setState(() {});
           }
           if (context.mounted) setState(() {});

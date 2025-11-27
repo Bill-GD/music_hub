@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart';
 
-import 'package:music_hub/data/services/log_handler.dart';
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
 
@@ -15,7 +13,7 @@ String sanitizeFilePath(String path) {
 
 Future<Response> apiQuery(String query) {
   const baseApiUrl = 'https://api.github.com/repos/Bill-GD/music_player_app';
-  LogHandler.log('Querying $query');
+  LogService.log('Querying $query');
   return get(
     Uri.parse('$baseApiUrl$query'),
     headers: {'Authorization': 'Bearer ${Globals.githubToken}'},
@@ -29,7 +27,7 @@ Future<List<(String, String)>> getAllTags() async {
     throw Exception('Rate limited. Please come back later.');
   }
   if (json is! List) {
-    LogHandler.log('JSON received is not a list', LogLevel.error);
+    LogService.log('JSON received is not a list', LogLevel.error);
     throw Exception('Something is wrong when trying to get version list.');
   }
 
@@ -53,7 +51,7 @@ String getSizeString(double bytes) {
 Future<bool> checkInternetConnection([List<ConnectivityResult>? result]) async {
   final connectivityResult = result ?? await Connectivity().checkConnectivity();
   final isInternetConnected = !connectivityResult.contains(ConnectivityResult.none);
-  LogHandler.log('Internet connected: $isInternetConnected');
+  LogService.log('Internet connected: $isInternetConnected');
   return isInternetConnected;
 }
 
@@ -81,24 +79,22 @@ String dedent(String text) {
     if (margin == null) {
       margin = indent;
     }
-
     // Current line more deeply indented than previous winner:
     // no change (previous winner is still on top).
     else if (indent.startsWith(margin)) {
     }
-
     // Current line consistent with and no deeper than previous winner:
     // it's the new winner.
     else if (margin.startsWith(indent)) {
       margin = indent;
     }
-
     // Find the largest common whitespace between current line and previous winner.
     else {
       final it = zip([margin.split(''), indent.split('')]).toList();
       for (int i = 0; i < it.length; i++) {
         if (it[0] != it[1]) {
-          final till = (i == 0) // compensate for lack of [:-1] Python syntax
+          final till =
+              (i == 0) // compensate for lack of [:-1] Python syntax
               ? margin!.length - 1
               : i - 1;
           margin = margin!.substring(0, till);
@@ -109,7 +105,10 @@ String dedent(String text) {
   }
 
   if (margin != null && margin != '') {
-    final r = RegExp(r'^' + margin, multiLine: true); // python r"(?m)^" illegal in js regex so leave it out
+    final r = RegExp(
+      r'^' + margin,
+      multiLine: true,
+    ); // python r"(?m)^" illegal in js regex so leave it out
     text = text.replaceAll(r, '');
   }
   return text;
