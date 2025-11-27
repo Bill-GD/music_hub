@@ -20,9 +20,9 @@ import 'package:music_hub/ui/core/widgets/page_indicator.dart';
 import 'package:music_hub/ui/core/widgets/playlist_sheet.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/utils.dart';
+import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/utils/utils.dart';
 
 Future<Route> getMusicPlayerRoute(BuildContext context, int songID) async {
   await Globals.audioHandler.setPlayerSong(songID, shouldPlay: !Globals.setDuplicate);

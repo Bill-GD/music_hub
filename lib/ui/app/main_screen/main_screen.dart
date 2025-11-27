@@ -16,9 +16,9 @@ import 'package:music_hub/ui/app/player/music_player.dart';
 import 'package:music_hub/ui/app/search/search.dart';
 import 'package:music_hub/ui/app/songs/artist_songs.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/utils.dart';
+import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

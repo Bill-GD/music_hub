@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/ui/core/widgets/file_picker.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 
 class AlbumInfo extends StatefulWidget {

@@ -8,7 +8,7 @@ import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/ui/app/main_screen/add_album.dart';
 import 'package:music_hub/ui/app/songs/album_songs.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/utils/globals.dart';
 
 class AlbumList extends StatefulWidget {
   const AlbumList({super.key});

@@ -1,4 +1,4 @@
-import 'package:music_hub/utils/globals/utils.dart';
+import 'package:music_hub/utils/utils.dart';
 
 extension DurationExtension on Duration {
   String toStringNoMilliseconds() {

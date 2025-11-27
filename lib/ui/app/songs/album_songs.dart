@@ -13,9 +13,9 @@ import 'package:music_hub/ui/app/songs/album_info.dart';
 import 'package:music_hub/ui/core/widgets/action_dialog.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/utils.dart';
+import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class AlbumSongs extends StatefulWidget {
   final int albumID;

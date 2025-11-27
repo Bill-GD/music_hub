@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/settings/version_dialog.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/utils.dart';
+import 'package:music_hub/utils/globals.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class VersionList extends StatefulWidget {
   const VersionList({super.key});

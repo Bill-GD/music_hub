@@ -8,9 +8,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/settings/version_list.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/utils.dart';
+import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});

@@ -11,7 +11,7 @@ import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/constants.dart' show TableNames;
 import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, WhereOrNull;
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/utils/globals.dart';
 
 class PlayerService extends BaseAudioHandler {
   // Streams

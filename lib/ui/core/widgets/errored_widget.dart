@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/ui/core/theme/extensions.dart';
 
 class ErroredWidget extends StatelessWidget {
   final FlutterErrorDetails e;
@@ -9,22 +9,20 @@ class ErroredWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LogService.log(e.exception.toString(), LogLevel.error);
-
     return Container(
-      // color: context.colorScheme.surfaceContainer,
-      padding: const EdgeInsets.all(32),
+      color: context.theme.colorScheme.surfaceContainer,
+      padding: const .all(32),
       child: SingleChildScrollView(
         child: Column(
           children: [
             const Text('Internal UI Error'),
             Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const .only(bottom: 8),
               child: Text('${e.exception}', style: const TextStyle(fontSize: 24)),
             ),
             SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const .all(16),
                 child: Text(e.stack.toString(), style: const TextStyle(fontSize: 18)),
               ),
             ),

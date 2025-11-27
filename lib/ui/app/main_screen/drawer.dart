@@ -8,7 +8,7 @@ import 'package:music_hub/ui/app/music_downloader/music_downloader.dart';
 import 'package:music_hub/ui/app/settings/setting.dart';
 import 'package:music_hub/ui/core/widgets/action_dialog.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 
 class MainDrawer extends StatefulWidget {

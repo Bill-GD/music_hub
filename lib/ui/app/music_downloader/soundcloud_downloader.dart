@@ -7,8 +7,8 @@ import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/globals/utils.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/utils/utils.dart';
 
 const _url = 'https://api-v2.soundcloud.com';
 

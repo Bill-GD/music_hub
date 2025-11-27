@@ -9,7 +9,7 @@ import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/ui/app/lyric/lyric_editor.dart';
 import 'package:music_hub/ui/core/widgets/action_dialog.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/utils/globals.dart';
 
 class LyricStrip extends StatefulWidget {
   const LyricStrip({super.key});

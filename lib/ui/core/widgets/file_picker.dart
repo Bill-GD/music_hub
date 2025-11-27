@@ -4,8 +4,10 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'package:get_it/get_it.dart';
+
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/globals/utils.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 
 class FilePicker extends StatefulWidget {
   /// LIst of allowed file extensions, example: ['mp3', 'lrc']
@@ -84,7 +86,7 @@ class _FilePickerState extends State<FilePicker> {
   @override
   void initState() {
     super.initState();
-    LogService.log('File picker: ${widget.rootDirectory}');
+    GetIt.I<LogService>().log('File picker: ${widget.rootDirectory}');
     getEntities(widget.rootDirectory);
     getCrumbs();
   }
@@ -92,13 +94,13 @@ class _FilePickerState extends State<FilePicker> {
   void getCrumbs() {
     final parts = [
       widget.rootDirectory.absolute.path,
-      ...currentRootPath //
+      ...currentRootPath
           .split(widget.rootDirectory.absolute.path)
           .last
           .split('/')
-          .where((e) => e.isNotEmpty)
+          .where((e) => e.isNotEmpty),
     ];
-    LogService.log('Parts: $parts');
+    GetIt.I<LogService>().log('Parts: $parts');
 
     crumbs.clear();
     for (final c in parts) {
@@ -111,20 +113,24 @@ class _FilePickerState extends State<FilePicker> {
   void getEntities(Directory root) {
     List<FileSystemEntity> entities;
     try {
-      entities = root //
+      entities = root
           .listSync()
           .where(((e) => !e.path.split('/').last.startsWith('.trashed')))
           .toList();
     } catch (e) {
       if (e is PathAccessException) {
-        return showToast(context, 'Permission denied');
+        return context.showToast('Permission denied');
       }
       rethrow;
     }
 
     if (widget.allowedExtensions.isNotEmpty) {
-      entities = entities //
-          .where((e) => e is Directory || (e is File && widget.allowedExtensions.contains(e.path.split('.').last)))
+      entities = entities
+          .where(
+            (e) =>
+                e is Directory ||
+                (e is File && widget.allowedExtensions.contains(e.path.split('.').last)),
+          )
           .toList();
     }
 
@@ -132,7 +138,9 @@ class _FilePickerState extends State<FilePicker> {
     entities.sort((a, b) {
       if (a is Directory && b is File) return -1;
       if (a is File && b is Directory) return 1;
-      if (widget.showImage && a is File && b is File) return b.statSync().changed.compareTo(a.statSync().changed);
+      if (widget.showImage && a is File && b is File) {
+        return b.statSync().changed.compareTo(a.statSync().changed);
+      }
       return a.path.compareTo(b.path);
     });
 
@@ -142,7 +150,7 @@ class _FilePickerState extends State<FilePicker> {
     currentRootPath = root.absolute.path;
     if (!currentRootPath.endsWith('/')) currentRootPath += '/';
 
-    LogService.log('Getting file entities from $currentRootPath');
+    GetIt.I<LogService>().log('Getting file entities from $currentRootPath');
 
     for (final entity in entities) {
       fileEntities.add(entity.path.split(currentRootPath).last.split('/').last);
@@ -166,15 +174,13 @@ class _FilePickerState extends State<FilePicker> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: depth == 0,
-      onPopInvoked: (didPop) => popHandler(),
+      onPopInvokedWithResult: (didPop, res) => popHandler(),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           surfaceTintColor: Colors.transparent,
           title: const Text('Storage'),
-          leading: CloseButton(
-            onPressed: Navigator.of(context).pop,
-          ),
+          leading: CloseButton(onPressed: Navigator.of(context).pop),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,32 +189,38 @@ class _FilePickerState extends State<FilePicker> {
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: RichText(
                 textAlign: TextAlign.start,
-                text: TextSpan(children: [
-                  for (var i = 0; i < crumbs.length; i++)
-                    TextSpan(
-                      text: crumbs[i],
-                      style: i < crumbs.length - 1
-                          ? TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            )
-                          : TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                      recognizer: i % 2 == 0 && i < crumbs.length - 1
-                          ? (TapGestureRecognizer()
-                            ..onTap = () {
-                              getEntities(i == 0 ? widget.rootDirectory : Directory(getCrumbPath(i)));
-                              depth = i ~/ 2;
-                              getCrumbs();
-                              setState(() {});
-                            })
-                          : null,
-                    ),
-                ]),
+                text: TextSpan(
+                  children: [
+                    for (var i = 0; i < crumbs.length; i++)
+                      TextSpan(
+                        text: crumbs[i],
+                        style: i < crumbs.length - 1
+                            ? TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              )
+                            : TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                        recognizer: i % 2 == 0 && i < crumbs.length - 1
+                            ? (TapGestureRecognizer()
+                                ..onTap = () {
+                                  getEntities(
+                                    i == 0
+                                        ? widget.rootDirectory
+                                        : Directory(getCrumbPath(i)),
+                                  );
+                                  depth = i ~/ 2;
+                                  getCrumbs();
+                                  setState(() {});
+                                })
+                            : null,
+                      ),
+                  ],
+                ),
               ),
             ),
             Flexible(
@@ -276,7 +288,9 @@ class _FilePickerState extends State<FilePicker> {
               final entity = fileEntities[index];
 
               return ListTile(
-                leading: Icon(isDirectory[index] ? Icons.folder_rounded : Icons.file_copy),
+                leading: Icon(
+                  isDirectory[index] ? Icons.folder_rounded : Icons.file_copy,
+                ),
                 title: Text(entity),
                 onTap: () => pickFileCallback(index),
               );

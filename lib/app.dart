@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import 'package:get_it/get_it.dart';
 import 'package:theme_provider/theme_provider.dart';
 
+import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/main_screen/main_screen.dart';
 import 'package:music_hub/ui/core/widgets/errored_widget.dart';
 
@@ -60,26 +62,15 @@ class MusicHubApp extends StatelessWidget {
             return MaterialApp(
               navigatorKey: navKey,
               builder: (context, child) {
-                ErrorWidget.builder = (errorDetails) => ErroredWidget(e: errorDetails);
-                // updateDebugOverlay = () {
-                //   // logHandler.info('Updating debug overlay');
-                //   if (context.mounted) setState(() {});
-                // };
-                // return Stack(
-                //   children: [
-                //     child!,
-                //     showDebugInfo ? debugOverlay() : const SizedBox(),
-                //   ],
-                // );
+                ErrorWidget.builder = (errorDetails) {
+                  GetIt.I<LogService>().log(errorDetails.exception.toString(), .error);
+                  return ErroredWidget(e: errorDetails);
+                };
                 return child!;
               },
               theme: ThemeProvider.themeOf(context).data,
               title: 'Music Hub',
               home: const MainScreen(),
-              // setup route to use Navigator.pushNamed to wait page navigation (pause previous page until return)
-              // routes: {
-              //   '/music_downloader': (context) => const MusicDownloader(),
-              // },
             );
           },
         ),

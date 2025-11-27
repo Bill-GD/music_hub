@@ -3,11 +3,15 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:get_it/get_it.dart';
+
 import 'package:music_hub/data/models/music_track.dart';
+import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
-import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/utils.dart';
+import 'package:music_hub/ui/core/theme/font_size.dart';
+import 'package:music_hub/utils/constants.dart' show Paths;
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/utils.dart';
 
 extension WidgetWithContext on BuildContext {
   void showToast(String msg) {
@@ -26,7 +30,7 @@ extension WidgetWithContext on BuildContext {
   }
 
   Future<void> showLogPopup({required String title}) async {
-    final logLines = File(Globals.logPath).readAsLinesSync();
+    final logLines = File(Paths.logPath).readAsLinesSync();
     final contentLines = <String>[];
 
     for (final line in logLines) {
@@ -95,7 +99,7 @@ extension WidgetWithContext on BuildContext {
     filled: true,
     fillColor: fillColor,
     hintText: hintText,
-    hintStyle: TextStyle(color: theme.colorScheme.primary.withOpacity(0.5)),
+    hintStyle: TextStyle(color: theme.colorScheme.primary.withValues(alpha: 0.5)),
     labelText: labelText,
     labelStyle: TextStyle(fontWeight: .w600, color: theme.colorScheme.primary),
     errorText: errorText,
@@ -108,7 +112,7 @@ extension WidgetWithContext on BuildContext {
   );
 
   Color? iconColor([double opacity = 1]) {
-    return theme.iconTheme.color?.withOpacity(opacity);
+    return theme.iconTheme.color?.withValues(alpha: opacity);
   }
 
   Text leadingText(String text, [bool bold = true, double size = 18]) {
@@ -126,9 +130,14 @@ extension WidgetWithContext on BuildContext {
     required int songID,
     required List<Widget> options,
   }) async {
-    Song song = Globals.allSongs.firstWhere((e) => e.id == songID);
+    Song song = GetIt.I<SongService>().allSongs.firstWhere((e) => e.id == songID);
     await getBottomSheet(
-      Text(song.name, style: bottomSheetTitle, textAlign: .center, softWrap: true),
+      Text(
+        song.name,
+        style: TextStyle(fontSize: FontSize.mediumSmall, fontWeight: .w700),
+        textAlign: .center,
+        softWrap: true,
+      ),
       options,
     );
   }

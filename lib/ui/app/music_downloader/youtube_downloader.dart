@@ -8,8 +8,8 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/utils.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/utils/utils.dart';
 
 Future<Map<String, dynamic>?> getYouTubeVideoData(BuildContext context, String urlText) async {
   try {

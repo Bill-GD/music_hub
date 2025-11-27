@@ -11,8 +11,8 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:music_hub/ui/app/music_downloader/soundcloud_downloader.dart';
 import 'package:music_hub/ui/app/music_downloader/youtube_downloader.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/utils.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class MusicDownloader extends StatefulWidget {
   const MusicDownloader({super.key});

@@ -14,7 +14,7 @@ import 'package:music_hub/ui/app/lyric/timestamp_editor.dart';
 import 'package:music_hub/ui/app/lyric/type_lyric.dart';
 import 'package:music_hub/ui/core/widgets/action_dialog.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 
 class LyricEditor extends StatefulWidget {

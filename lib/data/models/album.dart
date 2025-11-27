@@ -4,7 +4,7 @@ import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/constants.dart' show TableNames;
-import 'package:music_hub/utils/globals/utils.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class Album {
   int id;

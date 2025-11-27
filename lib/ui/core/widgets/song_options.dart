@@ -2,13 +2,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import 'package:get_it/get_it.dart';
+
 import 'package:music_hub/data/models/music_track.dart';
+import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/songs/song_info.dart';
-import 'package:music_hub/ui/core/widgets/action_dialog.dart';
+import 'package:music_hub/ui/core/theme/extensions.dart';
+import 'package:music_hub/ui/core/theme/font_size.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
+import 'package:music_hub/utils/constants.dart' show Paths;
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
-import 'package:music_hub/utils/globals/utils.dart';
-import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/utils/globals.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class SongInfoOption extends StatelessWidget {
   final int songID;
@@ -18,19 +24,22 @@ class SongInfoOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final songService = GetIt.I<SongService>();
+
     return ListTile(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
+      shape: RoundedRectangleBorder(borderRadius: .circular(30)),
+      leading: Icon(Icons.info_outline_rounded, color: context.iconColor()),
+      title: Text(
+        'Song info',
+        style: TextStyle(fontSize: FontSize.small, fontWeight: .w600),
       ),
-      leading: Icon(Icons.info_outline_rounded, color: iconColor(context)),
-      title: const Text('Song info', style: bottomSheetText),
       onTap: () async {
         final needsUpdate = await Navigator.of(context).push(
           PageRouteBuilder<bool>(
             transitionDuration: 400.ms,
-            transitionsBuilder: (_, anim, __, child) {
+            transitionsBuilder: (_, anim, _, child) {
               return ScaleTransition(
-                alignment: Alignment.bottomCenter,
+                alignment: .bottomCenter,
                 scale: Tween<double>(
                   begin: 0,
                   end: 1,
@@ -38,12 +47,12 @@ class SongInfoOption extends StatelessWidget {
                 child: child,
               );
             },
-            pageBuilder: (_, __, ___) => SongInfo(songID: songID),
+            pageBuilder: (_, _, _) => SongInfo(songID: songID),
           ),
         );
         if (needsUpdate == true) {
-          updateArtistsList();
-          sortAllSongs();
+          songService.updateArtistsList();
+          songService.sortAllSongs();
           updateCallback();
           if (context.mounted) Navigator.pop(context);
         }
@@ -59,33 +68,34 @@ class DeleteSongOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Song song = Globals.allSongs.firstWhere((e) => e.id == songID);
+    final playerService = GetIt.I<PlayerService>(), songService = GetIt.I<SongService>();
+    Song song = songService.allSongs.firstWhere((e) => e.id == songID);
 
     return ListTile(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
+      shape: RoundedRectangleBorder(borderRadius: .circular(30)),
+      leading: Icon(Icons.delete_rounded, color: context.iconColor()),
+      title: const Text(
+        'Delete',
+        style: TextStyle(fontSize: FontSize.small, fontWeight: .w600),
       ),
-      leading: Icon(Icons.delete_rounded, color: iconColor(context)),
-      title: const Text('Delete', style: bottomSheetText),
       onTap: () async {
         bool songDeleted = false;
-        await ActionDialog.static<void>(
-          context,
+        await context.showActionDialog<void>(
           icon: Icon(
             Icons.warning_rounded,
-            color: Theme.of(context).colorScheme.error,
+            color: context.theme.colorScheme.error,
             size: 30,
           ),
           title: 'Delete song',
-          titleFontSize: 24,
+          titleFontSize: FontSize.medium,
           textContent: dedent('''
                       This CANNOT be undone.
                       Are you sure you want to delete
         
                       ${song.name}'''),
-          contentFontSize: 16,
+          contentFontSize: FontSize.small,
           time: 300.ms,
-          scaleAlignment: Alignment.bottomCenter,
+          scaleAlignment: .bottomCenter,
           actions: [
             TextButton(
               child: const Text('No'),
@@ -94,13 +104,13 @@ class DeleteSongOption extends StatelessWidget {
             TextButton(
               child: const Text('Yes'),
               onPressed: () async {
-                if (Globals.currentSongID == songID) {
-                  Globals.currentSongID = -1;
+                if (songService.currentSongID == songID) {
+                  songService.currentSongID = -1;
                   Globals.showMinimizedPlayer = false;
                 }
-                Globals.audioHandler.pause();
+                playerService.pause();
                 await song.delete();
-                File(Globals.downloadPath + song.path).deleteSync();
+                File(Paths.downloadPath + song.path).deleteSync();
                 songDeleted = true;
                 if (context.mounted) Navigator.of(context).pop();
               },
@@ -108,8 +118,8 @@ class DeleteSongOption extends StatelessWidget {
           ],
         );
         if (songDeleted) {
-          await updateMusicData();
-          sortAllSongs();
+          await songService.updateMusicData();
+          songService.sortAllSongs();
           if (context.mounted) Navigator.pop(context);
         }
       },

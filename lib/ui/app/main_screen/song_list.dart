@@ -9,7 +9,7 @@ import 'package:music_hub/data/models/music_track.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/globals/widgets.dart';
 
 class SongList extends StatefulWidget {
