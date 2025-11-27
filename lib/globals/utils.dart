@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart';
 
-import '../handlers/log_handler.dart';
-import 'extensions.dart';
-import 'globals.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 String getTimeString(int milliseconds) {
   return Duration(milliseconds: milliseconds).toStringNoMilliseconds();

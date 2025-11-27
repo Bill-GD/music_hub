@@ -2,16 +2,17 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../globals/extensions.dart';
-import '../globals/utils.dart';
-import '../globals/widgets.dart';
-import 'soundcloud_downloader.dart';
-import 'youtube_downloader.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/music_downloader/soundcloud_downloader.dart';
+import 'package:music_hub/music_downloader/youtube_downloader.dart';
 
 class MusicDownloader extends StatefulWidget {
   const MusicDownloader({super.key});

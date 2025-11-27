@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/widgets.dart';
-import '../widgets/file_picker.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/widgets/file_picker.dart';
 
 class SongInfo extends StatefulWidget {
   final int songID;

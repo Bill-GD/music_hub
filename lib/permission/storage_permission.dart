@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 
-import '../handlers/log_handler.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 class StoragePermissionDialog extends StatelessWidget {
   const StoragePermissionDialog({super.key});

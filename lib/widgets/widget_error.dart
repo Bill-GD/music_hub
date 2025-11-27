@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../handlers/log_handler.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 class WidgetErrorScreen extends StatelessWidget {
   final FlutterErrorDetails e;

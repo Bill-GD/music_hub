@@ -4,12 +4,12 @@ import 'dart:io';
 
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
-import '../handlers/database_handler.dart';
-import '../handlers/log_handler.dart';
-import 'config.dart';
-import 'extensions.dart';
-import 'globals.dart';
-import 'utils.dart';
+import 'package:music_hub/globals/config.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/handlers/database_handler.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 class MusicTrack {
   int id, timeListened;

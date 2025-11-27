@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import '../player/player_utils.dart';
-import 'music_track.dart';
+import 'package:music_hub/globals/music_track.dart';
+import 'package:music_hub/player/player_utils.dart';
 
 final isDev = Globals.appVersion.contains('_dev_');
 final devBuild = Globals.appVersion.split('_').last;

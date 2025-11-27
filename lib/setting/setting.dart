@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../globals/config.dart';
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/widgets.dart';
-import '../widgets/action_dialog.dart';
-import 'about.dart';
-import 'backup.dart';
-import 'theme_setting.dart';
+import 'package:music_hub/globals/config.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/setting/about.dart';
+import 'package:music_hub/setting/backup.dart';
+import 'package:music_hub/setting/theme_setting.dart';
+import 'package:music_hub/widgets/action_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

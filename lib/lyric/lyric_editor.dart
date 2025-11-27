@@ -2,19 +2,20 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../globals/config.dart';
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/music_track.dart';
-import '../globals/widgets.dart';
-import '../handlers/log_handler.dart';
-import '../handlers/lyric_handler.dart';
-import '../player/player_utils.dart';
-import '../widgets/action_dialog.dart';
-import 'timestamp_editor.dart';
-import 'type_lyric.dart';
+import 'package:music_hub/globals/config.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/music_track.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/handlers/log_handler.dart';
+import 'package:music_hub/handlers/lyric_handler.dart';
+import 'package:music_hub/lyric/timestamp_editor.dart';
+import 'package:music_hub/lyric/type_lyric.dart';
+import 'package:music_hub/player/player_utils.dart';
+import 'package:music_hub/widgets/action_dialog.dart';
 
 class LyricEditor extends StatefulWidget {
   final int songID;

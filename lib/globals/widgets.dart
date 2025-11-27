@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../globals/utils.dart';
-import '../widgets/action_dialog.dart';
-import 'extensions.dart';
-import 'globals.dart';
-import 'music_track.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/music_track.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/widgets/action_dialog.dart';
 
 const TextStyle bottomSheetTitle = TextStyle(
   fontSize: 18,

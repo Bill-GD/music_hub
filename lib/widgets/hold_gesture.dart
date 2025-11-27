@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../globals/extensions.dart';
+import 'package:music_hub/globals/extensions.dart';
 
 class HoldingGesture extends StatefulWidget {
   final VoidCallback callback;

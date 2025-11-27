@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../globals/extensions.dart';
-import 'song_options.dart';
-import '../globals/globals.dart';
-import '../globals/widgets.dart';
-import '../handlers/log_handler.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 class PlaylistSheet extends StatefulWidget {
   const PlaylistSheet({super.key});

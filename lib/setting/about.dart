@@ -1,15 +1,16 @@
 import 'dart:async';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/utils.dart';
-import '../globals/widgets.dart';
-import '../handlers/log_handler.dart';
-import 'version_list.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/handlers/log_handler.dart';
+import 'package:music_hub/setting/version_list.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});

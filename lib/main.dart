@@ -2,21 +2,25 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:theme_provider/theme_provider.dart';
 
-import 'globals/config.dart';
-import 'globals/globals.dart';
-import 'globals/widgets.dart';
-import 'handlers/backup_handler.dart';
-import 'handlers/database_handler.dart';
-import 'handlers/log_handler.dart';
-import 'main_screen/main_screen.dart';
-import 'player/player_utils.dart';
-import 'widgets/widget_error.dart';
+import 'package:music_hub/globals/config.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/handlers/backup_handler.dart';
+import 'package:music_hub/handlers/database_handler.dart';
+import 'package:music_hub/handlers/log_handler.dart';
+import 'package:music_hub/main_screen/main_screen.dart';
+import 'package:music_hub/player/player_utils.dart';
+import 'package:music_hub/widgets/widget_error.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load();
 
   Globals.storagePath = (await getExternalStorageDirectory())?.parent.path ?? '';
 

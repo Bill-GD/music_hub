@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../globals/config.dart';
-import '../globals/extensions.dart';
-import '../globals/utils.dart';
-import '../handlers/backup_handler.dart';
-import '../handlers/log_handler.dart';
-import '../widgets/action_dialog.dart';
+import 'package:music_hub/globals/config.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/handlers/backup_handler.dart';
+import 'package:music_hub/handlers/log_handler.dart';
+import 'package:music_hub/widgets/action_dialog.dart';
 
 class BackupScreen extends StatefulWidget {
   const BackupScreen({super.key});

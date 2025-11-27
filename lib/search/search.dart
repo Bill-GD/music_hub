@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../globals/globals.dart';
-import '../globals/widgets.dart';
-import '../player/music_player.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/player/music_player.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

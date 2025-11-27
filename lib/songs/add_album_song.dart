@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/music_track.dart';
-import '../globals/utils.dart';
-import '../globals/widgets.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/music_track.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/globals/widgets.dart';
 
 class AddAlbumSong extends StatefulWidget {
   final int albumID;

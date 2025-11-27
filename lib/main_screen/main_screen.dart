@@ -1,23 +1,24 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+
+import 'package:animations/animations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../globals/config.dart';
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/music_track.dart';
-import '../globals/utils.dart';
-import '../globals/widgets.dart';
-import '../handlers/backup_handler.dart';
-import '../handlers/log_handler.dart';
-import '../permission/storage_permission.dart';
-import '../player/music_player.dart';
-import '../player/player_utils.dart';
-import '../search/search.dart';
-import '../songs/artist_songs.dart';
-import 'album_list.dart';
-import 'drawer.dart';
-import 'song_list.dart';
+import 'package:music_hub/globals/config.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/music_track.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/handlers/backup_handler.dart';
+import 'package:music_hub/handlers/log_handler.dart';
+import 'package:music_hub/main_screen/album_list.dart';
+import 'package:music_hub/main_screen/drawer.dart';
+import 'package:music_hub/main_screen/song_list.dart';
+import 'package:music_hub/permission/storage_permission.dart';
+import 'package:music_hub/player/music_player.dart';
+import 'package:music_hub/player/player_utils.dart';
+import 'package:music_hub/search/search.dart';
+import 'package:music_hub/songs/artist_songs.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

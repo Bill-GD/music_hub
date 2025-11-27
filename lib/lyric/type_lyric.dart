@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../globals/widgets.dart';
+import 'package:music_hub/globals/widgets.dart';
 
 class TypeLyric extends StatefulWidget {
   final List<String> lines;

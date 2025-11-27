@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/widgets.dart';
-import '../music_downloader/music_downloader.dart';
-import '../setting/setting.dart';
-import '../widgets/action_dialog.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/music_downloader/music_downloader.dart';
+import 'package:music_hub/setting/setting.dart';
+import 'package:music_hub/widgets/action_dialog.dart';
 
 class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});

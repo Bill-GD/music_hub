@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/music_track.dart';
-import '../globals/widgets.dart';
-import '../widgets/file_picker.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/music_track.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/widgets/file_picker.dart';
 
 class AlbumInfo extends StatefulWidget {
   final int albumID;

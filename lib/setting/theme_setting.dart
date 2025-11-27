@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:theme_provider/theme_provider.dart';
 
-import '../globals/widgets.dart';
+import 'package:music_hub/globals/widgets.dart';
 
 class ThemeSetting extends StatefulWidget {
   const ThemeSetting({super.key});

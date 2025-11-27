@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+
 import 'package:http/http.dart' show Response;
 import 'package:url_launcher/url_launcher.dart';
 
-import '../globals/extensions.dart';
-import '../globals/utils.dart';
-import '../handlers/log_handler.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 class VersionDialog extends StatefulWidget {
   final String tag;

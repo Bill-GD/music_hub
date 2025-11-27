@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
 
 enum LogLevel { info, warn, error }
 

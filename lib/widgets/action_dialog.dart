@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../globals/utils.dart';
+import 'package:music_hub/globals/utils.dart';
 
 class ActionDialog extends StatefulWidget {
   final Icon? icon;

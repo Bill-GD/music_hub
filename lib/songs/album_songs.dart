@@ -1,20 +1,21 @@
 import 'dart:math';
 
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+
+import 'package:animations/animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/music_track.dart';
-import '../globals/utils.dart';
-import '../globals/widgets.dart';
-import '../handlers/log_handler.dart';
-import '../player/music_player.dart';
-import '../widgets/action_dialog.dart';
-import '../widgets/song_options.dart';
-import 'add_album_song.dart';
-import 'album_info.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/music_track.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/handlers/log_handler.dart';
+import 'package:music_hub/player/music_player.dart';
+import 'package:music_hub/songs/add_album_song.dart';
+import 'package:music_hub/songs/album_info.dart';
+import 'package:music_hub/widgets/action_dialog.dart';
+import 'package:music_hub/widgets/song_options.dart';
 
 class AlbumSongs extends StatefulWidget {
   final int albumID;

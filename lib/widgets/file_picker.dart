@@ -4,8 +4,8 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../globals/utils.dart';
-import '../handlers/log_handler.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 class FilePicker extends StatefulWidget {
   /// LIst of allowed file extensions, example: ['mp3', 'lrc']

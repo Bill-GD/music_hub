@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import 'log_handler.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 class LyricHandler {
   static void addLyric(Lyric lyric) {

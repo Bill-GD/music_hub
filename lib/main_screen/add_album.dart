@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../globals/globals.dart';
-import '../globals/music_track.dart';
-import '../globals/widgets.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/music_track.dart';
+import 'package:music_hub/globals/widgets.dart';
 
 class AddAlbum extends StatefulWidget {
   const AddAlbum({super.key});

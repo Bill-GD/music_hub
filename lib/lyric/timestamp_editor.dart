@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../globals/extensions.dart';
-import '../handlers/log_handler.dart';
-import '../widgets/hold_gesture.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/handlers/log_handler.dart';
+import 'package:music_hub/widgets/hold_gesture.dart';
 
 class TimestampEditor extends StatefulWidget {
   final (int, int, int) timestamp;

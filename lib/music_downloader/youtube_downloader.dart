@@ -1,14 +1,15 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import 'package:dio/dio.dart';
 import 'package:http/http.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../globals/extensions.dart';
-import '../globals/utils.dart';
-import '../globals/widgets.dart';
-import '../handlers/log_handler.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 Future<Map<String, dynamic>?> getYouTubeVideoData(BuildContext context, String urlText) async {
   try {

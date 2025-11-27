@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../handlers/log_handler.dart';
-import 'globals.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 /// All user configurations, expose to user in setting page.
 class Config {

@@ -1,13 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../globals/globals.dart';
-import '../globals/music_track.dart';
-import '../globals/widgets.dart';
-import '../player/music_player.dart';
-import '../widgets/song_options.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/music_track.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/player/music_player.dart';
+import 'package:music_hub/widgets/song_options.dart';
 
 class ArtistSongs extends StatefulWidget {
   final String artistName;

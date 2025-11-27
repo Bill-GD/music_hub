@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
-import '../globals/utils.dart';
-import '../globals/widgets.dart';
-import '../handlers/log_handler.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 const _url = 'https://api-v2.soundcloud.com';
 

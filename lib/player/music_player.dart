@@ -3,25 +3,26 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:audio_service/audio_service.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/music_track.dart';
-import '../globals/utils.dart';
-import '../globals/widgets.dart';
-import '../handlers/log_handler.dart';
-import '../handlers/lyric_handler.dart';
-import '../lyric/lyric_editor.dart';
-import '../lyric/lyric_strip.dart';
-import '../widgets/file_picker.dart';
-import '../widgets/page_indicator.dart';
-import '../widgets/playlist_sheet.dart';
-import '../widgets/song_options.dart';
-import 'player_utils.dart';
+import 'package:audio_service/audio_service.dart';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/music_track.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/globals/widgets.dart';
+import 'package:music_hub/handlers/log_handler.dart';
+import 'package:music_hub/handlers/lyric_handler.dart';
+import 'package:music_hub/lyric/lyric_editor.dart';
+import 'package:music_hub/lyric/lyric_strip.dart';
+import 'package:music_hub/player/player_utils.dart';
+import 'package:music_hub/widgets/file_picker.dart';
+import 'package:music_hub/widgets/page_indicator.dart';
+import 'package:music_hub/widgets/playlist_sheet.dart';
+import 'package:music_hub/widgets/song_options.dart';
 
 Future<Route> getMusicPlayerRoute(BuildContext context, int songID) async {
   await Globals.audioHandler.setPlayerSong(songID, shouldPlay: !Globals.setDuplicate);

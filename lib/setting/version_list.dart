@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../globals/extensions.dart';
-import '../globals/globals.dart';
-import '../globals/utils.dart';
-import '../handlers/log_handler.dart';
-import 'version_dialog.dart';
+import 'package:music_hub/globals/extensions.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/globals/utils.dart';
+import 'package:music_hub/handlers/log_handler.dart';
+import 'package:music_hub/setting/version_dialog.dart';
 
 class VersionList extends StatefulWidget {
   const VersionList({super.key});

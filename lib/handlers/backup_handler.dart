@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import '../globals/config.dart';
-import '../globals/globals.dart';
-import 'database_handler.dart';
-import 'log_handler.dart';
+import 'package:music_hub/globals/config.dart';
+import 'package:music_hub/globals/globals.dart';
+import 'package:music_hub/handlers/database_handler.dart';
+import 'package:music_hub/handlers/log_handler.dart';
 
 class BackupHandler {
   static void init() {
