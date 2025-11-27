@@ -7,7 +7,7 @@ extension DurationExtension on Duration {
   }
 }
 
-extension NumberDurationExtensions on num {
+extension DurationFromNumber on num {
   Duration get microseconds => Duration(microseconds: round());
 
   Duration get ms => (this * 1000).microseconds;
@@ -43,9 +43,10 @@ extension WhereOrNull<E> on Iterable<E> {
   }
 }
 
-const _monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 extension DateString on DateTime {
+  static const _monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
   String toDateString() {
     final local = toLocal();
     // return '$_formatDay ${_monthNames[month - 1]} $year, ${hour.padIntLeft(2, '0')}:${minute.padIntLeft(2, '0')}:${second.padIntLeft(2, '0')}';

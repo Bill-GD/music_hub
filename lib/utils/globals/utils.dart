@@ -9,10 +9,6 @@ import 'package:music_hub/data/services/log_handler.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals/globals.dart';
 
-String getTimeString(int milliseconds) {
-  return Duration(milliseconds: milliseconds).toStringNoMilliseconds();
-}
-
 String sanitizeFilePath(String path) {
   return path.replaceAll(RegExp(r'[\\|?*<":>+\[\]/]'), '').replaceAll("'", '');
 }
@@ -52,21 +48,6 @@ String getSizeString(double bytes) {
     unitIndex++;
   }
   return '${bytes.toStringAsFixed(2)} ${units[unitIndex]}';
-}
-
-void showToast(BuildContext context, String msg) {
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(SnackBar(
-      content: Text(msg),
-      behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      action: SnackBarAction(
-        label: 'OK',
-        onPressed: ScaffoldMessenger.of(context).hideCurrentSnackBar,
-      ),
-    ));
 }
 
 Future<bool> checkInternetConnection([List<ConnectivityResult>? result]) async {

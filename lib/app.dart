@@ -16,7 +16,8 @@ class MusicHubApp extends StatelessWidget {
     return ThemeProvider(
       saveThemesOnChange: true,
       loadThemeOnInit: true,
-      defaultThemeId: '${SchedulerBinding.instance.platformDispatcher.platformBrightness.name}_theme',
+      defaultThemeId:
+          '${SchedulerBinding.instance.platformDispatcher.platformBrightness.name}_theme',
       themes: [
         AppTheme(
           id: 'light_theme',
@@ -33,7 +34,6 @@ class MusicHubApp extends StatelessWidget {
               seedColor: Colors.white,
               brightness: Brightness.light,
             ),
-            //.copyWith(surface: Colors.white),
           ),
         ),
         AppTheme(
