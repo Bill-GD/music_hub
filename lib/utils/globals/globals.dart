@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:music_hub/ui/app/player/player_utils.dart';
 import 'package:music_hub/utils/globals/music_track.dart';
 
-final isDev = Globals.appVersion.contains('_dev_');
-final devBuild = Globals.appVersion.split('_').last;
+// final isDev = Globals.appVersion.contains('_dev_');
+// final devBuild = Globals.appVersion.split('_').last;
 
 class Globals {
   /// List of all songs, persistent.
@@ -18,9 +18,6 @@ class Globals {
 
   static late final AudioPlayerHandler audioHandler;
 
-  static const String appName = 'Music Hub';
-  static const String appVersion = String.fromEnvironment('VERSION', defaultValue: '0.0.0');
-
   /// Does the minimized player shows up?
   static bool showMinimizedPlayer = false;
   static bool setDuplicate = false;
@@ -28,23 +25,6 @@ class Globals {
   /// ID of the currently selected/playing song.
   static int currentSongID = -1;
   static String? savedPlaylistName;
-
-  static const String songTable = 'music_track';
-  static const String albumTable = 'album';
-  static const String albumSongsTable = 'album_tracks';
-  static const String playlistTable = 'playlist';
-
-  /// The path to the app's storage directory.
-  static late final String storagePath;
-  static late final String jsonPath;
-  static late final String dbPath;
-  static late final String logPath;
-  // static late final String backupPath;
-  static const backupPath = '/storage/emulated/0/Android/music_hub_backup/';
-  static const downloadPath = '/storage/emulated/0/Download/';
-  static const lyricPath = '/storage/emulated/0/Lyrics/';
-
-  static const githubToken = String.fromEnvironment('GITHUB_TOKEN');
 
   static final lyricChangedController = StreamController<void>.broadcast();
 }
