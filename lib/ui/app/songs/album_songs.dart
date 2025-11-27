@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:music_hub/data/models/music_track.dart';
+import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
 import 'package:music_hub/ui/app/songs/add_album_song.dart';

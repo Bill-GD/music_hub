@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
 
-import 'package:music_hub/data/models/music_track.dart';
+import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/songs/song_info.dart';

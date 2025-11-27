@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 import 'package:music_hub/data/models/album.dart';
-import 'package:music_hub/data/models/music_track.dart';
+import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
