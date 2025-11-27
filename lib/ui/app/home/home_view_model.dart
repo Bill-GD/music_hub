@@ -7,7 +7,7 @@ import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
-import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/constants.dart' show Constants;
 import 'package:music_hub/utils/extensions.dart' show WhereOrNull;
 import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/utils.dart' show checkInternetConnection, getAllTags;

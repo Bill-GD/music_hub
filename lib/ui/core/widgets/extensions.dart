@@ -29,7 +29,7 @@ extension WidgetWithContext on BuildContext {
       );
   }
 
-  Future<void> showLogPopup({required String title}) async {
+  Future<void> showLogPopup(String title) async {
     final logLines = File(Paths.logPath).readAsLinesSync();
     final contentLines = <String>[];
 
@@ -151,7 +151,7 @@ extension WidgetWithContext on BuildContext {
         child: Container(
           constraints: .loose(.fromWidth(MediaQuery.of(context).size.width * 0.9)),
           decoration: BoxDecoration(
-            border: Border.all(width: 1, color: theme.colorScheme.onSurface),
+            border: .all(width: 1, color: theme.colorScheme.onSurface),
             borderRadius: .circular(30),
           ),
           child: Padding(

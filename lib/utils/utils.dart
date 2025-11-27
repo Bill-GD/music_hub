@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/constants.dart' show Constants;
 
 String sanitizeFilePath(String path) {
   return path.replaceAll(RegExp(r'[\\|?*<":>+\[\]/]'), '').replaceAll("'", '');

@@ -206,8 +206,8 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton.icon(
-                  icon: Icon(Icons.add_rounded, color: iconColor(context)),
-                  label: Text('Add', style: TextStyle(color: iconColor(context))),
+                  icon: Icon(Icons.add_rounded, color: context.iconColor()),
+                  label: Text('Add', style: TextStyle(color: context.iconColor())),
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.surface),
                     side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).colorScheme.surface)),
@@ -219,8 +219,8 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                   },
                 ),
                 ElevatedButton.icon(
-                  icon: Icon(Icons.edit, color: iconColor(context), size: 20),
-                  label: Text('Type', style: TextStyle(color: iconColor(context))),
+                  icon: Icon(Icons.edit, color: context.iconColor(), size: 20),
+                  label: Text('Type', style: TextStyle(color: context.iconColor())),
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.surface),
                     side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).colorScheme.surface)),

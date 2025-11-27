@@ -80,7 +80,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      leading: Icon(Icons.info_outline_rounded, color: iconColor(context)),
+                      leading: Icon(Icons.info_outline_rounded, color: context.iconColor()),
                       title: const Text('Album info', style: bottomSheetText),
                       onTap: () async {
                         bool? needsUpdate = await Navigator.of(context).push(
@@ -114,7 +114,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        leading: Icon(Icons.delete_rounded, color: iconColor(context)),
+                        leading: Icon(Icons.delete_rounded, color: context.iconColor()),
                         title: const Text('Delete album', style: bottomSheetText),
                         onTap: () async {
                           bool deleteAlbum = false;
@@ -365,7 +365,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  leading: Icon(Icons.delete_rounded, color: iconColor(context)),
+                  leading: Icon(Icons.delete_rounded, color: context.iconColor()),
                   title: const Text('Remove from playlist', style: bottomSheetText),
                   onTap: () async {
                     bool songRemoved = false;
