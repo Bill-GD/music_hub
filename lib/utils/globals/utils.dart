@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals/globals.dart';
+import 'package:music_hub/utils/constants.dart';
 
 String sanitizeFilePath(String path) {
   return path.replaceAll(RegExp(r'[\\|?*<":>+\[\]/]'), '').replaceAll("'", '');
@@ -13,10 +13,10 @@ String sanitizeFilePath(String path) {
 
 Future<Response> apiQuery(String query) {
   const baseApiUrl = 'https://api.github.com/repos/Bill-GD/music_player_app';
-  LogService.log('Querying $query');
+  GetIt.I<LogService>().log('Querying $query');
   return get(
     Uri.parse('$baseApiUrl$query'),
-    headers: {'Authorization': 'Bearer ${Globals.githubToken}'},
+    headers: {'Authorization': 'Bearer ${Constants.githubToken}'},
   );
 }
 
@@ -27,7 +27,7 @@ Future<List<(String, String)>> getAllTags() async {
     throw Exception('Rate limited. Please come back later.');
   }
   if (json is! List) {
-    LogService.log('JSON received is not a list', LogLevel.error);
+    GetIt.I<LogService>().log('JSON received is not a list', LogLevel.error);
     throw Exception('Something is wrong when trying to get version list.');
   }
 
@@ -51,7 +51,7 @@ String getSizeString(double bytes) {
 Future<bool> checkInternetConnection([List<ConnectivityResult>? result]) async {
   final connectivityResult = result ?? await Connectivity().checkConnectivity();
   final isInternetConnected = !connectivityResult.contains(ConnectivityResult.none);
-  LogService.log('Internet connected: $isInternetConnected');
+  GetIt.I<LogService>().log('Internet connected: $isInternetConnected');
   return isInternetConnected;
 }
 
@@ -63,7 +63,7 @@ List<int> range(int start, int end) {
 /// From https://pub.dev/packages/dedent, modified to not use extra packages
 String dedent(String text) {
   final whitespaceOnlyRe = RegExp(r'^[ \t]+$', multiLine: true);
-  final leadingWhitespaceRe = RegExp(r'(^[ \t]*)(?:[^ \t\n])', multiLine: true);
+  final leadingWhitespaceRe = RegExp(r'(^[ \t]*)[^ \t\n]', multiLine: true);
 
   // Look for the longest leading string of spaces and tabs common to all lines.
   String? margin;

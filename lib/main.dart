@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 
@@ -17,6 +18,7 @@ import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart' show Constants, Paths;
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,6 +68,9 @@ void main() async {
       configService: GetIt.I(),
       databaseService: GetIt.I(),
     ),
+  );
+  GetIt.I.registerSingleton(
+    Dio(BaseOptions(connectTimeout: 10.seconds, validateStatus: (_) => true)),
   );
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
