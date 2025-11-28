@@ -7,7 +7,7 @@ import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/extensions.dart' show PadInt, WhereOrNull;
 import 'package:music_hub/utils/utils.dart';
 
 class AddAlbumSong extends StatefulWidget {

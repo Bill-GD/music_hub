@@ -12,7 +12,7 @@ import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart' show Paths;
-import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
 import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/utils.dart';
 

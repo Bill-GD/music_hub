@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/hold_gesture.dart';
-import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/extensions.dart' show LyricTimestamp, PadInt;
 
 class TimestampEditor extends StatefulWidget {
   final (int, int, int) timestamp;

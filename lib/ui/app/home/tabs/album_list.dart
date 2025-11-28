@@ -8,7 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/album/add_album.dart';
 import 'package:music_hub/ui/app/album/album_songs.dart';
-import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
 
 class AlbumList extends StatefulWidget {
   const AlbumList({super.key});

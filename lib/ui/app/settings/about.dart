@@ -10,7 +10,7 @@ import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/settings/version_list.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart' show Constants;
-import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
 import 'package:music_hub/utils/utils.dart';
 
 class AboutScreen extends StatefulWidget {

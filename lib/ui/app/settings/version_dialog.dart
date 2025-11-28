@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
-import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/extensions.dart' show DateString;
 
 class VersionDialog extends StatefulWidget {
   final String tag;
@@ -72,9 +72,12 @@ class _VersionDialogState extends State<VersionDialog> {
       '/contents/$filename?ref=${widget.sha}',
     )).data;
 
-    if (noteData == null) throw Exception('Rate limited. Please come back later.');
-    if (noteData is! Map)
+    if (noteData == null) {
+      throw Exception('Rate limited. Please come back later.');
+    }
+    if (noteData is! Map) {
       throw Exception('Something is wrong, JSON received is not a map.');
+    }
 
     if (noteData['content'] == null) {
       logService.log('dev_changes.md not found, getting release instead');
@@ -89,8 +92,9 @@ class _VersionDialogState extends State<VersionDialog> {
     final commitData = (await githubService.apiQuery('/commits/${widget.sha}')).data;
 
     if (commitData == null) throw Exception('Rate limited. Please come back later.');
-    if (commitData is! Map)
+    if (commitData is! Map) {
       throw Exception('Something is wrong, JSON received is not a map.');
+    }
 
     timeUploaded = DateTime.parse(
       commitData['commit']['committer']['date'] as String,

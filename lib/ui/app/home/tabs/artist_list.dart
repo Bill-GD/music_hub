@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/artist/artist_songs.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
-import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
 
 class ArtistList extends StatefulWidget {
   const ArtistList({super.key});

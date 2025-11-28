@@ -4,8 +4,6 @@ import 'dart:io';
 
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:get_it/get_it.dart';
-import 'package:get_it/get_it.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/models/song.dart';
