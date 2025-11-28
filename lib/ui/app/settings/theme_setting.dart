@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:theme_provider/theme_provider.dart';
-
-import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/ui/core/theme/extensions.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 
 class ThemeSetting extends StatefulWidget {
   const ThemeSetting({super.key});
@@ -21,19 +20,16 @@ class _ThemeSettingState extends State<ThemeSetting> {
             icon: const Icon(Icons.arrow_back_ios_rounded),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text(
-            'Theme',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
+          title: const Text('Theme', style: TextStyle(fontWeight: .w700)),
           centerTitle: true,
         ),
         body: ListView(
           children: [
             SwitchListTile(
-              title: leadingText(context, 'Dark mode', false, 16),
+              title: context.leadingText('Dark mode', false, 16),
               // subtitle: const Text('Backup data on app launch. May be undesirable in certain situations.'),
-              value: ThemeProvider.themeOf(context).id.contains('dark'),
-              onChanged: (_) => ThemeProvider.controllerOf(context).nextTheme(),
+              value: context.isDarkMode,
+              onChanged: (_) => context.nextTheme(),
             ),
           ],
         ),

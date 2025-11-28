@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:get_it/get_it.dart';
+
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/settings/version_dialog.dart';
-import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals.dart';
+import 'package:music_hub/utils/constants.dart' show Constants;
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
 import 'package:music_hub/utils/utils.dart';
 
 class VersionList extends StatefulWidget {
@@ -14,6 +16,7 @@ class VersionList extends StatefulWidget {
 }
 
 class _VersionListState extends State<VersionList> {
+  final logService = GetIt.I<LogService>();
   List<String> tags = [], shas = [];
   int versionCount = 0;
   bool loading = true;
@@ -27,7 +30,7 @@ class _VersionListState extends State<VersionList> {
       shas = value.map((e) => e.$2).toList();
       versionCount = tags.length;
       if (context.mounted) {
-        LogService.log('Got $versionCount tags');
+        logService.log('Got $versionCount tags');
         setState(() => loading = false);
       }
     });
@@ -45,7 +48,7 @@ class _VersionListState extends State<VersionList> {
         ),
         title: const Text(
           'Version list',
-          style: TextStyle(fontWeight: FontWeight.w700),
+          style: TextStyle(fontWeight: .w700),
         ),
         centerTitle: true,
       ),
@@ -56,7 +59,7 @@ class _VersionListState extends State<VersionList> {
           shas = res.map((e) => e.$2).toList();
           versionCount = tags.length;
           if (context.mounted) {
-            LogService.log('Got $versionCount tags');
+            logService.log('Got $versionCount tags');
             setState(() {});
           }
           if (context.mounted) setState(() {});
@@ -68,20 +71,20 @@ class _VersionListState extends State<VersionList> {
                 itemBuilder: (context, index) {
                   bool isDevBuild = tags[index].contains('_dev_');
                   return ListTile(
-                    leading: tags[index] == 'v${Globals.appVersion}' //
+                    leading: tags[index] == 'v${Constants.appVersion}' //
                         ? const Icon(Icons.arrow_right_rounded)
                         : const Text(''),
                     title: Text(
                       tags[index],
                       style: const TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                         fontSize: 18,
                       ),
                     ),
                     subtitle: Text('${shas[index]} - ${isDevBuild ? 'dev' : 'stable'}'),
                     visualDensity: const VisualDensity(vertical: 3, horizontal: 4),
                     trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: .min,
                       children: [
                         if (!isDevBuild)
                           IconButton(
@@ -91,14 +94,14 @@ class _VersionListState extends State<VersionList> {
                                 transitionDuration: 300.ms,
                                 barrierDismissible: true,
                                 barrierLabel: '',
-                                transitionBuilder: (_, anim1, __, child) {
+                                transitionBuilder: (_, anim1, _, child) {
                                   return ScaleTransition(
                                     scale: anim1.drive(CurveTween(curve: Curves.easeOutQuart)),
                                     alignment: Alignment.center,
                                     child: child,
                                   );
                                 },
-                                pageBuilder: (context, __, ___) {
+                                pageBuilder: (context, _, _) {
                                   return VersionDialog(
                                     tag: tags[index],
                                     sha: shas[index],
@@ -114,14 +117,14 @@ class _VersionListState extends State<VersionList> {
                               transitionDuration: 300.ms,
                               barrierDismissible: true,
                               barrierLabel: '',
-                              transitionBuilder: (_, anim1, __, child) {
+                              transitionBuilder: (_, anim1, _, child) {
                                 return ScaleTransition(
                                   scale: anim1.drive(CurveTween(curve: Curves.easeOutQuart)),
-                                  alignment: Alignment.center,
+                                  alignment: .center,
                                   child: child,
                                 );
                               },
-                              pageBuilder: (context, __, ___) {
+                              pageBuilder: (context, _, _) {
                                 return VersionDialog(
                                   tag: tags[index],
                                   sha: shas[index],

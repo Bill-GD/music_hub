@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:get_it/get_it.dart';
+
 import 'package:music_hub/data/services/config_service.dart';
+import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/ui/app/settings/about.dart';
 import 'package:music_hub/ui/app/settings/backup.dart';
 import 'package:music_hub/ui/app/settings/theme_setting.dart';
-import 'package:music_hub/ui/core/widgets/action_dialog.dart';
-import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals.dart';
-import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
+import 'package:music_hub/utils/constants.dart' show Constants;
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -18,16 +20,18 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final configService = GetIt.I<ConfigService>(),
+      playerService = GetIt.I<PlayerService>();
   bool hasChanges = false;
 
-  bool autoBackup = ConfigService.backupOnLaunch;
-  bool ignoreShortFile = ConfigService.enableSongFiltering;
-  int ignoreTimeLimit = ConfigService.lengthLimitMilliseconds ~/ 1e3;
-  bool autoPlay = ConfigService.autoPlayNewSong;
-  int delayBetween = ConfigService.delayMilliseconds;
-  bool appendLyric = ConfigService.appendLyric;
-  double volume = ConfigService.volume;
-  int backupCount = ConfigService.backupCount;
+  late bool autoBackup = configService.backupOnLaunch;
+  late bool ignoreShortFile = configService.enableSongFiltering;
+  late int ignoreTimeLimit = configService.lengthLimitMilliseconds ~/ 1e3;
+  late bool autoPlay = configService.autoPlayNewSong;
+  late int delayBetween = configService.delayMilliseconds;
+  late bool appendLyric = configService.appendLyric;
+  late double volume = configService.volume;
+  late int backupCount = configService.backupCount;
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: const Icon(Icons.arrow_back_ios_rounded),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text(
-            'Settings',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
+          title: const Text('Settings', style: TextStyle(fontWeight: .w700)),
           centerTitle: true,
           actions: [
             IconButton(
@@ -52,43 +53,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                       String changes = 'Confirm the following changes?\n\n';
 
-                      changes += ignoreShortFile != ConfigService.enableSongFiltering
+                      changes += ignoreShortFile != configService.enableSongFiltering
                           ? ignoreShortFile
-                              ? 'Enable song filtering\n'
-                              : 'Disable song filtering\n'
+                                ? 'Enable song filtering\n'
+                                : 'Disable song filtering\n'
                           : '';
 
-                      changes += ignoreShortFile && ignoreTimeLimit != ConfigService.lengthLimitMilliseconds ~/ 1e3
+                      changes +=
+                          ignoreShortFile &&
+                              ignoreTimeLimit !=
+                                  configService.lengthLimitMilliseconds ~/ 1e3
                           ? 'Filter file shorter than: $ignoreTimeLimit s\n'
                           : '';
 
-                      changes += autoPlay != ConfigService.autoPlayNewSong
+                      changes += autoPlay != configService.autoPlayNewSong
                           ? autoPlay
-                              ? 'Enable auto play\n'
-                              : 'Disable auto play\n'
+                                ? 'Enable auto play\n'
+                                : 'Disable auto play\n'
                           : '';
 
-                      changes += appendLyric != ConfigService.appendLyric
+                      changes += appendLyric != configService.appendLyric
                           ? appendLyric
-                              ? 'Enable append lyric\n'
-                              : 'Disable append lyric\n'
+                                ? 'Enable append lyric\n'
+                                : 'Disable append lyric\n'
                           : '';
 
-                      changes += autoBackup != ConfigService.backupOnLaunch
+                      changes += autoBackup != configService.backupOnLaunch
                           ? autoBackup
-                              ? 'Enable auto backup\n'
-                              : 'Disable auto backup\n'
+                                ? 'Enable auto backup\n'
+                                : 'Disable auto backup\n'
                           : '';
-                      changes +=
-                          delayBetween != ConfigService.delayMilliseconds ? 'Delay between songs: $delayBetween ms\n' : '';
-                      changes += volume != ConfigService.volume ? 'Volume: x$volume\n' : '';
-                      changes += backupCount != ConfigService.backupCount ? 'Backup count: $backupCount\n' : '';
+                      changes += delayBetween != configService.delayMilliseconds
+                          ? 'Delay between songs: $delayBetween ms\n'
+                          : '';
+                      changes += volume != configService.volume
+                          ? 'Volume: x$volume\n'
+                          : '';
+                      changes += backupCount != configService.backupCount
+                          ? 'Backup count: $backupCount\n'
+                          : '';
 
-                      if (changes.endsWith('\n')) changes = changes.substring(0, changes.length - 1);
+                      if (changes.endsWith('\n')) {
+                        changes = changes.substring(0, changes.length - 1);
+                      }
 
                       if (hasChanges) {
-                        final needsUpdate = await ActionDialog.static<bool>(
-                          context,
+                        final needsUpdate = await context.showActionDialog<bool>(
                           title: 'Confirm changes',
                           titleFontSize: 24,
                           textContent: changes,
@@ -101,16 +111,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             TextButton(
                               onPressed: () async {
-                                ConfigService.backupOnLaunch = autoBackup;
-                                ConfigService.enableSongFiltering = ignoreShortFile;
-                                ConfigService.lengthLimitMilliseconds = ignoreTimeLimit * 1000;
-                                ConfigService.autoPlayNewSong = autoPlay;
-                                ConfigService.delayMilliseconds = delayBetween;
-                                ConfigService.appendLyric = appendLyric;
-                                ConfigService.volume = volume;
-                                Globals.audioHandler.setVolume(ConfigService.volume);
-                                ConfigService.backupCount = backupCount;
-                                await ConfigService.saveConfig();
+                                configService.backupOnLaunch = autoBackup;
+                                configService.enableSongFiltering = ignoreShortFile;
+                                configService.lengthLimitMilliseconds =
+                                    ignoreTimeLimit * 1000;
+                                configService.autoPlayNewSong = autoPlay;
+                                configService.delayMilliseconds = delayBetween;
+                                configService.appendLyric = appendLyric;
+                                configService.volume = volume;
+                                playerService.setVolume(configService.volume);
+                                configService.backupCount = backupCount;
+                                await configService.saveConfig();
                                 if (context.mounted) Navigator.of(context).pop(true);
                               },
                               child: const Text('Yes'),
@@ -126,32 +137,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
         body: ListView(
-          padding: const EdgeInsets.only(bottom: 24),
+          padding: const .only(bottom: 24),
           children: [
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              margin: const .symmetric(horizontal: 16, vertical: 12),
               child: const Text(
                 'APP SETTINGS',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: 18, fontWeight: .w700),
               ),
             ),
             SwitchListTile(
-              title: leadingText(context, 'Backup data on launch', false, 16),
-              subtitle: const Text('Backup data on app launch. May be undesirable in certain situations.'),
+              title: context.leadingText('Backup data on launch', false, 16),
+              subtitle: const Text(
+                'Backup data on app launch. May be undesirable in certain situations.',
+              ),
               value: autoBackup,
               onChanged: (value) {
-                hasChanges = value != ConfigService.backupOnLaunch;
+                hasChanges = value != configService.backupOnLaunch;
                 setState(() => autoBackup = value);
               },
             ),
             ListTile(
-              title: leadingText(context, 'Theme', false, 16),
+              title: context.leadingText('Theme', false, 16),
               subtitle: const Text('Customize the app\'s theme'),
               trailing: const Icon(CupertinoIcons.right_chevron),
               onTap: () {
                 Navigator.of(context).push(
                   PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => const ThemeSetting(),
+                    pageBuilder: (_, _, _) => const ThemeSetting(),
                     transitionsBuilder: (context, anim, _, child) {
                       return SlideTransition(
                         position: Tween<Offset>(
@@ -166,13 +179,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             ListTile(
-              title: leadingText(context, 'Backup', false, 16),
+              title: context.leadingText('Backup', false, 16),
               subtitle: const Text('Save and restore app data'),
               trailing: const Icon(CupertinoIcons.right_chevron),
               onTap: () {
                 Navigator.of(context).push(
                   PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => const BackupScreen(),
+                    pageBuilder: (_, _, _) => const BackupScreen(),
                     transitionsBuilder: (context, anim1, _, child) {
                       return SlideTransition(
                         position: Tween<Offset>(
@@ -189,11 +202,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Column(
               children: [
                 ListTile(
-                  title: leadingText(context, 'Backup count', false, 16),
+                  title: context.leadingText('Backup count', false, 16),
                   subtitle: Text('Number of backups to keep: $backupCount'),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const .symmetric(horizontal: 16),
                   child: Row(
                     children: [
                       const Text('5'),
@@ -203,7 +216,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           min: 5,
                           max: 15,
                           onChanged: (value) {
-                            hasChanges = value.toInt() != ConfigService.backupCount;
+                            hasChanges = value.toInt() != configService.backupCount;
                             setState(() => backupCount = value.toInt());
                           },
                         ),
@@ -215,13 +228,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
             ListTile(
-              title: leadingText(context, 'Version', false, 16),
-              subtitle: const Text(Globals.appVersion),
+              title: context.leadingText('Version', false, 16),
+              subtitle: Text(Constants.appVersion),
               trailing: const Icon(CupertinoIcons.right_chevron),
               onTap: () {
                 Navigator.of(context).push(
                   PageRouteBuilder(
-                    pageBuilder: (_, __, ___) => const AboutScreen(),
+                    pageBuilder: (_, _, _) => const AboutScreen(),
                     transitionsBuilder: (context, anim, _, child) {
                       return SlideTransition(
                         position: Tween<Offset>(
@@ -236,18 +249,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              margin: const .symmetric(horizontal: 16, vertical: 12),
               child: const Text(
                 'FILE SETTINGS',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: 18, fontWeight: .w700),
               ),
             ),
             SwitchListTile(
-              title: leadingText(context, 'Song Filter', false, 16),
+              title: context.leadingText('Song Filter', false, 16),
               subtitle: const Text('Ignore short files'),
               value: ignoreShortFile,
               onChanged: (value) {
-                hasChanges = value != ConfigService.enableSongFiltering;
+                hasChanges = value != configService.enableSongFiltering;
                 setState(() => ignoreShortFile = value);
               },
             ),
@@ -256,11 +269,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Column(
                 children: [
                   ListTile(
-                    title: leadingText(context, 'Time', false, 16),
+                    title: context.leadingText('Time', false, 16),
                     subtitle: Text('Hide files shorter than $ignoreTimeLimit seconds'),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const .symmetric(horizontal: 16),
                     child: Row(
                       children: [
                         const Text('0 sec'),
@@ -271,7 +284,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             max: 300,
                             onChanged: (value) {
                               if (!ignoreShortFile) return;
-                              hasChanges = value.toInt() != ConfigService.lengthLimitMilliseconds ~/ 1e3;
+                              hasChanges =
+                                  value.toInt() !=
+                                  configService.lengthLimitMilliseconds ~/ 1e3;
                               setState(() => ignoreTimeLimit = value.toInt());
                             },
                             divisions: 30,
@@ -285,29 +300,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              margin: const .symmetric(horizontal: 16, vertical: 12),
               child: const Text(
                 'PLAYER SETTINGS',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: 18, fontWeight: .w700),
               ),
             ),
             SwitchListTile(
-              title: leadingText(context, 'Auto play new song', false, 16),
+              title: context.leadingText('Auto play new song', false, 16),
               subtitle: const Text('Starts playing when choosing a new song'),
               value: autoPlay,
               onChanged: (value) {
-                hasChanges = value != ConfigService.autoPlayNewSong;
+                hasChanges = value != configService.autoPlayNewSong;
                 setState(() => autoPlay = value);
               },
             ),
             Column(
               children: [
                 ListTile(
-                  title: leadingText(context, 'Delay between songs', false, 16),
+                  title: context.leadingText('Delay between songs', false, 16),
                   subtitle: Text('Short delay of $delayBetween ms when skipping song'),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const .symmetric(horizontal: 16),
                   child: Row(
                     children: [
                       const Text('0'),
@@ -317,7 +332,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           min: 0.0,
                           max: 500.0,
                           onChanged: (value) {
-                            hasChanges = value.toInt() != ConfigService.delayMilliseconds;
+                            hasChanges = value.toInt() != configService.delayMilliseconds;
                             setState(() => delayBetween = value.toInt());
                           },
                         ),
@@ -329,20 +344,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
             SwitchListTile(
-              title: leadingText(context, 'Append lyric', false, 16),
+              title: context.leadingText('Append lyric', false, 16),
               subtitle: const Text('Only add lines instead of free lyric editing'),
               value: appendLyric,
               onChanged: (value) {
-                hasChanges = value != ConfigService.appendLyric;
+                hasChanges = value != configService.appendLyric;
                 setState(() => appendLyric = value);
               },
             ),
             ListTile(
-              title: leadingText(context, 'Volume', false, 16),
-              subtitle: Text('Change the player\'s base volume (${(volume * 100).toInt()}%)'),
+              title: context.leadingText('Volume', false, 16),
+              subtitle: Text(
+                'Change the player\'s base volume (${(volume * 100).toInt()}%)',
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const .symmetric(horizontal: 16),
               child: Row(
                 children: [
                   const Text('0%'),
@@ -352,7 +369,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       min: 0,
                       max: 1,
                       onChanged: (value) {
-                        hasChanges = value != ConfigService.volume;
+                        hasChanges = value != configService.volume;
                         setState(() => volume = value);
                       },
                       divisions: 100,

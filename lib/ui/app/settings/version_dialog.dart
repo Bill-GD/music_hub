@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' show Response;
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
 
@@ -21,13 +23,14 @@ class VersionDialog extends StatefulWidget {
 }
 
 class _VersionDialogState extends State<VersionDialog> {
+  final logService = GetIt.I<LogService>();
   bool loading = true;
   String body = '', timeUploaded = '';
 
   @override
   void initState() {
     super.initState();
-    LogService.log('Getting changelog of: ${widget.tag}');
+    logService.log('Getting changelog of: ${widget.tag}');
     getChangelog();
   }
 
@@ -52,7 +55,7 @@ class _VersionDialogState extends State<VersionDialog> {
     if (json == null) throw Exception('Rate limited. Please come back later.');
     if (json is! Map) throw Exception('Something is wrong, JSON received is not a map.');
 
-    LogService.log('Got release of: t=${widget.tag}, sha=${widget.sha}');
+    logService.log('Got release of: t=${widget.tag}, sha=${widget.sha}');
     timeUploaded = DateTime.parse(json['published_at'] as String).toDateString();
     return json['body'] as String;
   }
@@ -61,7 +64,7 @@ class _VersionDialogState extends State<VersionDialog> {
     // final filename = widget.dev ? 'release_note.md' : 'dev_changes.md';
     const filename = 'dev_changes.md';
 
-    LogService.log('Getting markdown of: t=${widget.tag}, sha=${widget.sha}');
+    logService.log('Getting markdown of: t=${widget.tag}, sha=${widget.sha}');
     Response res = await apiQuery('/contents/$filename?ref=${widget.sha}');
     dynamic json = jsonDecode(res.body);
 
@@ -69,7 +72,7 @@ class _VersionDialogState extends State<VersionDialog> {
     if (json is! Map) throw Exception('Something is wrong, JSON received is not a map.');
 
     if (json['content'] == null) {
-      LogService.log('dev_changes.md not found, getting release instead');
+      logService.log('dev_changes.md not found, getting release instead');
       return getRelease();
     }
 
@@ -77,7 +80,7 @@ class _VersionDialogState extends State<VersionDialog> {
       (json['content'] as String).replaceAll('\n', ''),
     ));
 
-    LogService.log('Getting time of commit (${widget.sha})');
+    logService.log('Getting time of commit (${widget.sha})');
     res = await apiQuery('/commits/${widget.sha}');
     json = jsonDecode(res.body);
 
@@ -145,11 +148,11 @@ class _VersionDialogState extends State<VersionDialog> {
               : isCode
                   ? 14
                   : 16,
-          fontWeight: titleLevel > 0 ? FontWeight.bold : null,
+          fontWeight: titleLevel > 0 ? .bold : null,
           fontFamily: isCode ? 'monospace' : null,
           color: isCode //
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).textTheme.bodyMedium?.color,
+              ? context.theme.colorScheme.primary
+              : context.theme.textTheme.bodyMedium?.color,
         ),
       ));
     }
@@ -169,8 +172,8 @@ class _VersionDialogState extends State<VersionDialog> {
                 text: widget.tag,
                 style: TextStyle(
                   fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).textTheme.titleLarge?.color,
+                  fontWeight: .w700,
+                  color: context.theme.textTheme.titleLarge?.color,
                 ),
               ),
               if (timeUploaded.isNotEmpty)
@@ -178,7 +181,7 @@ class _VersionDialogState extends State<VersionDialog> {
                   text: '\n($timeUploaded)',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                    color: context.theme.textTheme.bodyMedium?.color,
                   ),
                 ),
             ],
@@ -186,7 +189,7 @@ class _VersionDialogState extends State<VersionDialog> {
         ),
         content: loading
             ? const Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [CircularProgressIndicator()],
               )
             : SingleChildScrollView(
@@ -194,8 +197,8 @@ class _VersionDialogState extends State<VersionDialog> {
                   text: TextSpan(children: getContent(body)),
                 ),
               ),
-        contentPadding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-        actionsAlignment: MainAxisAlignment.spaceEvenly,
+        contentPadding: const .only(left: 20, right: 20, top: 20),
+        actionsAlignment: .spaceEvenly,
         actions: [
           TextButton(
             onPressed: Navigator.of(context).pop,
@@ -207,9 +210,9 @@ class _VersionDialogState extends State<VersionDialog> {
               final canLaunch = await canLaunchUrl(uri);
               launchUrl(uri);
               if (canLaunch) {
-                LogService.log('The system has found a handler, can launch URL');
+                logService.log('The system has found a handler, can launch URL');
               } else if (context.mounted) {
-                LogService.log(
+                logService.log(
                   'URL launcher support query is not specified or can\'t launch URL, but opening regardless',
                 );
               }
@@ -217,12 +220,12 @@ class _VersionDialogState extends State<VersionDialog> {
             child: const Text('Get version'),
           ),
         ],
-        actionsPadding: const EdgeInsets.symmetric(vertical: 12),
+        actionsPadding: const .symmetric(vertical: 12),
         shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          side: BorderSide(color: Theme.of(context).colorScheme.onSurface),
+          borderRadius: const .all(.circular(10)),
+          side: BorderSide(color: context.theme.colorScheme.onSurface),
         ),
-        insetPadding: const EdgeInsets.only(top: 40, bottom: 16, left: 20, right: 20),
+        insetPadding: const .only(top: 40, bottom: 16, left: 20, right: 20),
       ),
     );
   }
