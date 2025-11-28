@@ -6,7 +6,7 @@ import 'package:music_hub/data/services/player_service.dart';
 
 /// All user configurations, expose to user in setting page.
 class ConfigService {
-  final LogService _logService;
+  final LogService _logService = GetIt.I();
 
   /// Whether the app should backup data on launch.
   bool backupOnLaunch = false;
@@ -34,8 +34,6 @@ class ConfigService {
 
   /// Current sorting order of the song list, default [SortOptions.name].
   SortOptions currentSortOption = .name;
-
-  ConfigService({required LogService logService}) : _logService = logService;
 
   String getSortOptionString() {
     return switch (currentSortOption) {

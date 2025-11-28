@@ -3,6 +3,9 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/models/song.dart';
@@ -22,17 +25,9 @@ class SongService {
 
   final lyricChangedController = StreamController<void>.broadcast();
 
-  final LogService _logService;
-  final ConfigService _configService;
-  final DatabaseService _databaseService;
-
-  SongService({
-    required LogService logService,
-    required ConfigService configService,
-    required DatabaseService databaseService,
-  }) : _logService = logService,
-       _configService = configService,
-       _databaseService = databaseService;
+  final LogService _logService = GetIt.I();
+  final ConfigService _configService = GetIt.I();
+  final DatabaseService _databaseService = GetIt.I();
 
   /// Get all songs (from storage & saved)
   Future<void> updateMusicData() async {

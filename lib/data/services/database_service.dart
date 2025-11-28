@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
@@ -7,20 +8,15 @@ import 'package:music_hub/utils/constants.dart' show TableNames;
 
 class DatabaseService {
   final String _path;
-  final LogService _logService;
+  final LogService _logService = GetIt.I();
   late final Database _db;
 
   Database get db => _db;
 
-  DatabaseService._({required String path, required LogService logService})
-    : _path = path,
-      _logService = logService;
+  DatabaseService._({required String path}) : _path = path;
 
-  static Future<DatabaseService> create({
-    required String path,
-    required LogService logService,
-  }) async {
-    final service = DatabaseService._(path: path, logService: logService);
+  static Future<DatabaseService> create({required String path}) async {
+    final service = DatabaseService._(path: path);
     await service._init();
     return service;
   }

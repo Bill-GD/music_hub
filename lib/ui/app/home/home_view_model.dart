@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
+import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:music_hub/data/services/backup_service.dart';
@@ -13,23 +14,15 @@ import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/utils.dart' show checkInternetConnection, getAllTags;
 
 class HomeViewModel extends ChangeNotifier {
-  final PlayerService playerService;
-  final SongService songService;
-  final LogService _logService;
-  final ConfigService _configService;
-  final BackupService _backupService;
+  final PlayerService playerService = GetIt.I();
+  final SongService songService = GetIt.I();
+  final LogService _logService = GetIt.I();
+  final ConfigService _configService = GetIt.I();
+  final BackupService _backupService = GetIt.I();
 
   bool loading = true;
 
-  HomeViewModel({
-    required this.playerService,
-    required this.songService,
-    required LogService logService,
-    required ConfigService configService,
-    required BackupService backupService,
-  }) : _logService = logService,
-       _configService = configService,
-       _backupService = backupService {
+  HomeViewModel() {
     playerService.player.processingStateStream.listen((state) {
       notifyListeners();
     });
@@ -39,11 +32,12 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<PermissionStatus> checkStoragePermission() async {
-    PermissionStatus storagePermissionStatus =
-        await Permission.manageExternalStorage.status;
-    if (!storagePermissionStatus.isGranted) {
-      _logService.log('Storage permission not granted, redirecting to request page');
+    final storagePermissionStatus = await Permission.manageExternalStorage.status;
 
+    if (storagePermissionStatus.isGranted) {
+      _logService.log('Storage permission is granted');
+    } else {
+      _logService.log('Storage permission not granted, redirecting to request page');
       if (_configService.backupOnLaunch) {
         _configService.backupOnLaunch = false;
         _configService.saveConfig();
@@ -53,7 +47,6 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<void> loadSongs() async {
-    _logService.log('Storage permission is granted');
     await songService.updateMusicData();
     songService.sortAllSongs();
 
@@ -62,9 +55,7 @@ class HomeViewModel extends ChangeNotifier {
     }
     await playerService.recoverSavedPlaylist();
     Globals.showMinimizedPlayer =
-        songService.allSongs.firstWhereOrNull(
-          (e) => e.id == songService.currentSongID,
-        ) !=
+        songService.allSongs.firstWhereOrNull((e) => e.id == songService.currentSongID) !=
         null;
 
     _logService.log('App is ready');

@@ -1,23 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:get_it/get_it.dart';
+
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/constants.dart' show Paths, TableNames;
 
 class BackupService {
-  final ConfigService _configService;
-  final LogService _logService;
-  final DatabaseService _databaseService;
+  final ConfigService _configService = GetIt.I();
+  final LogService _logService = GetIt.I();
+  final DatabaseService _databaseService = GetIt.I();
 
-  BackupService({
-    required ConfigService configService,
-    required LogService logService,
-    required DatabaseService databaseService,
-  }) : _configService = configService,
-       _logService = logService,
-       _databaseService = databaseService {
+  BackupService() {
     final buDir = Directory(Paths.backupPath);
     if (!buDir.existsSync()) buDir.createSync();
   }

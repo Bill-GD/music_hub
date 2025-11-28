@@ -2,6 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:music_hub/data/models/song.dart';
@@ -59,20 +63,12 @@ class PlayerService extends BaseAudioHandler {
   bool _skipping = false;
 
   // Services
-  final LogService _logService;
-  final ConfigService _configService;
-  final DatabaseService _databaseService;
-  final SongService _songService;
+  final LogService _logService = GetIt.I();
+  final ConfigService _configService = GetIt.I();
+  final DatabaseService _databaseService = GetIt.I();
+  final SongService _songService = GetIt.I();
 
-  PlayerService({
-    required LogService logService,
-    required ConfigService configService,
-    required DatabaseService databaseService,
-    required SongService songService,
-  }) : _logService = logService,
-       _configService = configService,
-       _databaseService = databaseService,
-       _songService = songService {
+  PlayerService() {
     _logService.log('Audio Handler init');
     onSongChange = _onSongChangeController.stream;
     onPlayingChange = _onPlayingChangeController.stream;

@@ -33,27 +33,15 @@ void main() async {
     'App version: ${Constants.appVersion}, isDev: ${Constants.isDev}',
   );
 
-  GetIt.I.registerSingleton(ConfigService(logService: GetIt.I()));
-
-  GetIt.I.registerSingleton(
-    await DatabaseService.create(path: Paths.dbPath, logService: GetIt.I()),
-  );
-  GetIt.I.registerSingleton(
-    SongService(
-      logService: GetIt.I(),
-      configService: GetIt.I(),
-      databaseService: GetIt.I(),
-    ),
-  );
+  GetIt.I.registerSingleton(ConfigService());
+  GetIt.I.registerSingleton(await DatabaseService.create(path: Paths.dbPath));
+  GetIt.I.registerSingleton(SongService());
+  GetIt.I.registerSingleton(BackupService());
+  GetIt.I.registerSingleton(LyricService());
   GetIt.I.registerSingleton(
     await (() async {
       final handler = await AudioService.init(
-        builder: () => PlayerService(
-          logService: GetIt.I(),
-          configService: GetIt.I(),
-          databaseService: GetIt.I(),
-          songService: GetIt.I(),
-        ),
+        builder: () => PlayerService(),
         config: const AudioServiceConfig(
           androidNotificationChannelId: 'com.billgd.music_hub.channel.audio',
           androidNotificationChannelName: Constants.appName,
@@ -62,14 +50,6 @@ void main() async {
       return handler;
     })(),
   );
-  GetIt.I.registerSingleton(
-    BackupService(
-      logService: GetIt.I(),
-      configService: GetIt.I(),
-      databaseService: GetIt.I(),
-    ),
-  );
-  GetIt.I.registerSingleton(LyricService(GetIt.I()));
   GetIt.I.registerSingleton(
     Dio(BaseOptions(connectTimeout: 10.seconds, validateStatus: (_) => true)),
   );
@@ -97,17 +77,7 @@ void main() async {
 
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => HomeViewModel(
-            playerService: GetIt.I(),
-            songService: GetIt.I(),
-            logService: GetIt.I(),
-            configService: GetIt.I(),
-            backupService: GetIt.I(),
-          ),
-        ),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => HomeViewModel())],
       child: MusicHubApp(navKey: navigatorKey),
     ),
   );
