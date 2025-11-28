@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,7 +24,6 @@ abstract final class Paths {
   static const lyricPath = '/storage/emulated/0/Lyrics/';
 
   static late final String storagePath;
-  static late final String jsonPath;
   static late final String dbPath;
   static late final String logPath;
 
@@ -30,7 +31,9 @@ abstract final class Paths {
     storagePath = (await getExternalStorageDirectory())?.parent.path ?? '';
 
     logPath = '$storagePath/files/log.txt';
-    jsonPath = '$storagePath/files/tracks.json';
     dbPath = '$storagePath/database/database.db';
+
+    final lyricDir = Directory(lyricPath);
+    if (!lyricDir.existsSync()) lyricDir.createSync(recursive: true);
   }
 }
