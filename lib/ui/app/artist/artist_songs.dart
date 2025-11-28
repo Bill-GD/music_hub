@@ -3,12 +3,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/song.dart';
+import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
+import 'package:music_hub/ui/core/theme/extensions.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
-import 'package:music_hub/utils/globals.dart';
-import 'package:music_hub/utils/globals/widgets.dart';
 
 class ArtistSongs extends StatefulWidget {
   final String artistName;
@@ -20,12 +23,14 @@ class ArtistSongs extends StatefulWidget {
 }
 
 class _ArtistSongsState extends State<ArtistSongs> {
+  final songService = GetIt.I<SongService>(), playerService = GetIt.I<PlayerService>();
   late List<Song> songs;
 
   void getSongs() {
-    songs = Globals.allSongs.where((s) => s.artist == widget.artistName).toList()
+    songs = songService.allSongs.where((s) => s.artist == widget.artistName).toList()
       ..sort(
-        (track1, track2) => track1.name.toLowerCase().compareTo(track2.name.toLowerCase()),
+        (track1, track2) =>
+            track1.name.toLowerCase().compareTo(track2.name.toLowerCase()),
       );
   }
 
@@ -40,7 +45,7 @@ class _ArtistSongsState extends State<ArtistSongs> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: context.theme.colorScheme.surface,
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -49,48 +54,45 @@ class _ArtistSongsState extends State<ArtistSongs> {
           centerTitle: true,
           title: Text(
             widget.artistName,
-            style: const TextStyle(fontWeight: FontWeight.w700),
-            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: .w700),
+            textAlign: .center,
           ),
         ),
         body: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: .spaceEvenly,
               children: [
                 TextButton.icon(
                   style: const ButtonStyle(splashFactory: NoSplash.splashFactory),
                   icon: FaIcon(
                     FontAwesomeIcons.shuffle,
                     size: 25,
-                    color: iconColor(context, songs.isEmpty ? 0.5 : 1),
+                    color: context.iconColor(songs.isEmpty ? 0.5 : 1),
                   ),
                   label: Text(
                     'Shuffle playback',
                     style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: iconColor(context, songs.isEmpty ? 0.5 : 1),
+                      fontWeight: .w700,
+                      color: context.iconColor(songs.isEmpty ? 0.5 : 1),
                     ),
                   ),
                   onPressed: songs.isEmpty
                       ? null
                       : () async {
                           final randomSong = songs[Random().nextInt(songs.length)].id;
-                          if (!Globals.audioHandler.isShuffled) {
-                            Globals.audioHandler.changeShuffleMode();
+                          if (!playerService.isShuffled) {
+                            playerService.changeShuffleMode();
                           }
                           // get artistName or album.name depend on category
-                          Globals.audioHandler.registerPlaylist(
+                          playerService.registerPlaylist(
                             widget.artistName,
                             songs.map((e) => e.id).toList(),
                             randomSong,
                           );
-                          await Navigator.of(context).push(
-                            await getMusicPlayerRoute(
-                              context,
-                              randomSong,
-                            ),
-                          );
+                          await Navigator.of(
+                            context,
+                          ).push(await getMusicPlayerRoute(randomSong));
                         },
                 ),
                 TextButton.icon(
@@ -98,31 +100,31 @@ class _ArtistSongsState extends State<ArtistSongs> {
                   icon: FaIcon(
                     Icons.play_circle_filled_rounded,
                     size: 30,
-                    color: iconColor(context, songs.isEmpty ? 0.5 : 1),
+                    color: context.iconColor(songs.isEmpty ? 0.5 : 1),
                   ),
                   label: Text(
                     'Play sequentially',
                     style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: iconColor(context, songs.isEmpty ? 0.5 : 1),
+                      fontWeight: .w700,
+                      color: context.iconColor(songs.isEmpty ? 0.5 : 1),
                     ),
                   ),
                   onPressed: songs.isEmpty
                       ? null
                       : () async {
                           final first = songs[0].id;
-                          if (Globals.audioHandler.isShuffled) {
-                            Globals.audioHandler.changeShuffleMode();
+                          if (playerService.isShuffled) {
+                            playerService.changeShuffleMode();
                           }
                           // get artistName or album.name depend on category
-                          Globals.audioHandler.registerPlaylist(
+                          playerService.registerPlaylist(
                             widget.artistName,
                             songs.map((e) => e.id).toList(),
                             first,
                           );
-                          await Navigator.of(context).push(
-                            await getMusicPlayerRoute(context, first),
-                          );
+                          await Navigator.of(
+                            context,
+                          ).push(await getMusicPlayerRoute(first));
                         },
                 ),
               ],
@@ -133,56 +135,54 @@ class _ArtistSongsState extends State<ArtistSongs> {
                 child: ListView.builder(
                   itemCount: songs.length,
                   itemBuilder: (context, songIndex) => ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                    contentPadding: const .symmetric(horizontal: 4),
                     leading: Padding(
-                      padding: const EdgeInsets.only(left: 16),
+                      padding: const .only(left: 16),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text((songIndex + 1).toString().padLeft(2, '0')),
-                        ],
+                        mainAxisAlignment: .center,
+                        crossAxisAlignment: .center,
+                        children: [Text((songIndex + 1).toString().padLeft(2, '0'))],
                       ),
                     ),
                     title: Text(
                       songs[songIndex].name,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+                      overflow: .ellipsis,
+                      style: const TextStyle(fontWeight: .w600),
                     ),
                     subtitle: Text(
                       songs[songIndex].artist,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                       style: TextStyle(
                         color: Colors.grey[600],
-                        fontWeight: FontWeight.w400,
+                        fontWeight: .w400,
                       ),
                     ),
                     onTap: () async {
-                      Globals.audioHandler.registerPlaylist(
+                      playerService.registerPlaylist(
                         widget.artistName,
                         songs.map((e) => e.id).toList(),
                         songs[songIndex].id,
                       );
-                      await Navigator.of(context).push(
-                        await getMusicPlayerRoute(
-                          context,
-                          songs[songIndex].id,
-                        ),
-                      );
+                      await Navigator.of(
+                        context,
+                      ).push(await getMusicPlayerRoute(songs[songIndex].id));
                       setState(() {});
                     },
                     trailing: IconButton(
                       icon: const Icon(Icons.more_vert_rounded),
                       onPressed: () async {
-                        await showSongOptionsMenu(context, songID: songs[songIndex].id, options: [
-                          SongInfoOption(
-                            songID: songs[songIndex].id,
-                            updateCallback: () {
-                              setState(() {});
-                            },
-                          ),
-                          DeleteSongOption(songID: songs[songIndex].id),
-                        ]);
+                        await context.showSongOptionsMenu(
+                          songID: songs[songIndex].id,
+                          options: [
+                            SongInfoOption(
+                              songID: songs[songIndex].id,
+                              updateCallback: () {
+                                setState(() {});
+                              },
+                            ),
+                            DeleteSongOption(songID: songs[songIndex].id),
+                          ],
+                        );
                         getSongs();
                         if (songs.isEmpty && context.mounted) {
                           Navigator.of(context).pop();

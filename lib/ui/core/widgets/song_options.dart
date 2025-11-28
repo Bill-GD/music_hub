@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
-import 'package:music_hub/ui/app/songs/song_info.dart';
+import 'package:music_hub/ui/app/song/song_info.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';

@@ -79,9 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       vm.songService.allSongs.map((e) => e.id).toList(),
                       song.id,
                     );
-                    await Navigator.of(
-                      context,
-                    ).push(await getMusicPlayerRoute(context, song.id));
+                    await Navigator.of(context).push(await getMusicPlayerRoute(song.id));
                     setState(() {});
                   },
                 );

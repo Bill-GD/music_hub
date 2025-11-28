@@ -2,10 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import 'package:get_it/get_it.dart';
+
+import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/song_service.dart';
+import 'package:music_hub/ui/core/theme/extensions.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/file_picker.dart';
-import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals.dart';
-import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/utils/constants.dart' show Paths;
+import 'package:music_hub/utils/extensions.dart' show DateString;
 
 class SongInfo extends StatefulWidget {
   final int songID;
@@ -17,10 +22,13 @@ class SongInfo extends StatefulWidget {
 }
 
 class _SongInfoState extends State<SongInfo> {
-  final _songController = TextEditingController(), _artistController = TextEditingController();
+  final songService = GetIt.I<SongService>(), playerService = GetIt.I<PlayerService>();
+
+  final _songController = TextEditingController(),
+      _artistController = TextEditingController();
   bool hasCover = false, hasChanges = false;
 
-  late final song = Globals.allSongs.firstWhere((e) => e.id == widget.songID);
+  late final song = songService.allSongs.firstWhere((e) => e.id == widget.songID);
   late String imagePath = song.imagePath;
 
   @override
@@ -47,10 +55,7 @@ class _SongInfoState extends State<SongInfo> {
             icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 40),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text(
-            'Edit song info',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
+          title: const Text('Edit song info', style: TextStyle(fontWeight: .w700)),
           centerTitle: true,
           actions: [
             IconButton(
@@ -72,8 +77,8 @@ class _SongInfoState extends State<SongInfo> {
                       song.imagePath = imagePath;
 
                       await song.update();
-                      if (widget.songID == Globals.currentSongID) {
-                        Globals.audioHandler.updateNotificationInfo(songID: widget.songID);
+                      if (widget.songID == songService.currentSongID) {
+                        playerService.updateNotificationInfo(songID: widget.songID);
                       }
 
                       // setState(() => hasChanges = false);
@@ -90,21 +95,18 @@ class _SongInfoState extends State<SongInfo> {
             children: [
               // song name
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
+                padding: const .symmetric(horizontal: 30),
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  margin: const .symmetric(vertical: 10),
                   child: TextField(
                     controller: _songController,
                     onChanged: (value) => setState(() => hasChanges = value != song.name),
-                    decoration: textFieldDecoration(
-                      context,
+                    decoration: context.textFieldDecoration(
                       labelText: 'Name',
-                      fillColor: Theme.of(context).colorScheme.surface,
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
+                      fillColor: context.theme.colorScheme.surface,
+                      border: const OutlineInputBorder(borderRadius: .all(.circular(10))),
                       suffixIcon: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        padding: .symmetric(horizontal: 12),
                         child: Icon(Icons.edit_rounded),
                       ),
                     ),
@@ -113,21 +115,19 @@ class _SongInfoState extends State<SongInfo> {
               ),
               // song artist
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
+                padding: const .symmetric(horizontal: 30),
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  margin: const .symmetric(vertical: 10),
                   child: TextField(
                     controller: _artistController,
-                    onChanged: (value) => setState(() => hasChanges = value != song.artist),
-                    decoration: textFieldDecoration(
-                      context,
+                    onChanged: (value) =>
+                        setState(() => hasChanges = value != song.artist),
+                    decoration: context.textFieldDecoration(
                       labelText: 'Artist',
-                      fillColor: Theme.of(context).colorScheme.surface,
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
+                      fillColor: context.theme.colorScheme.surface,
+                      border: const OutlineInputBorder(borderRadius: .all(.circular(10))),
                       suffixIcon: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        padding: .symmetric(horizontal: 12),
                         child: Icon(Icons.edit_rounded),
                       ),
                     ),
@@ -135,25 +135,24 @@ class _SongInfoState extends State<SongInfo> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.only(top: 30, bottom: 20),
+                margin: const .only(top: 30, bottom: 20),
                 child: const Text(
                   'Other information',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+                  style: TextStyle(fontSize: 22, fontWeight: .w700),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30, right: 15),
+                padding: const .only(left: 30, right: 15),
                 child: Row(
                   children: [
-                    leadingText(context, 'ID'),
+                    context.leadingText('ID'),
                     Expanded(
                       child: TextFormField(
                         readOnly: true,
-                        scrollPadding: const EdgeInsets.only(right: 0),
+                        scrollPadding: const .only(right: 0),
                         initialValue: song.id.toString(),
-                        decoration: textFieldDecoration(
-                          context,
-                          fillColor: Theme.of(context).colorScheme.surface,
+                        decoration: context.textFieldDecoration(
+                          fillColor: context.theme.colorScheme.surface,
                           border: InputBorder.none,
                         ),
                       ),
@@ -162,18 +161,17 @@ class _SongInfoState extends State<SongInfo> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30, right: 15),
+                padding: const .only(left: 30, right: 15),
                 child: Row(
                   children: [
-                    leadingText(context, 'Time played'),
+                    context.leadingText('Time played'),
                     Expanded(
                       child: TextFormField(
                         readOnly: true,
-                        scrollPadding: const EdgeInsets.only(right: 0),
+                        scrollPadding: const .only(right: 0),
                         initialValue: song.timeListened.toString(),
-                        decoration: textFieldDecoration(
-                          context,
-                          fillColor: Theme.of(context).colorScheme.surface,
+                        decoration: context.textFieldDecoration(
+                          fillColor: context.theme.colorScheme.surface,
                           border: InputBorder.none,
                         ),
                       ),
@@ -182,18 +180,17 @@ class _SongInfoState extends State<SongInfo> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30, right: 15),
+                padding: const .only(left: 30, right: 15),
                 child: Row(
                   children: [
-                    leadingText(context, 'Time added'),
+                    context.leadingText('Time added'),
                     Expanded(
                       child: TextFormField(
                         readOnly: true,
-                        scrollPadding: const EdgeInsets.only(right: 0),
+                        scrollPadding: const .only(right: 0),
                         initialValue: song.timeAdded.toDateString(),
-                        decoration: textFieldDecoration(
-                          context,
-                          fillColor: Theme.of(context).colorScheme.surface,
+                        decoration: context.textFieldDecoration(
+                          fillColor: context.theme.colorScheme.surface,
                           border: InputBorder.none,
                         ),
                       ),
@@ -202,18 +199,17 @@ class _SongInfoState extends State<SongInfo> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30, right: 15),
+                padding: const .only(left: 30, right: 15),
                 child: Row(
                   children: [
-                    leadingText(context, 'Path'),
+                    context.leadingText('Path'),
                     Expanded(
                       child: TextFormField(
                         readOnly: true,
-                        scrollPadding: const EdgeInsets.only(right: 0),
+                        scrollPadding: const .only(right: 0),
                         initialValue: song.fullPath,
-                        decoration: textFieldDecoration(
-                          context,
-                          fillColor: Theme.of(context).colorScheme.surface,
+                        decoration: context.textFieldDecoration(
+                          fillColor: context.theme.colorScheme.surface,
                           border: InputBorder.none,
                         ),
                       ),
@@ -222,18 +218,19 @@ class _SongInfoState extends State<SongInfo> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30, right: 15),
+                padding: const .only(left: 30, right: 15),
                 child: Row(
                   children: [
-                    leadingText(context, 'Lyric'),
+                    context.leadingText('Lyric'),
                     Expanded(
                       child: TextFormField(
                         readOnly: true,
-                        scrollPadding: const EdgeInsets.only(right: 0),
-                        initialValue: song.lyricPath.isNotEmpty ? Globals.lyricPath + song.lyricPath : 'No lyric',
-                        decoration: textFieldDecoration(
-                          context,
-                          fillColor: Theme.of(context).colorScheme.surface,
+                        scrollPadding: const .only(right: 0),
+                        initialValue: song.lyricPath.isNotEmpty
+                            ? Paths.lyricPath + song.lyricPath
+                            : 'No lyric',
+                        decoration: context.textFieldDecoration(
+                          fillColor: context.theme.colorScheme.surface,
                           border: InputBorder.none,
                         ),
                       ),
@@ -243,14 +240,14 @@ class _SongInfoState extends State<SongInfo> {
               ),
               // cover image
               Container(
-                margin: const EdgeInsets.only(top: 30, bottom: 20),
+                margin: const .only(top: 30, bottom: 20),
                 child: const Text(
                   'Cover image',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+                  style: TextStyle(fontSize: 22, fontWeight: .w700),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 32),
+                padding: const .only(bottom: 32),
                 child: GestureDetector(
                   onTap: () async {
                     final path = await FilePicker.image(
@@ -265,34 +262,31 @@ class _SongInfoState extends State<SongInfo> {
                   child: Stack(
                     children: [
                       Container(
-                        constraints: BoxConstraints.tight(const Size(320, 320)),
+                        constraints: .tight(const Size(320, 320)),
                         decoration: !hasCover
                             ? BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: .circular(10),
                                 border: Border.all(
                                   width: 1,
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color: context.theme.colorScheme.onSurface,
                                 ),
                               )
                             : null,
                         child: hasCover
                             ? ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.file(
-                                  File(imagePath),
-                                  fit: BoxFit.cover,
-                                ),
+                                borderRadius: .circular(20),
+                                child: Image.file(File(imagePath), fit: .cover),
                               )
                             : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: .center,
+                                mainAxisSize: .min,
                                 children: [
                                   const Icon(Icons.image_not_supported_rounded, size: 80),
                                   Text(
                                     imagePath.isNotEmpty
                                         ? 'Image is missing\nTap to relocate or change'
                                         : 'No cover image\nTap to change',
-                                    textAlign: TextAlign.center,
+                                    textAlign: .center,
                                   ),
                                 ],
                               ),
@@ -304,7 +298,7 @@ class _SongInfoState extends State<SongInfo> {
                             icon: const Icon(Icons.close_rounded),
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
-                                Theme.of(context).colorScheme.surface.withOpacity(0.2),
+                                context.theme.colorScheme.surface.withValues(alpha: 0.2),
                               ),
                             ),
                             onPressed: () {

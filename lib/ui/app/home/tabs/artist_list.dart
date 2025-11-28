@@ -1,14 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import 'package:animations/animations.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/services/song_service.dart';
-import 'package:music_hub/ui/app/main_screen/add_album.dart';
-import 'package:music_hub/ui/app/songs/album_songs.dart';
-import 'package:music_hub/ui/app/songs/artist_songs.dart';
+import 'package:music_hub/ui/app/artist/artist_songs.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/utils/extensions.dart';
 

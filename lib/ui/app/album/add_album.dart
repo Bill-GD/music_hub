@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/data/models/song.dart';
-import 'package:music_hub/utils/globals.dart';
-import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:get_it/get_it.dart';
+
+import 'package:music_hub/data/models/album.dart';
+import 'package:music_hub/data/services/song_service.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 
 class AddAlbum extends StatefulWidget {
   const AddAlbum({super.key});
@@ -12,10 +14,12 @@ class AddAlbum extends StatefulWidget {
 }
 
 class _AddAlbumState extends State<AddAlbum> {
+  final songService = GetIt.I<SongService>();
+
   final albumNameController = TextEditingController();
   String errorText = '';
   bool canAdd = false;
-  late final names = Globals.albums.map((e) => e.name);
+  late final names = songService.albums.map((e) => e.name);
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +32,18 @@ class _AddAlbumState extends State<AddAlbum> {
         centerTitle: true,
         title: const Text(
           'Add new album',
-          style: TextStyle(fontWeight: FontWeight.w700),
-          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: .w700),
+          textAlign: .center,
         ),
         actions: [
           IconButton(
             onPressed: canAdd
                 ? () async {
-                    await Album(name: albumNameController.text, timeAdded: DateTime.now()).insert();
-                    await updateAlbumList();
+                    await Album(
+                      name: albumNameController.text,
+                      timeAdded: DateTime.now(),
+                    ).insert();
+                    await songService.updateAlbumList();
                     if (context.mounted) Navigator.of(context).pop();
                   }
                 : null,
@@ -45,7 +52,7 @@ class _AddAlbumState extends State<AddAlbum> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        padding: const .symmetric(horizontal: 32, vertical: 16),
         child: TextField(
           controller: albumNameController,
           onChanged: (val) {
@@ -61,18 +68,15 @@ class _AddAlbumState extends State<AddAlbum> {
             }
             setState(() {});
           },
-          decoration: textFieldDecoration(
-            context,
+          decoration: context.textFieldDecoration(
             labelText: 'Name',
             fillColor: Theme.of(context).colorScheme.surface,
             errorText: errorText.isEmpty ? null : errorText,
             suffixIcon: const Padding(
-              padding: EdgeInsets.only(right: 12),
+              padding: .only(right: 12),
               child: Icon(Icons.edit_rounded),
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            border: OutlineInputBorder(borderRadius: .circular(10)),
           ),
         ),
       ),

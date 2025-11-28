@@ -2,11 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/data/models/song.dart';
+import 'package:get_it/get_it.dart';
+
+import 'package:music_hub/data/models/album.dart';
+import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/song_service.dart';
+import 'package:music_hub/ui/core/theme/extensions.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/file_picker.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals.dart';
-import 'package:music_hub/utils/globals/widgets.dart';
 
 class AlbumInfo extends StatefulWidget {
   final int albumID;
@@ -18,6 +22,7 @@ class AlbumInfo extends StatefulWidget {
 }
 
 class _AlbumInfoState extends State<AlbumInfo> {
+  final songService = GetIt.I<SongService>(), playerService = GetIt.I<PlayerService>();
   late final TextEditingController albumController;
   late final Album album;
   String errorText = '', imagePath = '';
@@ -26,7 +31,7 @@ class _AlbumInfoState extends State<AlbumInfo> {
   @override
   void initState() {
     super.initState();
-    album = Globals.albums.firstWhere((e) => e.id == widget.albumID);
+    album = songService.albums.firstWhere((e) => e.id == widget.albumID);
     albumController = TextEditingController(text: album.name);
     imagePath = album.imagePath;
     hasCover = File(imagePath).existsSync();
@@ -47,10 +52,7 @@ class _AlbumInfoState extends State<AlbumInfo> {
             icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 40),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text(
-            'Edit album info',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
+          title: const Text('Edit album info', style: TextStyle(fontWeight: .w700)),
           centerTitle: true,
           actions: [
             IconButton(
@@ -60,7 +62,7 @@ class _AlbumInfoState extends State<AlbumInfo> {
                       FocusManager.instance.primaryFocus?.unfocus();
 
                       album.name = albumController.text.trim();
-                      Globals.audioHandler.playlistName = album.name;
+                      playerService.playlistName = album.name;
                       album.imagePath = imagePath;
                       await album.update();
 
@@ -76,9 +78,9 @@ class _AlbumInfoState extends State<AlbumInfo> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
+                padding: const .symmetric(horizontal: 30),
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  margin: const .symmetric(vertical: 10),
                   child: TextField(
                     controller: albumController,
                     readOnly: album.name == 'Unknown',
@@ -93,18 +95,15 @@ class _AlbumInfoState extends State<AlbumInfo> {
                       }
                       setState(() {});
                     },
-                    decoration: textFieldDecoration(
-                      context,
+                    decoration: context.textFieldDecoration(
                       labelText: 'Name',
-                      fillColor: Theme.of(context).colorScheme.surface,
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
+                      fillColor: context.theme.colorScheme.surface,
+                      border: const OutlineInputBorder(borderRadius: .all(.circular(10))),
                       errorText: errorText.isNotEmpty ? errorText : null,
                       suffixIcon: widget.albumID == 1
                           ? null
                           : const Padding(
-                              padding: EdgeInsets.only(right: 12),
+                              padding: .only(right: 12),
                               child: Icon(Icons.edit_rounded),
                             ),
                     ),
@@ -112,25 +111,24 @@ class _AlbumInfoState extends State<AlbumInfo> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.only(top: 30, bottom: 20),
+                margin: const .only(top: 30, bottom: 20),
                 child: const Text(
                   'Other Information',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+                  style: TextStyle(fontSize: 22, fontWeight: .w700),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30, right: 15),
+                padding: const .only(left: 30, right: 15),
                 child: Row(
                   children: [
-                    leadingText(context, 'ID'),
+                    context.leadingText('ID'),
                     Expanded(
                       child: TextFormField(
                         readOnly: true,
-                        scrollPadding: const EdgeInsets.only(right: 0),
+                        scrollPadding: const .only(right: 0),
                         initialValue: album.id.toString(),
-                        decoration: textFieldDecoration(
-                          context,
-                          fillColor: Theme.of(context).colorScheme.surface,
+                        decoration: context.textFieldDecoration(
+                          fillColor: context.theme.colorScheme.surface,
                           border: InputBorder.none,
                         ),
                       ),
@@ -139,18 +137,17 @@ class _AlbumInfoState extends State<AlbumInfo> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30, right: 15),
+                padding: const .only(left: 30, right: 15),
                 child: Row(
                   children: [
-                    leadingText(context, 'Song count'),
+                    context.leadingText('Song count'),
                     Expanded(
                       child: TextFormField(
                         readOnly: true,
-                        scrollPadding: const EdgeInsets.only(right: 0),
+                        scrollPadding: const .only(right: 0),
                         initialValue: album.songs.length.toString(),
-                        decoration: textFieldDecoration(
-                          context,
-                          fillColor: Theme.of(context).colorScheme.surface,
+                        decoration: context.textFieldDecoration(
+                          fillColor: context.theme.colorScheme.surface,
                           border: InputBorder.none,
                         ),
                       ),
@@ -159,18 +156,17 @@ class _AlbumInfoState extends State<AlbumInfo> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 30, right: 15),
+                padding: const .only(left: 30, right: 15),
                 child: Row(
                   children: [
-                    leadingText(context, 'Time Added'),
+                    context.leadingText('Time Added'),
                     Expanded(
                       child: TextFormField(
                         readOnly: true,
-                        scrollPadding: const EdgeInsets.only(right: 0),
+                        scrollPadding: const .only(right: 0),
                         initialValue: album.timeAdded.toDateString(),
-                        decoration: textFieldDecoration(
-                          context,
-                          fillColor: Theme.of(context).colorScheme.surface,
+                        decoration: context.textFieldDecoration(
+                          fillColor: context.theme.colorScheme.surface,
                           border: InputBorder.none,
                         ),
                       ),
@@ -180,14 +176,14 @@ class _AlbumInfoState extends State<AlbumInfo> {
               ),
               // cover image
               Container(
-                margin: const EdgeInsets.only(top: 30, bottom: 20),
+                margin: const .only(top: 30, bottom: 20),
                 child: const Text(
                   'Cover image',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+                  style: TextStyle(fontSize: 22, fontWeight: .w700),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 32),
+                padding: const .only(bottom: 32),
                 child: GestureDetector(
                   onTap: () async {
                     final path = await FilePicker.image(
@@ -202,34 +198,31 @@ class _AlbumInfoState extends State<AlbumInfo> {
                   child: Stack(
                     children: [
                       Container(
-                        constraints: BoxConstraints.tight(const Size(320, 320)),
+                        constraints: .tight(const Size(320, 320)),
                         decoration: !hasCover
                             ? BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
+                                borderRadius: .circular(10),
+                                border: .all(
                                   width: 1,
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color: context.theme.colorScheme.onSurface,
                                 ),
                               )
                             : null,
                         child: hasCover
                             ? ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.file(
-                                  File(imagePath),
-                                  fit: BoxFit.cover,
-                                ),
+                                borderRadius: .circular(20),
+                                child: Image.file(File(imagePath), fit: .cover),
                               )
                             : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: .center,
+                                mainAxisSize: .min,
                                 children: [
                                   const Icon(Icons.image_not_supported_rounded, size: 80),
                                   Text(
                                     imagePath.isNotEmpty
                                         ? 'Image not found\nTap to relocate or change'
                                         : 'No cover image\nTap to change',
-                                    textAlign: TextAlign.center,
+                                    textAlign: .center,
                                   ),
                                 ],
                               ),
@@ -241,7 +234,9 @@ class _AlbumInfoState extends State<AlbumInfo> {
                             icon: const Icon(Icons.close_rounded),
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
-                                Theme.of(context).colorScheme.surface.withOpacity(0.2),
+                                Theme.of(
+                                  context,
+                                ).colorScheme.surface.withValues(alpha: 0.2),
                               ),
                             ),
                             onPressed: () {

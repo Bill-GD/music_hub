@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:get_it/get_it.dart';
+
+import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/models/song.dart';
+import 'package:music_hub/data/services/song_service.dart';
+import 'package:music_hub/ui/core/theme/extensions.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/globals.dart';
-import 'package:music_hub/utils/globals/widgets.dart';
 import 'package:music_hub/utils/utils.dart';
 
 class AddAlbumSong extends StatefulWidget {
@@ -16,6 +20,7 @@ class AddAlbumSong extends StatefulWidget {
 }
 
 class _AddAlbumSongState extends State<AddAlbumSong> {
+  final songService = GetIt.I<SongService>();
   late final Album album;
   late final List<Song> availableSongs;
   late final List<int> order;
@@ -27,11 +32,12 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
   @override
   void initState() {
     super.initState();
-    album = Globals.albums.firstWhere((e) => e.id == widget.albumID);
-    availableSongs = Globals.allSongs
-        .where((e) => !album.songs.contains(e.id)) //
-        .toList()
-      ..sort((a, b) => a.id - b.id);
+    album = songService.albums.firstWhere((e) => e.id == widget.albumID);
+    availableSongs =
+        songService.allSongs
+            .where((e) => !album.songs.contains(e.id)) //
+            .toList()
+          ..sort((a, b) => a.id - b.id);
     order = List.generate(availableSongs.length, (_) => -1);
   }
 
@@ -46,8 +52,8 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
         centerTitle: true,
         title: const Text(
           'Add new song',
-          style: TextStyle(fontWeight: FontWeight.w700),
-          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: .w700),
+          textAlign: .center,
         ),
         actions: [
           IconButton(
@@ -55,16 +61,17 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
                 ? () async {
                     // LogHandler.log('$order');
                     // LogHandler.log('${availableSongs.map((e) => e.id)}');
-                    final unknown = Globals.albums.firstWhere((e) => e.id == 1);
+                    final unknown = songService.albums.firstWhere((e) => e.id == 1);
                     for (final i in range(1, songAddedCount)) {
                       final si = availableSongs[order.indexOf(i)].id;
-                      Globals.allSongs.firstWhereOrNull((e) => e.id == si)?.hasAlbum = true;
+                      songService.allSongs.firstWhereOrNull((e) => e.id == si)?.hasAlbum =
+                          true;
                       album.songs.add(si);
                       unknown.songs.remove(si);
                     }
                     await album.update();
                     await unknown.update();
-                    await updateAlbumList();
+                    await songService.updateAlbumList();
                     if (context.mounted) Navigator.of(context).pop();
                   }
                 : null,
@@ -75,34 +82,31 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
       body: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            margin: const EdgeInsets.symmetric(vertical: 10),
+            padding: const .symmetric(horizontal: 30),
+            margin: const .symmetric(vertical: 10),
             child: TextField(
               controller: searchController,
               onChanged: (val) {
                 searchText = val;
                 setState(() {});
               },
-              decoration: textFieldDecoration(
-                context,
+              decoration: context.textFieldDecoration(
                 labelText: 'Search',
                 hintText: 'Search names and artists',
-                fillColor: Theme.of(context).colorScheme.surface,
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
+                fillColor: context.theme.colorScheme.surface,
+                border: const OutlineInputBorder(borderRadius: .all(.circular(10))),
               ),
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const .symmetric(horizontal: 16),
               child: ListView.builder(
                 itemCount: availableSongs.length,
                 itemBuilder: (context, songIndex) {
                   final song = availableSongs[songIndex];
                   final tile = CheckboxListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                    contentPadding: const .symmetric(horizontal: 4),
                     value: order[songIndex] != -1,
                     secondary: Text(
                       order[songIndex] < 0 ? '' : order[songIndex].padIntLeft(2, '0'),
@@ -111,16 +115,13 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
                     title: Text(
                       song.name,
                       // '${song.id}. ${song.name}',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+                      overflow: .ellipsis,
+                      style: const TextStyle(fontWeight: .w600),
                     ),
                     subtitle: Text(
                       song.artist,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w400,
-                      ),
+                      overflow: .ellipsis,
+                      style: TextStyle(color: Colors.grey[600], fontWeight: .w400),
                     ),
                     onChanged: (val) {
                       if (val == true) {
