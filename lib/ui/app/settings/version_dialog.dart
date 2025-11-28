@@ -206,7 +206,7 @@ class _VersionDialogState extends State<VersionDialog> {
           ),
           TextButton(
             onPressed: () async {
-              final uri = Uri.parse('https://github.com/Bill-GD/music_player_app/releases/tag/${widget.tag}');
+              final uri = Uri.parse('https://github.com/Bill-GD/music_hub/releases/tag/${widget.tag}');
               final canLaunch = await canLaunchUrl(uri);
               launchUrl(uri);
               if (canLaunch) {

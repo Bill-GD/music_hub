@@ -115,7 +115,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     subtitle: const Text('Get the releases of this app'),
                     onTap: () async {
                       final uri = Uri.parse(
-                        'https://github.com/Bill-GD/music_player_app/releases',
+                        'https://github.com/Bill-GD/music_hub/releases',
                       );
                       final canLaunch = await canLaunchUrl(uri);
                       launchUrl(uri);
@@ -133,7 +133,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     subtitle: const Text('Open GitHub repository of this app'),
                     onTap: () async {
                       final uri = Uri.parse(
-                        'https://github.com/Bill-GD/music_player_app',
+                        'https://github.com/Bill-GD/music_hub',
                       );
                       final canLaunch = await canLaunchUrl(uri);
                       launchUrl(uri);

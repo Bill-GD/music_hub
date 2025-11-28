@@ -12,7 +12,7 @@ String sanitizeFilePath(String path) {
 }
 
 Future<Response> apiQuery(String query) {
-  const baseApiUrl = 'https://api.github.com/repos/Bill-GD/music_player_app';
+  const baseApiUrl = 'https://api.github.com/repos/Bill-GD/music_hub';
   GetIt.I<LogService>().log('Querying $query');
   return get(
     Uri.parse('$baseApiUrl$query'),

@@ -2,9 +2,9 @@
 
 # **Music Hub**
 
-![GitHub Release](https://img.shields.io/github/v/release/Bill-GD/music_player_app?include_prereleases&style=plastic)
-![GitHub repo size](https://img.shields.io/github/repo-size/Bill-GD/music_player_app?style=plastic)
-![GitHub repo size](https://img.shields.io/github/languages/code-size/Bill-GD/music_player_app?style=plastic)
+![GitHub Release](https://img.shields.io/github/v/release/Bill-GD/music_hub?include_prereleases&style=plastic)
+![GitHub repo size](https://img.shields.io/github/repo-size/Bill-GD/music_hub?style=plastic)
+![GitHub repo size](https://img.shields.io/github/languages/code-size/Bill-GD/music_hub?style=plastic)
 
 ### What is this and why was this made?
 
@@ -17,7 +17,7 @@ There are 3 main reasons I built this:
 
 ### How to use?
 
-You can go to the [release](https://github.com/Bill-GD/music_player_app/releases/latest) section and download the APK
+You can go to the [release](https://github.com/Bill-GD/music_hub/releases/latest) section and download the APK
 file
 that is suitable for your Android device.
 If you aren't sure, download the main APK file instead (should be similar to `music_hub_1_4_8.apk
