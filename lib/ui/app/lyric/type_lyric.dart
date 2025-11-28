@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/utils/globals/widgets.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 
 class TypeLyric extends StatefulWidget {
   final List<String> lines;
@@ -42,15 +42,14 @@ class _TypeLyricState extends State<TypeLyric> {
           ),
         ),
         body: Container(
-          padding: const EdgeInsets.all(10),
+          padding: const .all(10),
           height: MediaQuery.of(context).size.height,
           child: TextField(
             controller: lyricController,
             maxLines: null,
-            textAlign: TextAlign.center,
-            textAlignVertical: TextAlignVertical.center,
-            decoration: textFieldDecoration(
-              context,
+            textAlign: .center,
+            textAlignVertical: .center,
+            decoration: context.textFieldDecoration(
               border: InputBorder.none,
               hintText: 'Type lyric here,\n'
                   'separated by new line.\n'

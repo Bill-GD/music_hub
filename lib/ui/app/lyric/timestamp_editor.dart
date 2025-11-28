@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:get_it/get_it.dart';
+
 import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/hold_gesture.dart';
 import 'package:music_hub/utils/extensions.dart';
 
@@ -51,17 +54,13 @@ class _TimestampEditorState extends State<TimestampEditor> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(
-        'Edit timestamp',
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
+      title: const Text('Edit timestamp', textAlign: .center, overflow: .ellipsis),
+      titleTextStyle: context.theme.textTheme.titleLarge?.copyWith(
+        fontSize: 24,
+        fontWeight: .w700,
       ),
-      titleTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
-          ),
       content: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: [
           const Text('Current: '),
           Text(
@@ -70,29 +69,26 @@ class _TimestampEditorState extends State<TimestampEditor> {
               seconds: widget.timestamp.$2,
               milliseconds: widget.timestamp.$3,
             ).toLyricTimestamp(),
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: .bold),
           ),
           const SizedBox(height: 10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: .center,
+            mainAxisSize: .min,
             children: [
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: .center,
+                mainAxisSize: .min,
                 children: [
                   HoldingGesture(
                     callback: () {
                       upTime(0);
                       setState(() {});
                     },
-                    child: const Icon(
-                      Icons.arrow_drop_up_rounded,
-                      size: 40,
-                    ),
+                    child: const Icon(Icons.arrow_drop_up_rounded, size: 40),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+                    padding: const .symmetric(vertical: 24, horizontal: 32),
                     child: Text(edit[0].padIntLeft(2, '0')),
                   ),
                   HoldingGesture(
@@ -100,30 +96,24 @@ class _TimestampEditorState extends State<TimestampEditor> {
                       downTime(0);
                       setState(() {});
                     },
-                    child: const Icon(
-                      Icons.arrow_drop_down_rounded,
-                      size: 40,
-                    ),
+                    child: const Icon(Icons.arrow_drop_down_rounded, size: 40),
                   ),
                 ],
               ),
               const Text(':'),
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: .center,
+                mainAxisSize: .min,
                 children: [
                   HoldingGesture(
                     callback: () {
                       upTime(1);
                       setState(() {});
                     },
-                    child: const Icon(
-                      Icons.arrow_drop_up_rounded,
-                      size: 40,
-                    ),
+                    child: const Icon(Icons.arrow_drop_up_rounded, size: 40),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+                    padding: const .symmetric(vertical: 24, horizontal: 32),
                     child: Text(edit[1].padIntLeft(2, '0')),
                   ),
                   HoldingGesture(
@@ -131,30 +121,24 @@ class _TimestampEditorState extends State<TimestampEditor> {
                       downTime(1);
                       setState(() {});
                     },
-                    child: const Icon(
-                      Icons.arrow_drop_down_rounded,
-                      size: 40,
-                    ),
+                    child: const Icon(Icons.arrow_drop_down_rounded, size: 40),
                   ),
                 ],
               ),
               const Text('.'),
               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: .center,
+                mainAxisSize: .min,
                 children: [
                   HoldingGesture(
                     callback: () {
                       upTime(2);
                       setState(() {});
                     },
-                    child: const Icon(
-                      Icons.arrow_drop_up_rounded,
-                      size: 40,
-                    ),
+                    child: const Icon(Icons.arrow_drop_up_rounded, size: 40),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+                    padding: const .symmetric(vertical: 24, horizontal: 32),
                     child: Text((edit[2] ~/ 10).padIntLeft(2, '0')),
                   ),
                   HoldingGesture(
@@ -162,20 +146,17 @@ class _TimestampEditorState extends State<TimestampEditor> {
                       downTime(2);
                       setState(() {});
                     },
-                    child: const Icon(
-                      Icons.arrow_drop_down_rounded,
-                      size: 40,
-                    ),
+                    child: const Icon(Icons.arrow_drop_down_rounded, size: 40),
                   ),
                 ],
               ),
             ],
-          )
+          ),
         ],
       ),
-      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 18),
-      contentPadding: const EdgeInsets.only(left: 20, right: 20, top: 15),
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      contentTextStyle: context.theme.textTheme.bodyMedium?.copyWith(fontSize: 18),
+      contentPadding: const .only(left: 20, right: 20, top: 15),
+      actionsAlignment: .spaceEvenly,
       actions: [
         TextButton(
           child: const Text('Cancel'),
@@ -184,17 +165,17 @@ class _TimestampEditorState extends State<TimestampEditor> {
         TextButton(
           child: const Text('Save'),
           onPressed: () {
-            LogService.log('Edited timestamp: ${widget.timestamp} -> $edit');
+            GetIt.I<LogService>().log('Edited timestamp: ${widget.timestamp} -> $edit');
             Navigator.of(context).pop(edit);
           },
         ),
       ],
-      actionsPadding: const EdgeInsets.symmetric(vertical: 12),
+      actionsPadding: const .symmetric(vertical: 12),
       shape: RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        side: BorderSide(color: Theme.of(context).colorScheme.onSurface),
+        borderRadius: const .all(.circular(10)),
+        side: BorderSide(color: context.theme.colorScheme.onSurface),
       ),
-      insetPadding: const EdgeInsets.only(top: 40, bottom: 16),
+      insetPadding: const .only(top: 40, bottom: 16),
     );
   }
 }

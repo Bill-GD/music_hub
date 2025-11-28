@@ -277,63 +277,63 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                             ),
                           ],
                         ),
-                        song.lyricPath.isEmpty || lyric.list.isEmpty
-                            ? Column(
-                                mainAxisAlignment: .center,
-                                children: [
-                                  ElevatedButton(
-                                    style: const ButtonStyle(
-                                      backgroundColor: WidgetStatePropertyAll(
-                                        Colors.transparent,
-                                      ),
-                                      side: WidgetStatePropertyAll(
-                                        BorderSide(color: Colors.white54),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              LyricEditor(songID: song.id),
-                                        ),
-                                      );
-                                    },
-                                    child: const Text(
-                                      'Add lyric',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
+                        if (song.lyricPath.isEmpty || lyric.list.isEmpty)
+                          Column(
+                            mainAxisAlignment: .center,
+                            children: [
+                              ElevatedButton(
+                                style: const ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Colors.transparent,
                                   ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      var path = await FilePicker.open(
-                                        context: context,
-                                        rootDirectory: Directory(Paths.lyricPath),
-                                        allowedExtensions: const ['lrc'],
-                                      );
-                                      if (path == null) return;
-                                      path = path.split(Paths.lyricPath).last;
-                                      if (song.lyricPath == path) return;
+                                  side: WidgetStatePropertyAll(
+                                    BorderSide(color: Colors.white54),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => LyricEditor(songID: song.id),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  'Add lyric',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  var path = await FilePicker.open(
+                                    context: context,
+                                    rootDirectory: Directory(Paths.lyricPath),
+                                    allowedExtensions: const ['lrc'],
+                                  );
+                                  if (path == null) return;
+                                  path = path.split(Paths.lyricPath).last;
+                                  if (song.lyricPath == path) return;
 
-                                      logService.log('Chosen new lrc: $path');
-                                      song.lyricPath = path;
-                                      await song.update();
-                                      updateLyric();
-                                    },
-                                    style: ButtonStyle(
-                                      backgroundColor: WidgetStatePropertyAll(
-                                        context.theme.colorScheme.onSecondaryContainer,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'Select file',
-                                      style: TextStyle(
-                                        color: context.theme.colorScheme.surface,
-                                      ),
-                                    ),
+                                  logService.log('Chosen new lrc: $path');
+                                  song.lyricPath = path;
+                                  await song.update();
+                                  updateLyric();
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    context.theme.colorScheme.onSecondaryContainer,
                                   ),
-                                ],
-                              )
-                            : const LyricStrip(),
+                                ),
+                                child: Text(
+                                  'Select file',
+                                  style: TextStyle(
+                                    color: context.theme.colorScheme.surface,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        else
+                          const LyricStrip(),
                       ],
                     ),
                   ),
