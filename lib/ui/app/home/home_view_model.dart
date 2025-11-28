@@ -56,7 +56,7 @@ class HomeViewModel extends ChangeNotifier {
       _backupService.backupData();
     }
     await playerService.recoverSavedPlaylist();
-    Globals.showMinimizedPlayer =
+    Globals.showMinimizedPlayer.value =
         songService.allSongs.firstWhereOrNull((e) => e.id == songService.currentSongID) !=
         null;
 

@@ -189,8 +189,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       ),
                     ),
               // mini player
-              bottomNavigationBar: Visibility(
-                visible: Globals.showMinimizedPlayer,
+              bottomNavigationBar: ValueListenableBuilder(
+                valueListenable: Globals.showMinimizedPlayer,
+                builder: (context, showMinimizedPlayer, child) {
+                  return Visibility(visible: showMinimizedPlayer, child: child!);
+                },
                 child: Container(
                   margin: const .only(left: 10, right: 10, bottom: 10),
                   decoration: BoxDecoration(

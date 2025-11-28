@@ -106,7 +106,7 @@ class DeleteSongOption extends StatelessWidget {
               onPressed: () async {
                 if (songService.currentSongID == songID) {
                   songService.currentSongID = -1;
-                  Globals.showMinimizedPlayer = false;
+                  Globals.showMinimizedPlayer.value = false;
                 }
                 playerService.pause();
                 await song.delete();

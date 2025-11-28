@@ -168,7 +168,7 @@ class PlayerService extends BaseAudioHandler {
     );
 
     _songService.currentSongID = songID;
-    Globals.showMinimizedPlayer = true;
+    Globals.showMinimizedPlayer.value = true;
 
     String imgPath = song.imagePath;
     if (imgPath.isEmpty) {
@@ -254,7 +254,7 @@ class PlayerService extends BaseAudioHandler {
 
     _songService.savedPlaylistName = '${res[0]['list_name']}'.trim();
     _songService.currentSongID = currentID;
-    Globals.showMinimizedPlayer = true;
+    Globals.showMinimizedPlayer.value = true;
     Globals.setDuplicate = true;
 
     await registerPlaylist(

@@ -470,99 +470,96 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
             );
           },
         ),
-        bottomNavigationBar: Visibility(
-          visible: Globals.showMinimizedPlayer,
-          child: Container(
-            margin: const .only(left: 10, right: 10, bottom: 10),
-            decoration: BoxDecoration(
-              color: context.theme.colorScheme.primaryContainer,
-              borderRadius: .circular(30),
-              boxShadow: const [
-                BoxShadow(color: Colors.black38, blurRadius: 5, offset: Offset(0, 5)),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: .spaceEvenly,
-              crossAxisAlignment: .center,
-              children: [
-                Expanded(
-                  child: Theme(
-                    data: context.theme.copyWith(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                    ),
-                    child: ListTile(
-                      contentPadding: .zero,
-                      dense: true,
-                      visualDensity: .compact,
-                      leading: Padding(
-                        padding: const .only(left: 14),
-                        child: Icon(
-                          Icons.music_note_rounded,
-                          color: context.theme.colorScheme.primary,
-                        ),
-                      ),
-                      title: Text(
-                        currentDuration.toLyricTimestamp(),
-                        overflow: .ellipsis,
-                        style: const TextStyle(fontWeight: .w700, fontSize: 16),
-                      ),
-                      subtitle: Text(
-                        '${currentDuration.inMilliseconds} ms',
-                        overflow: .ellipsis,
-                        style: const TextStyle(fontWeight: .w500, fontSize: 12),
-                      ),
-                    ),
+        bottomNavigationBar: Container(
+          margin: const .only(left: 10, right: 10, bottom: 10),
+          decoration: BoxDecoration(
+            color: context.theme.colorScheme.primaryContainer,
+            borderRadius: .circular(30),
+            boxShadow: const [
+              BoxShadow(color: Colors.black38, blurRadius: 5, offset: Offset(0, 5)),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: .spaceEvenly,
+            crossAxisAlignment: .center,
+            children: [
+              Expanded(
+                child: Theme(
+                  data: context.theme.copyWith(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
                   ),
-                ),
-                IconButton(
-                  onPressed: () => playerService.seek(currentDuration - 5.seconds),
-                  icon: Icon(
-                    Icons.replay_5_rounded,
-                    color: context.theme.colorScheme.primary,
-                    size: 30,
-                  ),
-                ),
-                Stack(
-                  alignment: .center,
-                  children: [
-                    CircularProgressIndicator(
-                      strokeWidth: 2,
-                      value: playerService.currentDuration / playerService.totalDuration,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        if (Globals.setDuplicate) {
-                          playerService.setPlayerSong(songService.currentSongID);
-                        } else {
-                          playerService.playing
-                              ? playerService.pause()
-                              : playerService.play();
-                        }
-                        setState(() {});
-                      },
-                      icon: AnimatedIcon(
-                        icon: AnimatedIcons.play_pause,
-                        progress: Tween<double>(
-                          begin: 0.0,
-                          end: 1.0,
-                        ).animate(animController),
+                  child: ListTile(
+                    contentPadding: .zero,
+                    dense: true,
+                    visualDensity: .compact,
+                    leading: Padding(
+                      padding: const .only(left: 14),
+                      child: Icon(
+                        Icons.music_note_rounded,
                         color: context.theme.colorScheme.primary,
-                        size: 30,
                       ),
                     ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () => playerService.seek(currentDuration + 5.seconds),
-                  icon: Icon(
-                    Icons.forward_5_rounded,
-                    color: context.theme.colorScheme.primary,
-                    size: 30,
+                    title: Text(
+                      currentDuration.toLyricTimestamp(),
+                      overflow: .ellipsis,
+                      style: const TextStyle(fontWeight: .w700, fontSize: 16),
+                    ),
+                    subtitle: Text(
+                      '${currentDuration.inMilliseconds} ms',
+                      overflow: .ellipsis,
+                      style: const TextStyle(fontWeight: .w500, fontSize: 12),
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              IconButton(
+                onPressed: () => playerService.seek(currentDuration - 5.seconds),
+                icon: Icon(
+                  Icons.replay_5_rounded,
+                  color: context.theme.colorScheme.primary,
+                  size: 30,
+                ),
+              ),
+              Stack(
+                alignment: .center,
+                children: [
+                  CircularProgressIndicator(
+                    strokeWidth: 2,
+                    value: playerService.currentDuration / playerService.totalDuration,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      if (Globals.setDuplicate) {
+                        playerService.setPlayerSong(songService.currentSongID);
+                      } else {
+                        playerService.playing
+                            ? playerService.pause()
+                            : playerService.play();
+                      }
+                      setState(() {});
+                    },
+                    icon: AnimatedIcon(
+                      icon: AnimatedIcons.play_pause,
+                      progress: Tween<double>(
+                        begin: 0.0,
+                        end: 1.0,
+                      ).animate(animController),
+                      color: context.theme.colorScheme.primary,
+                      size: 30,
+                    ),
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: () => playerService.seek(currentDuration + 5.seconds),
+                icon: Icon(
+                  Icons.forward_5_rounded,
+                  color: context.theme.colorScheme.primary,
+                  size: 30,
+                ),
+              ),
+            ],
           ),
         ),
       ),
