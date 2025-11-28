@@ -78,25 +78,26 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       style: TextStyle(fontSize: FontSize.mediumSmall),
                     ),
                     onTap: () {
-                      Navigator.of(context).push<bool>(
-                        PageRouteBuilder(
-                          pageBuilder: (_, _, _) {
-                            return const MusicDownloader();
-                          },
-                          transitionsBuilder: (context, anim1, _, child) {
-                            return SlideTransition(
-                              position:
-                                  Tween<Offset>(
-                                    begin: const Offset(-1, 0),
-                                    end: const Offset(0, 0),
-                                  ).animate(
-                                    anim1.drive(CurveTween(curve: Curves.decelerate)),
-                                  ),
-                              child: child,
-                            );
-                          },
-                        ),
-                      );
+                      context.showToast('Downloader disabled');
+                      // Navigator.of(context).push<bool>(
+                      //   PageRouteBuilder(
+                      //     pageBuilder: (_, _, _) {
+                      //       return const MusicDownloader();
+                      //     },
+                      //     transitionsBuilder: (context, anim1, _, child) {
+                      //       return SlideTransition(
+                      //         position:
+                      //             Tween<Offset>(
+                      //               begin: const Offset(-1, 0),
+                      //               end: const Offset(0, 0),
+                      //             ).animate(
+                      //               anim1.drive(CurveTween(curve: Curves.decelerate)),
+                      //             ),
+                      //         child: child,
+                      //       );
+                      //     },
+                      //   ),
+                      // );
                     },
                   ),
                   _listItemDivider(),
