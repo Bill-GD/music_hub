@@ -34,7 +34,6 @@ void main() async {
   );
 
   GetIt.I.registerSingleton(ConfigService(logService: GetIt.I()));
-  await GetIt.I<ConfigService>().loadConfig();
 
   GetIt.I.registerSingleton(
     await DatabaseService.create(path: Paths.dbPath, logService: GetIt.I()),
@@ -74,6 +73,8 @@ void main() async {
   GetIt.I.registerSingleton(
     Dio(BaseOptions(connectTimeout: 10.seconds, validateStatus: (_) => true)),
   );
+
+  await GetIt.I<ConfigService>().loadConfig();
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   PlatformDispatcher.instance.onError = (e, s) {
