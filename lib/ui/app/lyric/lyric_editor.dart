@@ -345,8 +345,9 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                       ),
                       onPressed: () {
                         isEditing = false;
-                        if (!hasChanged)
+                        if (!hasChanged) {
                           hasChanged = item.line != lineEditController.text;
+                        }
                         if (hasChanged) {
                           lyric.list[index] = LyricItem(
                             timestamp: item.timestamp,

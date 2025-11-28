@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:music_hub/ui/app/music_downloader/music_downloader.dart';
 import 'package:music_hub/ui/app/settings/setting.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';

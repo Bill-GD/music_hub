@@ -32,13 +32,13 @@ class FilePicker extends StatefulWidget {
     return await Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, _, __) => FilePicker._internal(
+        pageBuilder: (context, _, _) => FilePicker._internal(
           rootDirectory: rootDirectory,
           allowedExtensions: allowedExtensions,
           showImage: false,
         ),
         transitionDuration: const Duration(milliseconds: 300),
-        transitionsBuilder: (_, anim, __, child) {
+        transitionsBuilder: (_, anim, _, child) {
           return SlideTransition(
             position: Tween<Offset>(
               begin: const Offset(0, 1),
@@ -58,13 +58,13 @@ class FilePicker extends StatefulWidget {
     return await Navigator.push(
       context,
       PageRouteBuilder(
-        pageBuilder: (context, _, __) => FilePicker._internal(
+        pageBuilder: (context, _, _) => FilePicker._internal(
           rootDirectory: rootDirectory,
           allowedExtensions: const ['jpg', 'jpeg', 'png', 'webp'],
           showImage: true,
         ),
         transitionDuration: const Duration(milliseconds: 300),
-        transitionsBuilder: (_, anim, __, child) {
+        transitionsBuilder: (_, anim, _, child) {
           return SlideTransition(
             position: Tween<Offset>(
               begin: const Offset(0, 1),
