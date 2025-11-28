@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/home/drawer.dart';
 import 'package:music_hub/ui/app/home/home_view_model.dart';
 import 'package:music_hub/ui/app/home/tabs/album_list.dart';
@@ -30,7 +29,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
-  final logService = GetIt.I<LogService>();
   late final animController = AnimationController(
     duration: 300.ms,
     reverseDuration: 300.ms,
@@ -55,9 +53,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         );
 
         storagePermissionStatus = await Permission.manageExternalStorage.status;
-      } else {
-        await widget.viewModel.loadSongs();
       }
+      await widget.viewModel.loadSongs();
     });
 
     widget.viewModel.playerService.onPlayingChange.listen((playing) {

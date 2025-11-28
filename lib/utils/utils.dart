@@ -1,41 +1,10 @@
-import 'dart:convert';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/constants.dart' show Constants;
 
 String sanitizeFilePath(String path) {
   return path.replaceAll(RegExp(r'[\\|?*<":>+\[\]/]'), '').replaceAll("'", '');
-}
-
-Future<Response> apiQuery(String query) {
-  const baseApiUrl = 'https://api.github.com/repos/Bill-GD/music_hub';
-  GetIt.I<LogService>().log('Querying $query');
-  return get(
-    Uri.parse('$baseApiUrl$query'),
-    headers: {'Authorization': 'Bearer ${Constants.githubToken}'},
-  );
-}
-
-Future<List<(String, String)>> getAllTags() async {
-  final value = await apiQuery('/git/refs/tags');
-  final json = jsonDecode(value.body);
-  if (json == null) {
-    throw Exception('Rate limited. Please come back later.');
-  }
-  if (json is! List) {
-    GetIt.I<LogService>().log('JSON received is not a list', LogLevel.error);
-    throw Exception('Something is wrong when trying to get version list.');
-  }
-
-  return json.map((e) {
-    final tag = e['ref'].toString().trim().split('/').last;
-    final sha = e['object']['sha'].toString().trim().substring(0, 7);
-    return (tag, sha);
-  }).toList();
 }
 
 String getSizeString(double bytes) {

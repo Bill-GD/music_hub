@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
 
+import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/settings/version_dialog.dart';
 import 'package:music_hub/utils/constants.dart' show Constants;
 import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
-import 'package:music_hub/utils/utils.dart';
 
 class VersionList extends StatefulWidget {
   const VersionList({super.key});
@@ -16,7 +16,7 @@ class VersionList extends StatefulWidget {
 }
 
 class _VersionListState extends State<VersionList> {
-  final logService = GetIt.I<LogService>();
+  final logService = GetIt.I<LogService>(), githubService = GetIt.I<GithubService>();
   List<String> tags = [], shas = [];
   int versionCount = 0;
   bool loading = true;
@@ -24,7 +24,7 @@ class _VersionListState extends State<VersionList> {
   @override
   void initState() {
     super.initState();
-    getAllTags().then((value) {
+    githubService.getAllTags().then((value) {
       value = value.reversed.toList();
       tags = value.map((e) => e.$1).toList();
       shas = value.map((e) => e.$2).toList();
@@ -54,7 +54,7 @@ class _VersionListState extends State<VersionList> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          final res = (await getAllTags()).reversed.toList();
+          final res = (await githubService.getAllTags()).reversed.toList();
           tags = res.map((e) => e.$1).toList();
           shas = res.map((e) => e.$2).toList();
           versionCount = tags.length;

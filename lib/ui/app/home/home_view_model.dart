@@ -5,13 +5,14 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:music_hub/data/services/backup_service.dart';
 import 'package:music_hub/data/services/config_service.dart';
+import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/constants.dart' show Constants;
 import 'package:music_hub/utils/extensions.dart' show WhereOrNull;
 import 'package:music_hub/utils/globals.dart';
-import 'package:music_hub/utils/utils.dart' show checkInternetConnection, getAllTags;
+import 'package:music_hub/utils/utils.dart' show checkInternetConnection;
 
 class HomeViewModel extends ChangeNotifier {
   final PlayerService playerService = GetIt.I();
@@ -19,6 +20,7 @@ class HomeViewModel extends ChangeNotifier {
   final LogService _logService = GetIt.I();
   final ConfigService _configService = GetIt.I();
   final BackupService _backupService = GetIt.I();
+  final GithubService _githubService = GetIt.I();
 
   bool loading = true;
 
@@ -66,7 +68,7 @@ class HomeViewModel extends ChangeNotifier {
   Future<(bool, String?)> checkNewVersion() async {
     final hasInternet = await checkInternetConnection();
     if (!hasInternet) return (false, null);
-    final tags = (await getAllTags()).map((e) => e.$1).toList();
+    final tags = (await _githubService.getAllTags()).map((e) => e.$1).toList();
     if (tags.isEmpty || 'v${Constants.appVersion}' == tags.last) return (false, null);
     return (true, tags.last);
   }

@@ -3,27 +3,31 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' show Response;
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/utils.dart';
 
 class VersionDialog extends StatefulWidget {
   final String tag;
   final String sha;
   final bool dev;
 
-  const VersionDialog({super.key, required this.tag, required this.sha, this.dev = false});
+  const VersionDialog({
+    super.key,
+    required this.tag,
+    required this.sha,
+    this.dev = false,
+  });
 
   @override
   State<VersionDialog> createState() => _VersionDialogState();
 }
 
 class _VersionDialogState extends State<VersionDialog> {
-  final logService = GetIt.I<LogService>();
+  final logService = GetIt.I<LogService>(), githubService = GetIt.I<GithubService>();
   bool loading = true;
   String body = '', timeUploaded = '';
 
@@ -39,8 +43,8 @@ class _VersionDialogState extends State<VersionDialog> {
       body = widget.tag.contains('_dev_')
           ? await getRelease()
           : widget.dev
-              ? await getNote()
-              : await getRelease();
+          ? await getNote()
+          : await getRelease();
     } catch (e) {
       if (mounted) Navigator.pop(context);
       rethrow;
@@ -49,15 +53,14 @@ class _VersionDialogState extends State<VersionDialog> {
   }
 
   Future<String> getRelease() async {
-    final res = await apiQuery('/releases/tags/${widget.tag}');
-    final json = jsonDecode(res.body);
+    final data = (await githubService.apiQuery('/releases/tags/${widget.tag}')).data;
 
-    if (json == null) throw Exception('Rate limited. Please come back later.');
-    if (json is! Map) throw Exception('Something is wrong, JSON received is not a map.');
+    if (data == null) throw Exception('Rate limited. Please come back later.');
+    if (data is! Map) throw Exception('Something is wrong, JSON received is not a map.');
 
     logService.log('Got release of: t=${widget.tag}, sha=${widget.sha}');
-    timeUploaded = DateTime.parse(json['published_at'] as String).toDateString();
-    return json['body'] as String;
+    timeUploaded = DateTime.parse(data['published_at'] as String).toDateString();
+    return data['body'] as String;
   }
 
   Future<String> getNote() async {
@@ -65,29 +68,33 @@ class _VersionDialogState extends State<VersionDialog> {
     const filename = 'dev_changes.md';
 
     logService.log('Getting markdown of: t=${widget.tag}, sha=${widget.sha}');
-    Response res = await apiQuery('/contents/$filename?ref=${widget.sha}');
-    dynamic json = jsonDecode(res.body);
+    final noteData = (await githubService.apiQuery(
+      '/contents/$filename?ref=${widget.sha}',
+    )).data;
 
-    if (json == null) throw Exception('Rate limited. Please come back later.');
-    if (json is! Map) throw Exception('Something is wrong, JSON received is not a map.');
+    if (noteData == null) throw Exception('Rate limited. Please come back later.');
+    if (noteData is! Map)
+      throw Exception('Something is wrong, JSON received is not a map.');
 
-    if (json['content'] == null) {
+    if (noteData['content'] == null) {
       logService.log('dev_changes.md not found, getting release instead');
       return getRelease();
     }
 
-    final content = utf8.decode(base64Decode(
-      (json['content'] as String).replaceAll('\n', ''),
-    ));
+    final content = utf8.decode(
+      base64Decode((noteData['content'] as String).replaceAll('\n', '')),
+    );
 
     logService.log('Getting time of commit (${widget.sha})');
-    res = await apiQuery('/commits/${widget.sha}');
-    json = jsonDecode(res.body);
+    final commitData = (await githubService.apiQuery('/commits/${widget.sha}')).data;
 
-    if (json == null) throw Exception('Rate limited. Please come back later.');
-    if (json is! Map) throw Exception('Something is wrong, JSON received is not a map.');
+    if (commitData == null) throw Exception('Rate limited. Please come back later.');
+    if (commitData is! Map)
+      throw Exception('Something is wrong, JSON received is not a map.');
 
-    timeUploaded = DateTime.parse(json['commit']['committer']['date'] as String).toDateString();
+    timeUploaded = DateTime.parse(
+      commitData['commit']['committer']['date'] as String,
+    ).toDateString();
 
     return content;
   }
@@ -96,13 +103,7 @@ class _VersionDialogState extends State<VersionDialog> {
     final List<InlineSpan> bodySpans = [];
     final List<String> bodyLines = body
         .split(RegExp(r'(\r\n)|\n|(\n\n)'))
-        .where(
-          (e) => !e.contains(
-            RegExp(
-              r"(Full Changelog)|(What's Changed)|(/pull/)",
-            ),
-          ),
-        )
+        .where((e) => !e.contains(RegExp(r"(Full Changelog)|(What's Changed)|(/pull/)")))
         .map((e) => '$e\n')
         .toList();
     while (bodyLines.isNotEmpty && bodyLines.last.trim().isEmpty) {
@@ -116,10 +117,7 @@ class _VersionDialogState extends State<VersionDialog> {
 
       bodyLines[i] = split.first;
       for (int j = 1; j < split.length; j++) {
-        bodyLines.insert(
-          idx + j,
-          '${j % 2 != 0 ? '`' : ''}${split[j]}',
-        );
+        bodyLines.insert(idx + j, '${j % 2 != 0 ? '`' : ''}${split[j]}');
         i++;
       }
     }
@@ -140,21 +138,24 @@ class _VersionDialogState extends State<VersionDialog> {
         text = l;
       }
 
-      bodySpans.add(TextSpan(
-        text: text,
-        style: TextStyle(
-          fontSize: titleLevel > 0
-              ? 24.0 - titleLevel
-              : isCode
-                  ? 14
-                  : 16,
-          fontWeight: titleLevel > 0 ? .bold : null,
-          fontFamily: isCode ? 'monospace' : null,
-          color: isCode //
-              ? context.theme.colorScheme.primary
-              : context.theme.textTheme.bodyMedium?.color,
+      bodySpans.add(
+        TextSpan(
+          text: text,
+          style: TextStyle(
+            fontSize: titleLevel > 0
+                ? 24.0 - titleLevel
+                : isCode
+                ? 14
+                : 16,
+            fontWeight: titleLevel > 0 ? .bold : null,
+            fontFamily: isCode ? 'monospace' : null,
+            color:
+                isCode //
+                ? context.theme.colorScheme.primary
+                : context.theme.textTheme.bodyMedium?.color,
+          ),
         ),
-      ));
+      );
     }
 
     return bodySpans;
@@ -188,25 +189,19 @@ class _VersionDialogState extends State<VersionDialog> {
           ),
         ),
         content: loading
-            ? const Column(
-                mainAxisSize: .min,
-                children: [CircularProgressIndicator()],
-              )
+            ? const Column(mainAxisSize: .min, children: [CircularProgressIndicator()])
             : SingleChildScrollView(
-                child: RichText(
-                  text: TextSpan(children: getContent(body)),
-                ),
+                child: RichText(text: TextSpan(children: getContent(body))),
               ),
         contentPadding: const .only(left: 20, right: 20, top: 20),
         actionsAlignment: .spaceEvenly,
         actions: [
-          TextButton(
-            onPressed: Navigator.of(context).pop,
-            child: const Text('OK'),
-          ),
+          TextButton(onPressed: Navigator.of(context).pop, child: const Text('OK')),
           TextButton(
             onPressed: () async {
-              final uri = Uri.parse('https://github.com/Bill-GD/music_hub/releases/tag/${widget.tag}');
+              final uri = Uri.parse(
+                'https://github.com/Bill-GD/music_hub/releases/tag/${widget.tag}',
+              );
               final canLaunch = await canLaunchUrl(uri);
               launchUrl(uri);
               if (canLaunch) {

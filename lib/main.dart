@@ -12,6 +12,7 @@ import 'package:music_hub/app.dart';
 import 'package:music_hub/data/services/backup_service.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
+import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
@@ -28,6 +29,10 @@ void main() async {
   await dotenv.load();
   await Paths.init();
 
+  GetIt.I.registerSingleton(
+    Dio(BaseOptions(connectTimeout: 10.seconds, validateStatus: (_) => true)),
+  );
+
   GetIt.I.registerSingleton(LogService(logPath: Paths.logPath));
   GetIt.I<LogService>().log(
     'App version: ${Constants.appVersion}, isDev: ${Constants.isDev}',
@@ -38,6 +43,7 @@ void main() async {
   GetIt.I.registerSingleton(SongService());
   GetIt.I.registerSingleton(BackupService());
   GetIt.I.registerSingleton(LyricService());
+  GetIt.I.registerSingleton(GithubService());
   GetIt.I.registerSingleton(
     await (() async {
       final handler = await AudioService.init(
@@ -49,9 +55,6 @@ void main() async {
       );
       return handler;
     })(),
-  );
-  GetIt.I.registerSingleton(
-    Dio(BaseOptions(connectTimeout: 10.seconds, validateStatus: (_) => true)),
   );
 
   await GetIt.I<ConfigService>().loadConfig();
