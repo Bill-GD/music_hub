@@ -1,13 +1,13 @@
-/// This file is a part of flutter_media_metadata (https://github.com/alexmercerind/flutter_media_metadata).
-///
-/// Copyright (c) 2021-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-/// Use of this source code is governed by MIT license that can be found in the LICENSE file.
-
 import 'dart:io';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_media_metadata/src/models/metadata.dart';
+
+/// This file is a part of flutter_media_metadata (https://github.com/alexmercerind/flutter_media_metadata).
+///
+/// Copyright (c) 2021-2022, Hitesh Kumar Saini &lt;saini123hitesh@gmail.com&gt;.
+/// All rights reserved.
+/// Use of this source code is governed by MIT license that can be found in the LICENSE file.
 
 /// ## MetadataRetriever
 ///

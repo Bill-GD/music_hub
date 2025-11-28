@@ -1,9 +1,8 @@
 /// This file is a part of flutter_media_metadata (https://github.com/alexmercerind/flutter_media_metadata).
 ///
-/// Copyright (c) 2021-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// Copyright (c) 2021-2022, Hitesh Kumar Saini &lt;saini123hitesh@gmail.com&gt;.
 /// All rights reserved.
 /// Use of this source code is governed by MIT license that can be found in the LICENSE file.
-
 /// Safely parses [int] from a [String].
 int? parseInteger(dynamic value) {
   if (value == null) {

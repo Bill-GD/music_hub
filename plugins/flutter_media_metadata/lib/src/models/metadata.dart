@@ -1,12 +1,12 @@
-/// This file is a part of flutter_media_metadata (https://github.com/alexmercerind/flutter_media_metadata).
-///
-/// Copyright (c) 2021-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
-/// All rights reserved.
-/// Use of this source code is governed by MIT license that can be found in the LICENSE file.
-
 import 'dart:typed_data';
 
 import 'package:flutter_media_metadata/src/utils.dart';
+
+/// This file is a part of flutter_media_metadata (https://github.com/alexmercerind/flutter_media_metadata).
+///
+/// Copyright (c) 2021-2022, Hitesh Kumar Saini &lt;saini123hitesh@gmail.com&gt;.
+/// All rights reserved.
+/// Use of this source code is governed by MIT license that can be found in the LICENSE file.
 
 /// Metadata of a media file.
 class Metadata {
@@ -79,9 +79,7 @@ class Metadata {
 
   factory Metadata.fromJson(dynamic map) => Metadata(
         trackName: map['metadata']['trackName'],
-        trackArtistNames: map['metadata']['trackArtistNames'] != null
-            ? map['metadata']['trackArtistNames'].split('/')
-            : null,
+        trackArtistNames: map['metadata']['trackArtistNames']?.split('/'),
         albumName: map['metadata']['albumName'],
         albumArtistName: map['metadata']['albumArtistName'],
         trackNumber: parseInteger(map['metadata']['trackNumber']),

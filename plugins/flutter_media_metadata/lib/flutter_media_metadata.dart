@@ -3,7 +3,7 @@
 /// A Flutter plugin to read metadata of media files.
 ///
 /// MIT License.
-/// Copyright (c) 2021-2022, Hitesh Kumar Saini <saini123hitesh@gmail.com>.
+/// Copyright (c) 2021-2022, Hitesh Kumar Saini &lt;saini123hitesh@gmail.com&gt;.
 ///
 /// _Minimal Example_
 /// ```dart
@@ -27,6 +27,5 @@
 ///
 library flutter_media_metadata;
 
-export 'package:flutter_media_metadata/src/flutter_media_metadata_native.dart'
-    if (dart.library.html) 'package:flutter_media_metadata/src/flutter_media_metadata_web.dart';
+export 'package:flutter_media_metadata/src/flutter_media_metadata_native.dart';
 export 'package:flutter_media_metadata/src/models/metadata.dart';
