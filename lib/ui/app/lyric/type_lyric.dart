@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:music_hub/ui/core/widgets/extensions.dart';
+import 'package:music_hub/ui/core/widgets/input.dart';
 
 class TypeLyric extends StatefulWidget {
   final List<String> lines;
+
   const TypeLyric({super.key, required this.lines});
 
   @override
@@ -35,27 +37,21 @@ class _TypeLyricState extends State<TypeLyric> {
             ),
           ],
           shape: BorderDirectional(
-            bottom: BorderSide(
-              color: Theme.of(context).colorScheme.secondary,
-              width: 1,
-            ),
+            bottom: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1),
           ),
         ),
         body: Container(
           padding: const .all(10),
           height: MediaQuery.of(context).size.height,
-          child: TextField(
+          child: Input(
             controller: lyricController,
-            maxLines: null,
             textAlign: .center,
             textAlignVertical: .center,
-            decoration: context.textFieldDecoration(
-              border: InputBorder.none,
-              hintText: 'Type lyric here,\n'
-                  'separated by new line.\n'
-                  'Use space for empty line.',
-              fillColor: Colors.transparent,
-            ),
+            border: .none,
+            hintText:
+                'Type lyric here,\n'
+                'separated by new line.\n'
+                'Use space for empty line.',
           ),
         ),
       ),

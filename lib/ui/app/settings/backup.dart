@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:music_hub/data/services/backup_service.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/ui/core/widgets/button.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/extensions.dart' show DateString, DurationFromNumber;
 
@@ -51,8 +52,11 @@ class _BackupScreenState extends State<BackupScreen> {
               padding: const .only(bottom: 16),
               child: Row(
                 mainAxisAlignment: .center,
+                spacing: 20,
                 children: [
-                  ElevatedButton(
+                  Button(
+                    text: 'Backup data',
+                    outline: true,
                     onPressed: () async {
                       final res = await context.showActionDialog<bool>(
                         title: 'Backup data',
@@ -83,10 +87,10 @@ class _BackupScreenState extends State<BackupScreen> {
                       updateBackupList();
                       setState(() {});
                     },
-                    child: const Text('Backup data'),
                   ),
-                  const SizedBox(width: 20),
-                  ElevatedButton(
+                  Button(
+                    text: 'Recover backup',
+                    outline: true,
                     onPressed: () async {
                       if (backupService.getBackups().isEmpty) {
                         GetIt.I<LogService>().log('No backup data found');
@@ -122,7 +126,6 @@ class _BackupScreenState extends State<BackupScreen> {
                       updateBackupList();
                       setState(() {});
                     },
-                    child: const Text('Recover backup'),
                   ),
                 ],
               ),

@@ -10,6 +10,7 @@ import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/file_picker.dart';
+import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/extensions.dart' show DateString;
 
 class AlbumInfo extends StatefulWidget {
@@ -81,7 +82,7 @@ class _AlbumInfoState extends State<AlbumInfo> {
                 padding: const .symmetric(horizontal: 30),
                 child: Container(
                   margin: const .symmetric(vertical: 10),
-                  child: TextField(
+                  child: Input(
                     controller: albumController,
                     readOnly: album.name == 'Unknown',
                     onChanged: (val) {
@@ -95,18 +96,14 @@ class _AlbumInfoState extends State<AlbumInfo> {
                       }
                       setState(() {});
                     },
-                    decoration: context.textFieldDecoration(
-                      labelText: 'Name',
-                      fillColor: context.theme.colorScheme.surface,
-                      border: const OutlineInputBorder(borderRadius: .all(.circular(10))),
-                      errorText: errorText.isNotEmpty ? errorText : null,
-                      suffixIcon: widget.albumID == 1
-                          ? null
-                          : const Padding(
-                              padding: .only(right: 12),
-                              child: Icon(Icons.edit_rounded),
-                            ),
-                    ),
+                    labelText: 'Name',
+                    errorText: errorText.isNotEmpty ? errorText : null,
+                    suffixIcon: widget.albumID == 1
+                        ? null
+                        : const Padding(
+                            padding: .only(right: 12),
+                            child: Icon(Icons.edit_rounded),
+                          ),
                   ),
                 ),
               ),
@@ -123,14 +120,11 @@ class _AlbumInfoState extends State<AlbumInfo> {
                   children: [
                     context.leadingText('ID'),
                     Expanded(
-                      child: TextFormField(
+                      child: Input(
                         readOnly: true,
                         scrollPadding: const .only(right: 0),
                         initialValue: album.id.toString(),
-                        decoration: context.textFieldDecoration(
-                          fillColor: context.theme.colorScheme.surface,
-                          border: InputBorder.none,
-                        ),
+                        border: .none,
                       ),
                     ),
                   ],
@@ -142,14 +136,11 @@ class _AlbumInfoState extends State<AlbumInfo> {
                   children: [
                     context.leadingText('Song count'),
                     Expanded(
-                      child: TextFormField(
+                      child: Input(
                         readOnly: true,
                         scrollPadding: const .only(right: 0),
                         initialValue: album.songs.length.toString(),
-                        decoration: context.textFieldDecoration(
-                          fillColor: context.theme.colorScheme.surface,
-                          border: InputBorder.none,
-                        ),
+                        border: .none,
                       ),
                     ),
                   ],
@@ -161,14 +152,11 @@ class _AlbumInfoState extends State<AlbumInfo> {
                   children: [
                     context.leadingText('Time Added'),
                     Expanded(
-                      child: TextFormField(
+                      child: Input(
                         readOnly: true,
                         scrollPadding: const .only(right: 0),
                         initialValue: album.timeAdded.toDateString(),
-                        decoration: context.textFieldDecoration(
-                          fillColor: context.theme.colorScheme.surface,
-                          border: InputBorder.none,
-                        ),
+                        border: .none,
                       ),
                     ),
                   ],

@@ -4,6 +4,7 @@ import 'package:music_hub/ui/app/player/music_player.dart';
 import 'package:music_hub/ui/app/search/search_view_model.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
+import 'package:music_hub/ui/core/widgets/input.dart';
 
 class SearchScreen extends StatefulWidget {
   final SearchViewModel viewModel;
@@ -27,26 +28,16 @@ class _SearchScreenState extends State<SearchScreen> {
             icon: const Icon(Icons.keyboard_arrow_up_rounded, size: 40),
             onPressed: Navigator.of(context).pop,
           ),
-          title: Container(
-            height: AppBar().preferredSize.height * 0.65,
-            margin: const .only(right: 15),
-            child: TextField(
-              autofocus: true,
-              onChanged: vm.searchSongs,
-              decoration: context.textFieldDecoration(
-                hintText: 'Search songs and artists',
-                prefixIcon: Icon(
-                  Icons.search_rounded,
-                  color: context.theme.colorScheme.primary,
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: context.theme.colorScheme.onSurface),
-                  borderRadius: .circular(25),
-                ),
-                fillColor: context.theme.colorScheme.secondaryContainer.withValues(
-                  alpha: 0.4,
-                ),
-              ),
+          title: Input(
+            autofocus: true,
+            onChanged: vm.searchSongs,
+            hintText: 'Search songs and artists',
+            constraints: BoxConstraints.loose(
+              Size.fromHeight(AppBar().preferredSize.height * 0.65),
+            ),
+            prefixIcon: Icon(
+              Icons.search_rounded,
+              color: context.theme.colorScheme.primary,
             ),
           ),
         ),

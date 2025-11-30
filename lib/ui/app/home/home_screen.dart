@@ -15,6 +15,7 @@ import 'package:music_hub/ui/app/search/search_view_model.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
+import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/constants.dart' show Constants;
 import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, WhereOrNull;
 import 'package:music_hub/utils/globals.dart';
@@ -95,55 +96,40 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             child: Scaffold(
               appBar: AppBar(
                 backgroundColor: context.theme.colorScheme.surface,
-                title: Container(
-                  height: AppBar().preferredSize.height * 0.65,
-                  margin: const .only(right: 15),
-                  child: TextField(
-                    readOnly: true,
-                    decoration: context.textFieldDecoration(
-                      hintText: 'Search songs and artists',
-                      prefixIcon: Icon(
-                        Icons.search_rounded,
-                        color: context.theme.colorScheme.primary,
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: context.theme.colorScheme.onSurface,
-                        ),
-                        borderRadius: .circular(25),
-                      ),
-                      fillColor: context.theme.colorScheme.secondaryContainer.withValues(
-                        alpha: 0.4,
-                      ),
-                    ),
-                    onTap: () async {
-                      await Navigator.of(context).push(
-                        PageRouteBuilder(
-                          pageBuilder: (context, _, _) {
-                            return SearchScreen(
-                              viewModel: SearchViewModel(
-                                playerService: GetIt.I(),
-                                songService: GetIt.I(),
-                              ),
-                            );
-                          },
-                          transitionDuration: 400.ms,
-                          transitionsBuilder: (_, anim, _, child) {
-                            return SlideTransition(
-                              position:
-                                  Tween<Offset>(
-                                        begin: const Offset(0, -1),
-                                        end: const Offset(0, 0),
-                                      )
-                                      .chain(CurveTween(curve: Curves.easeOutCubic))
-                                      .animate(anim),
-                              child: child,
-                            );
-                          },
-                        ),
-                      );
-                    },
+                title: Input(
+                  readOnly: true,
+                  hintText: 'Search songs and artists',
+                  prefixIcon: Icon(
+                    Icons.search_rounded,
+                    color: context.theme.colorScheme.primary,
                   ),
+                  constraints: BoxConstraints.loose(
+                    Size.fromHeight(AppBar().preferredSize.height * 0.65),
+                  ),
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      PageRouteBuilder(
+                        pageBuilder: (context, _, _) {
+                          return SearchScreen(
+                            viewModel: SearchViewModel(
+                              playerService: GetIt.I(),
+                              songService: GetIt.I(),
+                            ),
+                          );
+                        },
+                        transitionDuration: 400.ms,
+                        transitionsBuilder: (_, anim, _, child) {
+                          return SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(0, -1),
+                              end: const Offset(0, 0),
+                            ).chain(CurveTween(curve: Curves.easeOutCubic)).animate(anim),
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
                 bottom: TabBar(
                   enableFeedback: false,

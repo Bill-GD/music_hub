@@ -9,6 +9,7 @@ import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/file_picker.dart';
+import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/constants.dart' show Paths;
 import 'package:music_hub/utils/extensions.dart' show DateString;
 
@@ -98,17 +99,13 @@ class _SongInfoState extends State<SongInfo> {
                 padding: const .symmetric(horizontal: 30),
                 child: Container(
                   margin: const .symmetric(vertical: 10),
-                  child: TextField(
+                  child: Input(
                     controller: _songController,
                     onChanged: (value) => setState(() => hasChanges = value != song.name),
-                    decoration: context.textFieldDecoration(
-                      labelText: 'Name',
-                      fillColor: context.theme.colorScheme.surface,
-                      border: const OutlineInputBorder(borderRadius: .all(.circular(10))),
-                      suffixIcon: const Padding(
-                        padding: .symmetric(horizontal: 12),
-                        child: Icon(Icons.edit_rounded),
-                      ),
+                    labelText: 'Name',
+                    suffixIcon: const Padding(
+                      padding: .symmetric(horizontal: 12),
+                      child: Icon(Icons.edit_rounded),
                     ),
                   ),
                 ),
@@ -118,18 +115,14 @@ class _SongInfoState extends State<SongInfo> {
                 padding: const .symmetric(horizontal: 30),
                 child: Container(
                   margin: const .symmetric(vertical: 10),
-                  child: TextField(
+                  child: Input(
                     controller: _artistController,
                     onChanged: (value) =>
                         setState(() => hasChanges = value != song.artist),
-                    decoration: context.textFieldDecoration(
-                      labelText: 'Artist',
-                      fillColor: context.theme.colorScheme.surface,
-                      border: const OutlineInputBorder(borderRadius: .all(.circular(10))),
-                      suffixIcon: const Padding(
-                        padding: .symmetric(horizontal: 12),
-                        child: Icon(Icons.edit_rounded),
-                      ),
+                    labelText: 'Artist',
+                    suffixIcon: const Padding(
+                      padding: .symmetric(horizontal: 12),
+                      child: Icon(Icons.edit_rounded),
                     ),
                   ),
                 ),
@@ -147,14 +140,11 @@ class _SongInfoState extends State<SongInfo> {
                   children: [
                     context.leadingText('ID'),
                     Expanded(
-                      child: TextFormField(
+                      child: Input(
                         readOnly: true,
                         scrollPadding: const .only(right: 0),
                         initialValue: song.id.toString(),
-                        decoration: context.textFieldDecoration(
-                          fillColor: context.theme.colorScheme.surface,
-                          border: InputBorder.none,
-                        ),
+                        border: .none,
                       ),
                     ),
                   ],
@@ -166,14 +156,11 @@ class _SongInfoState extends State<SongInfo> {
                   children: [
                     context.leadingText('Time played'),
                     Expanded(
-                      child: TextFormField(
+                      child: Input(
                         readOnly: true,
                         scrollPadding: const .only(right: 0),
                         initialValue: song.timeListened.toString(),
-                        decoration: context.textFieldDecoration(
-                          fillColor: context.theme.colorScheme.surface,
-                          border: InputBorder.none,
-                        ),
+                        border: .none,
                       ),
                     ),
                   ],
@@ -185,14 +172,11 @@ class _SongInfoState extends State<SongInfo> {
                   children: [
                     context.leadingText('Time added'),
                     Expanded(
-                      child: TextFormField(
+                      child: Input(
                         readOnly: true,
                         scrollPadding: const .only(right: 0),
                         initialValue: song.timeAdded.toDateString(),
-                        decoration: context.textFieldDecoration(
-                          fillColor: context.theme.colorScheme.surface,
-                          border: InputBorder.none,
-                        ),
+                        border: .none,
                       ),
                     ),
                   ],
@@ -204,14 +188,11 @@ class _SongInfoState extends State<SongInfo> {
                   children: [
                     context.leadingText('Path'),
                     Expanded(
-                      child: TextFormField(
+                      child: Input(
                         readOnly: true,
                         scrollPadding: const .only(right: 0),
                         initialValue: song.fullPath,
-                        decoration: context.textFieldDecoration(
-                          fillColor: context.theme.colorScheme.surface,
-                          border: InputBorder.none,
-                        ),
+                        border: .none,
                       ),
                     ),
                   ],
@@ -223,16 +204,13 @@ class _SongInfoState extends State<SongInfo> {
                   children: [
                     context.leadingText('Lyric'),
                     Expanded(
-                      child: TextFormField(
+                      child: Input(
                         readOnly: true,
                         scrollPadding: const .only(right: 0),
                         initialValue: song.lyricPath.isNotEmpty
                             ? Paths.lyricPath + song.lyricPath
                             : 'No lyric',
-                        decoration: context.textFieldDecoration(
-                          fillColor: context.theme.colorScheme.surface,
-                          border: InputBorder.none,
-                        ),
+                        border: .none,
                       ),
                     ),
                   ],

@@ -18,6 +18,7 @@ import 'package:music_hub/ui/app/lyric/lyric_editor.dart';
 import 'package:music_hub/ui/app/lyric/lyric_strip.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
+import 'package:music_hub/ui/core/widgets/button.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/file_picker.dart';
 import 'package:music_hub/ui/core/widgets/page_indicator.dart';
@@ -281,15 +282,9 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                           Column(
                             mainAxisAlignment: .center,
                             children: [
-                              ElevatedButton(
-                                style: const ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    Colors.transparent,
-                                  ),
-                                  side: WidgetStatePropertyAll(
-                                    BorderSide(color: Colors.white54),
-                                  ),
-                                ),
+                              Button(
+                                text: 'Add lyric',
+                                outline: true,
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
@@ -297,12 +292,9 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                                     ),
                                   );
                                 },
-                                child: const Text(
-                                  'Add lyric',
-                                  style: TextStyle(color: Colors.white),
-                                ),
                               ),
-                              ElevatedButton(
+                              Button(
+                                text: 'Select file',
                                 onPressed: () async {
                                   var path = await FilePicker.open(
                                     context: context,
@@ -318,17 +310,6 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                                   await song.update();
                                   updateLyric();
                                 },
-                                style: ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    context.theme.colorScheme.onSecondaryContainer,
-                                  ),
-                                ),
-                                child: Text(
-                                  'Select file',
-                                  style: TextStyle(
-                                    color: context.theme.colorScheme.surface,
-                                  ),
-                                ),
                               ),
                             ],
                           )

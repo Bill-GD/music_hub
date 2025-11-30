@@ -18,6 +18,7 @@ import 'package:music_hub/ui/app/lyric/timestamp_editor.dart';
 import 'package:music_hub/ui/app/lyric/type_lyric.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
+import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/constants.dart' show Paths;
 import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, LyricTimestamp;
 import 'package:music_hub/utils/globals.dart';
@@ -333,33 +334,29 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                     ? context.theme.colorScheme.inverseSurface.withValues(alpha: 0.1)
                     : null,
                 leading: Text(item.timestamp.toLyricTimestamp()),
-                title: TextField(
+                title: Input(
                   controller: lineEditController,
-                  maxLines: null,
                   autofocus: true,
-                  decoration: context.textFieldDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        Icons.check_rounded,
-                        color: context.theme.colorScheme.primary,
-                      ),
-                      onPressed: () {
-                        isEditing = false;
-                        if (!hasChanged) {
-                          hasChanged = item.line != lineEditController.text;
-                        }
-                        if (hasChanged) {
-                          lyric.list[index] = LyricItem(
-                            timestamp: item.timestamp,
-                            line: lineEditController.text,
-                          );
-                        }
-                        setState(() {});
-                      },
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      Icons.check_rounded,
+                      color: context.theme.colorScheme.primary,
                     ),
-                    border: OutlineInputBorder(borderRadius: .circular(10)),
-                    contentPadding: const .only(left: 10, top: 5, bottom: 5),
+                    onPressed: () {
+                      isEditing = false;
+                      if (!hasChanged) {
+                        hasChanged = item.line != lineEditController.text;
+                      }
+                      if (hasChanged) {
+                        lyric.list[index] = LyricItem(
+                          timestamp: item.timestamp,
+                          line: lineEditController.text,
+                        );
+                      }
+                      setState(() {});
+                    },
                   ),
+                  // contentPadding: const .only(left: 10, top: 5, bottom: 5),
                 ),
               );
             }

@@ -4,7 +4,9 @@ import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/services/song_service.dart';
+import 'package:music_hub/ui/core/widgets/button.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
+import 'package:music_hub/ui/core/widgets/input.dart';
 
 class AddAlbum extends StatefulWidget {
   const AddAlbum({super.key});
@@ -26,8 +28,8 @@ class _AddAlbumState extends State<AddAlbum> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 40),
+          onPressed: () => Navigator.of(context).pop(),
         ),
         centerTitle: true,
         title: const Text(
@@ -53,7 +55,7 @@ class _AddAlbumState extends State<AddAlbum> {
       ),
       body: Padding(
         padding: const .symmetric(horizontal: 32, vertical: 16),
-        child: TextField(
+        child: Input(
           controller: albumNameController,
           onChanged: (val) {
             if (val.trim().isEmpty) {
@@ -68,15 +70,11 @@ class _AddAlbumState extends State<AddAlbum> {
             }
             setState(() {});
           },
-          decoration: context.textFieldDecoration(
-            labelText: 'Name',
-            fillColor: Theme.of(context).colorScheme.surface,
-            errorText: errorText.isEmpty ? null : errorText,
-            suffixIcon: const Padding(
-              padding: .only(right: 12),
-              child: Icon(Icons.edit_rounded),
-            ),
-            border: OutlineInputBorder(borderRadius: .circular(10)),
+          labelText: 'Name',
+          errorText: errorText.isEmpty ? null : errorText,
+          suffixIcon: const Padding(
+            padding: .only(right: 12),
+            child: Icon(Icons.edit_rounded),
           ),
         ),
       ),

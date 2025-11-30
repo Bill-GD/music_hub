@@ -7,6 +7,7 @@ import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
+import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/extensions.dart' show PadInt, WhereOrNull;
 import 'package:music_hub/utils/utils.dart';
 
@@ -84,18 +85,14 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
           Container(
             padding: const .symmetric(horizontal: 30),
             margin: const .symmetric(vertical: 10),
-            child: TextField(
+            child: Input(
               controller: searchController,
               onChanged: (val) {
                 searchText = val;
                 setState(() {});
               },
-              decoration: context.textFieldDecoration(
-                labelText: 'Search',
-                hintText: 'Search names and artists',
-                fillColor: context.theme.colorScheme.surface,
-                border: const OutlineInputBorder(borderRadius: .all(.circular(10))),
-              ),
+              labelText: 'Search',
+              hintText: 'Search names and artists',
             ),
           ),
           Expanded(

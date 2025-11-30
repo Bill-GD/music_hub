@@ -85,32 +85,6 @@ extension WidgetWithContext on BuildContext {
     );
   }
 
-  InputDecoration textFieldDecoration({
-    Color? fillColor,
-    String? hintText,
-    String? labelText,
-    String? errorText,
-    InputBorder? border,
-    Widget? prefixIcon,
-    Widget? suffixIcon,
-    EdgeInsetsGeometry? contentPadding,
-    BoxConstraints? constraints,
-  }) => InputDecoration(
-    filled: true,
-    fillColor: fillColor,
-    hintText: hintText,
-    hintStyle: TextStyle(color: theme.colorScheme.primary.withValues(alpha: 0.5)),
-    labelText: labelText,
-    labelStyle: TextStyle(fontWeight: .w600, color: theme.colorScheme.primary),
-    errorText: errorText,
-    prefixIcon: prefixIcon,
-    suffixIcon: suffixIcon,
-    suffixIconConstraints: const BoxConstraints(minHeight: 2, minWidth: 2),
-    contentPadding: contentPadding ?? const .symmetric(horizontal: 20),
-    border: border,
-    constraints: constraints,
-  );
-
   Color? iconColor([double opacity = 1]) {
     return theme.iconTheme.color?.withValues(alpha: opacity);
   }
