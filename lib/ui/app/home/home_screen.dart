@@ -95,13 +95,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             length: 3,
             child: Scaffold(
               appBar: AppBar(
-                backgroundColor: context.theme.colorScheme.surface,
+                backgroundColor: context.colorScheme.surface,
                 title: Input(
                   readOnly: true,
                   hintText: 'Search songs and artists',
                   prefixIcon: Icon(
                     Icons.search_rounded,
-                    color: context.theme.colorScheme.primary,
+                    color: context.colorScheme.primary,
                   ),
                   constraints: BoxConstraints.loose(
                     Size.fromHeight(AppBar().preferredSize.height * 0.65),
@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     insets: const .symmetric(vertical: 6),
                     borderSide: BorderSide(
                       width: 3,
-                      color: context.theme.colorScheme.primary,
+                      color: context.colorScheme.primary,
                     ),
                   ),
                   labelStyle: const TextStyle(
@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 child: Container(
                   margin: const .only(left: 10, right: 10, bottom: 10),
                   decoration: BoxDecoration(
-                    color: context.theme.colorScheme.primaryContainer,
+                    color: context.colorScheme.primaryContainer,
                     borderRadius: .circular(30),
                     boxShadow: const [
                       BoxShadow(
@@ -205,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                               padding: const .only(left: 14),
                               child: Icon(
                                 Icons.music_note_rounded,
-                                color: context.theme.colorScheme.primary,
+                                color: context.colorScheme.primary,
                               ),
                             ),
                             title: Text(
@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         onPressed: () => vm.playerService.skipToPrevious(),
                         icon: Icon(
                           Icons.skip_previous_rounded,
-                          color: context.theme.colorScheme.primary,
+                          color: context.colorScheme.primary,
                           size: 20,
                         ),
                       ),
@@ -272,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 begin: 0.0,
                                 end: 1.0,
                               ).animate(animController),
-                              color: context.theme.colorScheme.primary,
+                              color: context.colorScheme.primary,
                               size: 30,
                             ),
                           ),
@@ -282,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         onPressed: () => vm.playerService.skipToNext(),
                         icon: Icon(
                           Icons.skip_next_rounded,
-                          color: context.theme.colorScheme.primary,
+                          color: context.colorScheme.primary,
                           size: 20,
                         ),
                       ),

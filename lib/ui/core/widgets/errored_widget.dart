@@ -14,7 +14,7 @@ class ErroredWidget extends StatelessWidget {
       builder: (context) {
         return SafeArea(
           child: Container(
-            color: context.theme.colorScheme.surfaceContainer,
+            color: context.colorScheme.surfaceContainer,
             child: Stack(
               children: [
                 Padding(

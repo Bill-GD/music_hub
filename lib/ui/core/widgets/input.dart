@@ -74,12 +74,12 @@ class Input extends StatelessWidget {
         labelText: labelText,
         hintText: hintText,
         hintStyle: TextStyle(
-          color: context.theme.colorScheme.primary.withValues(alpha: 0.5),
+          color: context.colorScheme.primary.withValues(alpha: 0.5),
         ),
         errorText: errorText,
         labelStyle:
             labelStyle ??
-            TextStyle(fontWeight: .w600, color: context.theme.colorScheme.primary),
+            TextStyle(fontWeight: .w600, color: context.colorScheme.primary),
         border: border,
         constraints: constraints,
         prefixIcon: prefixIcon,

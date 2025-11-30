@@ -192,7 +192,7 @@ class _AlbumInfoState extends State<AlbumInfo> {
                                 borderRadius: .circular(10),
                                 border: .all(
                                   width: 1,
-                                  color: context.theme.colorScheme.onSurface,
+                                  color: context.colorScheme.onSurface,
                                 ),
                               )
                             : null,

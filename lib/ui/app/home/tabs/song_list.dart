@@ -189,7 +189,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                         padding: const .only(left: 12),
                         child: Icon(
                           Icons.music_note_rounded,
-                          color: context.theme.colorScheme.primary,
+                          color: context.colorScheme.primary,
                         ),
                       ),
                     ],

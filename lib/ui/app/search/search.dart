@@ -23,7 +23,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: context.theme.colorScheme.surface,
+          backgroundColor: context.colorScheme.surface,
           leading: IconButton(
             icon: const Icon(Icons.keyboard_arrow_up_rounded, size: 40),
             onPressed: Navigator.of(context).pop,
@@ -37,7 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             prefixIcon: Icon(
               Icons.search_rounded,
-              color: context.theme.colorScheme.primary,
+              color: context.colorScheme.primary,
             ),
           ),
         ),

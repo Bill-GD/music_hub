@@ -190,8 +190,8 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
           gradient: coverImage == null
               ? LinearGradient(
                   colors: [
-                    context.theme.colorScheme.surface,
-                    context.theme.colorScheme.primaryContainer,
+                    context.colorScheme.surface,
+                    context.colorScheme.primaryContainer,
                   ],
                   stops: const [0.0, 0.8],
                   begin: .topCenter,
@@ -204,7 +204,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
           child: Scaffold(
             backgroundColor: coverImage == null
                 ? Colors.transparent
-                : context.theme.colorScheme.surfaceContainerLowest.withValues(alpha: 0.5),
+                : context.colorScheme.surfaceContainerLowest.withValues(alpha: 0.5),
             extendBodyBehindAppBar: true,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
@@ -251,16 +251,16 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                                   ? BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: [
-                                          context.theme.colorScheme.primaryContainer,
+                                          context.colorScheme.primaryContainer,
                                           Colors.white70,
-                                          context.theme.colorScheme.primaryContainer,
+                                          context.colorScheme.primaryContainer,
                                         ],
                                         begin: .topCenter,
                                         end: .bottomCenter,
                                       ),
                                       border: .all(
                                         width: 1,
-                                        color: context.theme.colorScheme.onSurface,
+                                        color: context.colorScheme.onSurface,
                                       ),
                                       borderRadius: .circular(20),
                                     )
@@ -388,7 +388,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                           timeLabelLocation: .below,
                           timeLabelType: .totalTime,
                           timeLabelTextStyle: TextStyle(
-                            color: context.theme.colorScheme.onSurface,
+                            color: context.colorScheme.onSurface,
                             fontWeight: .bold,
                           ),
                           onSeek: (seekDuration) async {
@@ -409,7 +409,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                                 playerService.minTimePercent *
                                 MediaQuery.of(context).size.width,
                           ),
-                          color: context.theme.colorScheme.primary,
+                          color: context.colorScheme.primary,
                         ),
                       ],
                     ),
@@ -428,8 +428,8 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                           icon: Icon(
                             CupertinoIcons.shuffle,
                             color: playerService.isShuffled
-                                ? context.theme.colorScheme.primary
-                                : context.theme.colorScheme.primary.withValues(
+                                ? context.colorScheme.primary
+                                : context.colorScheme.primary.withValues(
                                     alpha: 0.3,
                                   ),
                             size: 30,
@@ -441,7 +441,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                           },
                           icon: Icon(
                             Icons.skip_previous_rounded,
-                            color: context.theme.colorScheme.primary,
+                            color: context.colorScheme.primary,
                             size: 45,
                           ),
                         ),
@@ -465,7 +465,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                                 begin: 0.0,
                                 end: 1.0,
                               ).animate(animController),
-                              color: context.theme.colorScheme.primary,
+                              color: context.colorScheme.primary,
                               size: 70,
                             ),
                           ),
@@ -476,7 +476,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                           },
                           icon: Icon(
                             Icons.skip_next_rounded,
-                            color: context.theme.colorScheme.primary,
+                            color: context.colorScheme.primary,
                             size: 45,
                           ),
                         ),
@@ -490,8 +490,8 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                                 ? CupertinoIcons.repeat_1
                                 : CupertinoIcons.repeat,
                             color: playerService.repeatMode == .none
-                                ? context.theme.colorScheme.primary.withValues(alpha: 0.3)
-                                : context.theme.colorScheme.primary,
+                                ? context.colorScheme.primary.withValues(alpha: 0.3)
+                                : context.colorScheme.primary,
                             size: 35,
                           ),
                         ),

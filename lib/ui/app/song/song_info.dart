@@ -246,7 +246,7 @@ class _SongInfoState extends State<SongInfo> {
                                 borderRadius: .circular(10),
                                 border: Border.all(
                                   width: 1,
-                                  color: context.theme.colorScheme.onSurface,
+                                  color: context.colorScheme.onSurface,
                                 ),
                               )
                             : null,
@@ -276,7 +276,7 @@ class _SongInfoState extends State<SongInfo> {
                             icon: const Icon(Icons.close_rounded),
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
-                                context.theme.colorScheme.surface.withValues(alpha: 0.2),
+                                context.colorScheme.surface.withValues(alpha: 0.2),
                               ),
                             ),
                             onPressed: () {

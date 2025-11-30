@@ -34,7 +34,7 @@ class _ArtistListState extends State<ArtistList> {
             String artistName = songService.artists.keys.elementAt(artistIndex);
             return OpenContainer(
               closedElevation: 0,
-              closedColor: context.theme.colorScheme.surface,
+              closedColor: context.colorScheme.surface,
               openColor: Colors.transparent,
               transitionDuration: 400.ms,
               onClosed: (_) => setState(() {}),

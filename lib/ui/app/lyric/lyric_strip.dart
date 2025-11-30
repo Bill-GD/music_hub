@@ -143,7 +143,7 @@ class _LyricStripState extends State<LyricStrip> {
                     shadows: [
                       if (highlight)
                         Shadow(
-                          color: context.theme.colorScheme.inverseSurface.withValues(
+                          color: context.colorScheme.inverseSurface.withValues(
                             alpha: isViewed ? 1 : 0.4,
                           ),
                           blurRadius: 25,
@@ -165,7 +165,7 @@ class _LyricStripState extends State<LyricStrip> {
                     shadows: [
                       if (highlight)
                         Shadow(
-                          color: context.theme.colorScheme.inverseSurface,
+                          color: context.colorScheme.inverseSurface,
                           blurRadius: isViewed ? 30 : 20,
                         ),
                     ],

@@ -8,4 +8,6 @@ extension ThemeWithContext on BuildContext {
   void nextTheme() => ThemeProvider.controllerOf(this).nextTheme();
 
   ThemeData get theme => Theme.of(this);
+
+  ColorScheme get colorScheme => theme.colorScheme;
 }

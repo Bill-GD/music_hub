@@ -83,7 +83,7 @@ class DeleteSongOption extends StatelessWidget {
         await context.showActionDialog<void>(
           icon: Icon(
             Icons.warning_rounded,
-            color: context.theme.colorScheme.error,
+            color: context.colorScheme.error,
             size: 30,
           ),
           title: 'Delete song',

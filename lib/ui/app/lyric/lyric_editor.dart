@@ -153,7 +153,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: context.theme.colorScheme.surface,
+          backgroundColor: context.colorScheme.surface,
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_rounded),
@@ -235,10 +235,10 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                   label: Text('Add', style: TextStyle(color: context.iconColor())),
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(
-                      context.theme.colorScheme.surface,
+                      context.colorScheme.surface,
                     ),
                     side: WidgetStatePropertyAll(
-                      BorderSide(color: context.theme.colorScheme.surface),
+                      BorderSide(color: context.colorScheme.surface),
                     ),
                   ),
                   onPressed: () {
@@ -252,10 +252,10 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                   label: Text('Type', style: TextStyle(color: context.iconColor())),
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(
-                      context.theme.colorScheme.surface,
+                      context.colorScheme.surface,
                     ),
                     side: WidgetStatePropertyAll(
-                      BorderSide(color: context.theme.colorScheme.surface),
+                      BorderSide(color: context.colorScheme.surface),
                     ),
                   ),
                   onPressed: () {
@@ -331,7 +331,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                 tileColor:
                     index ==
                         currentLine //
-                    ? context.theme.colorScheme.inverseSurface.withValues(alpha: 0.1)
+                    ? context.colorScheme.inverseSurface.withValues(alpha: 0.1)
                     : null,
                 leading: Text(item.timestamp.toLyricTimestamp()),
                 title: Input(
@@ -340,7 +340,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                   suffixIcon: IconButton(
                     icon: Icon(
                       Icons.check_rounded,
-                      color: context.theme.colorScheme.primary,
+                      color: context.colorScheme.primary,
                     ),
                     onPressed: () {
                       isEditing = false;
@@ -365,7 +365,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
               tileColor:
                   index ==
                       currentLine //
-                  ? context.theme.colorScheme.inverseSurface.withValues(alpha: 0.1)
+                  ? context.colorScheme.inverseSurface.withValues(alpha: 0.1)
                   : null,
               contentPadding: const .only(left: 16, right: 0),
               leading: GestureDetector(
@@ -431,7 +431,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                   IconButton(
                     icon: Icon(
                       Icons.delete_forever_rounded,
-                      color: context.theme.colorScheme.error,
+                      color: context.colorScheme.error,
                       size: 20,
                     ),
                     onPressed: () {
@@ -470,7 +470,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
         bottomNavigationBar: Container(
           margin: const .only(left: 10, right: 10, bottom: 10),
           decoration: BoxDecoration(
-            color: context.theme.colorScheme.primaryContainer,
+            color: context.colorScheme.primaryContainer,
             borderRadius: .circular(30),
             boxShadow: const [
               BoxShadow(color: Colors.black38, blurRadius: 5, offset: Offset(0, 5)),
@@ -494,7 +494,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                       padding: const .only(left: 14),
                       child: Icon(
                         Icons.music_note_rounded,
-                        color: context.theme.colorScheme.primary,
+                        color: context.colorScheme.primary,
                       ),
                     ),
                     title: Text(
@@ -514,7 +514,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                 onPressed: () => playerService.seek(currentDuration - 5.seconds),
                 icon: Icon(
                   Icons.replay_5_rounded,
-                  color: context.theme.colorScheme.primary,
+                  color: context.colorScheme.primary,
                   size: 30,
                 ),
               ),
@@ -542,7 +542,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                         begin: 0.0,
                         end: 1.0,
                       ).animate(animController),
-                      color: context.theme.colorScheme.primary,
+                      color: context.colorScheme.primary,
                       size: 30,
                     ),
                   ),
@@ -552,7 +552,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                 onPressed: () => playerService.seek(currentDuration + 5.seconds),
                 icon: Icon(
                   Icons.forward_5_rounded,
-                  color: context.theme.colorScheme.primary,
+                  color: context.colorScheme.primary,
                   size: 30,
                 ),
               ),

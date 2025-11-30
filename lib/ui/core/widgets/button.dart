@@ -21,7 +21,7 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.theme.colorScheme;
+    final colorScheme = context.colorScheme;
 
     Color bgColor = outline ? Colors.transparent : colorScheme.primaryContainer;
     Color? outlineColor = outline ? colorScheme.primaryContainer : null;

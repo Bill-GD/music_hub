@@ -45,7 +45,7 @@ class _ArtistSongsState extends State<ArtistSongs> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: context.theme.colorScheme.surface,
+          backgroundColor: context.colorScheme.surface,
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
             onPressed: () => Navigator.of(context).pop(),

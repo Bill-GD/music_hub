@@ -155,7 +155,7 @@ class _VersionDialogState extends State<VersionDialog> {
             fontFamily: isCode ? 'monospace' : null,
             color:
                 isCode //
-                ? context.theme.colorScheme.primary
+                ? context.colorScheme.primary
                 : context.theme.textTheme.bodyMedium?.color,
           ),
         ),
@@ -222,7 +222,7 @@ class _VersionDialogState extends State<VersionDialog> {
         actionsPadding: const .symmetric(vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius: const .all(.circular(10)),
-          side: BorderSide(color: context.theme.colorScheme.onSurface),
+          side: BorderSide(color: context.colorScheme.onSurface),
         ),
         insetPadding: const .only(top: 40, bottom: 16, left: 20, right: 20),
       ),

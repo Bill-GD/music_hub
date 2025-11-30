@@ -173,7 +173,7 @@ class _TimestampEditorState extends State<TimestampEditor> {
       actionsPadding: const .symmetric(vertical: 12),
       shape: RoundedRectangleBorder(
         borderRadius: const .all(.circular(10)),
-        side: BorderSide(color: context.theme.colorScheme.onSurface),
+        side: BorderSide(color: context.colorScheme.onSurface),
       ),
       insetPadding: const .only(top: 40, bottom: 16),
     );

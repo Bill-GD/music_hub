@@ -58,7 +58,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: context.theme.colorScheme.surface,
+          backgroundColor: context.colorScheme.surface,
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -129,7 +129,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                           await context.showActionDialog<bool>(
                             icon: Icon(
                               Icons.warning_rounded,
-                              color: context.theme.colorScheme.error,
+                              color: context.colorScheme.error,
                               size: 30,
                             ),
                             title: 'Delete Album',
@@ -276,7 +276,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                         return ClipRRect(
                           borderRadius: .circular(10),
                           child: Material(
-                            color: context.theme.colorScheme.surfaceContainerHighest,
+                            color: context.colorScheme.surfaceContainerHighest,
                             child: child,
                           ),
                         );
@@ -296,7 +296,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                           return OpenContainer(
                             key: const ValueKey(-1),
                             closedElevation: 0,
-                            closedColor: context.theme.colorScheme.surface,
+                            closedColor: context.colorScheme.surface,
                             openColor: Colors.transparent,
                             transitionDuration: 400.ms,
                             onClosed: (_) => setState(getSongs),
