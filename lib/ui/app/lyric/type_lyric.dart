@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
 
 class TypeLyric extends StatefulWidget {

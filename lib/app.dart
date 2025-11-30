@@ -13,7 +13,6 @@ import 'package:music_hub/ui/app/home/home_screen.dart';
 import 'package:music_hub/ui/core/widgets/errored_widget.dart';
 import 'package:music_hub/utils/constants.dart' show Constants;
 import 'package:music_hub/utils/globals.dart';
-import 'package:music_hub/utils/utils.dart';
 
 class MusicHubApp extends StatefulWidget {
   final GlobalKey<NavigatorState> navKey;
@@ -25,21 +24,27 @@ class MusicHubApp extends StatefulWidget {
 }
 
 class _MusicHubAppState extends State<MusicHubApp> {
-  late final StreamSubscription<List<ConnectivityResult>> connectivitySubscription;
+  late final StreamSubscription<List<ConnectivityResult>> connectionSubscription;
 
   @override
   void initState() {
     super.initState();
-    connectivitySubscription = Connectivity().onConnectivityChanged.listen((newResults) {
-      checkInternetConnection(newResults).then((val) {
-        Globals.isInternetConnected.value = val;
-      });
+    connectionSubscription = Connectivity().onConnectivityChanged.listen((
+      newResults,
+    ) async {
+      final connectivityResult = newResults;
+      Globals.isInternetConnected.value = !connectivityResult.contains(
+        ConnectivityResult.none,
+      );
+      GetIt.I<LogService>().log(
+        'Internet connected: ${Globals.isInternetConnected.value}',
+      );
     });
   }
 
   @override
   void dispose() {
-    connectivitySubscription.cancel();
+    connectionSubscription.cancel();
     super.dispose();
   }
 

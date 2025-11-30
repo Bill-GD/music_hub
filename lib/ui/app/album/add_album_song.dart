@@ -5,8 +5,6 @@ import 'package:get_it/get_it.dart';
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/song_service.dart';
-import 'package:music_hub/ui/core/theme/extensions.dart';
-import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/extensions.dart' show PadInt, WhereOrNull;
 import 'package:music_hub/utils/utils.dart';

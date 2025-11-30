@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,7 +8,7 @@ import 'package:music_hub/ui/app/settings/version_list.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart' show Constants;
 import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
-import 'package:music_hub/utils/utils.dart';
+import 'package:music_hub/utils/globals.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -22,24 +19,6 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreenState extends State<AboutScreen> {
   final logService = GetIt.I<LogService>();
-  late StreamSubscription<List<ConnectivityResult>> connectStream;
-  bool isInternetConnected = false;
-
-  @override
-  void initState() {
-    super.initState();
-    connectStream = Connectivity().onConnectivityChanged.listen((newResults) {
-      checkInternetConnection(newResults).then((val) {
-        setState(() => isInternetConnected = val);
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    connectStream.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +35,7 @@ class _AboutScreenState extends State<AboutScreen> {
         body: Column(
           children: [
             Visibility(
-              visible: !isInternetConnected,
+              visible: !Globals.isInternetConnected.value,
               child: Container(
                 width: double.infinity,
                 color: Colors.red,
@@ -75,7 +54,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     title: context.leadingText('Version list', false, 16),
                     subtitle: const Text('View the list of versions of this app'),
                     onTap: () {
-                      if (!isInternetConnected) return;
+                      if (!Globals.isInternetConnected.value) return;
 
                       Navigator.of(context).push(
                         PageRouteBuilder(
@@ -132,9 +111,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     title: context.leadingText('GitHub Repo', false, 16),
                     subtitle: const Text('Open GitHub repository of this app'),
                     onTap: () async {
-                      final uri = Uri.parse(
-                        'https://github.com/Bill-GD/music_hub',
-                      );
+                      final uri = Uri.parse('https://github.com/Bill-GD/music_hub');
                       final canLaunch = await canLaunchUrl(uri);
                       launchUrl(uri);
                       if (canLaunch) {

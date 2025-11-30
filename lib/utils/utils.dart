@@ -1,7 +1,4 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:get_it/get_it.dart';
 
-import 'package:music_hub/data/services/log_service.dart';
 
 String sanitizeFilePath(String path) {
   return path.replaceAll(RegExp(r'[\\|?*<":>+\[\]/]'), '').replaceAll("'", '');
@@ -15,13 +12,6 @@ String getSizeString(double bytes) {
     unitIndex++;
   }
   return '${bytes.toStringAsFixed(2)} ${units[unitIndex]}';
-}
-
-Future<bool> checkInternetConnection([List<ConnectivityResult>? result]) async {
-  final connectivityResult = result ?? await Connectivity().checkConnectivity();
-  final isInternetConnected = !connectivityResult.contains(ConnectivityResult.none);
-  GetIt.I<LogService>().log('Internet connected: $isInternetConnected');
-  return isInternetConnected;
 }
 
 /// [start] and [end] are inclusive

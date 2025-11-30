@@ -12,7 +12,6 @@ import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/constants.dart' show Constants;
 import 'package:music_hub/utils/extensions.dart' show WhereOrNull;
 import 'package:music_hub/utils/globals.dart';
-import 'package:music_hub/utils/utils.dart' show checkInternetConnection;
 
 class HomeViewModel extends ChangeNotifier {
   final PlayerService playerService = GetIt.I();
@@ -66,8 +65,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<(bool, String?)> checkNewVersion() async {
-    final hasInternet = await checkInternetConnection();
-    if (!hasInternet) return (false, null);
+    if (!Globals.isInternetConnected.value) return (false, null);
     final tags = (await _githubService.getAllTags()).map((e) => e.$1).toList();
     if (tags.isEmpty || 'v${Constants.appVersion}' == tags.last) return (false, null);
     return (true, tags.last);
