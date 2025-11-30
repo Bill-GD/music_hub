@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:music_hub/ui/app/downloader/downloader_screen.dart';
+import 'package:music_hub/ui/app/downloader/downloader_view_model.dart';
 import 'package:music_hub/ui/app/settings/setting.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
@@ -77,26 +79,28 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       style: TextStyle(fontSize: FontSize.mediumSmall),
                     ),
                     onTap: () {
-                      context.showToast('Downloader disabled');
-                      // Navigator.of(context).push<bool>(
-                      //   PageRouteBuilder(
-                      //     pageBuilder: (_, _, _) {
-                      //       return const MusicDownloader();
-                      //     },
-                      //     transitionsBuilder: (context, anim1, _, child) {
-                      //       return SlideTransition(
-                      //         position:
-                      //             Tween<Offset>(
-                      //               begin: const Offset(-1, 0),
-                      //               end: const Offset(0, 0),
-                      //             ).animate(
-                      //               anim1.drive(CurveTween(curve: Curves.decelerate)),
-                      //             ),
-                      //         child: child,
-                      //       );
-                      //     },
-                      //   ),
-                      // );
+                      // context.showToast('Downloader disabled');
+                      Navigator.of(context).push<bool>(
+                        PageRouteBuilder(
+                          pageBuilder: (_, _, _) {
+                            return MusicDownloaderScreen(
+                              viewModel: DownloaderViewModel(),
+                            );
+                          },
+                          transitionsBuilder: (context, anim1, _, child) {
+                            return SlideTransition(
+                              position:
+                                  Tween<Offset>(
+                                    begin: const Offset(-1, 0),
+                                    end: const Offset(0, 0),
+                                  ).animate(
+                                    anim1.drive(CurveTween(curve: Curves.decelerate)),
+                                  ),
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
                     },
                   ),
                   _listItemDivider(),

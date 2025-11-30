@@ -59,7 +59,10 @@ void main() async {
 
   await GetIt.I<ConfigService>().loadConfig();
 
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
+  GetIt.I.registerSingleton(navigatorKey);
+
   PlatformDispatcher.instance.onError = (e, s) {
     GetIt.I<LogService>().log(e.toString(), .error);
     final curContext = navigatorKey.currentContext;
