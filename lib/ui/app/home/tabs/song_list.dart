@@ -16,10 +16,9 @@ import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
 
 class SongList extends StatefulWidget {
-  final int param;
   final void Function(void Function()) updateParent;
 
-  const SongList({super.key, required this.param, required this.updateParent});
+  const SongList({super.key, required this.updateParent});
 
   @override
   State<SongList> createState() => _SongListState();
@@ -215,7 +214,6 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                       context,
                     ).push(await getMusicPlayerRoute(songService.allSongs[songIndex].id));
                     setState(() {});
-                    widget.updateParent(() {});
                   },
                   trailing: Row(
                     mainAxisSize: .min,

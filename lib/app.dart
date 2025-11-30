@@ -11,6 +11,7 @@ import 'package:theme_provider/theme_provider.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/home/home_screen.dart';
 import 'package:music_hub/ui/core/widgets/errored_widget.dart';
+import 'package:music_hub/utils/constants.dart' show Constants;
 import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/utils.dart';
 
@@ -92,7 +93,7 @@ class _MusicHubAppState extends State<MusicHubApp> {
                 return child!;
               },
               theme: ThemeProvider.themeOf(context).data,
-              title: 'Music Hub',
+              title: Constants.appName,
               home: HomeScreen(viewModel: context.read()),
             );
           },

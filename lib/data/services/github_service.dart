@@ -20,17 +20,16 @@ class GithubService {
   }
 
   Future<List<(String, String)>> getAllTags() async {
-    final value = await apiQuery('/git/refs/tags');
-    final json = jsonDecode(value.data);
-    if (json == null) {
+    final data = (await apiQuery('/git/refs/tags')).data;
+    if (data == null) {
       throw Exception('Rate limited. Please come back later.');
     }
-    if (json is! List) {
+    if (data is! List) {
       _logService.log('JSON received is not a list', .error);
       throw Exception('Something is wrong when trying to get version list.');
     }
 
-    return json.map((e) {
+    return data.map((e) {
       final tag = e['ref'].toString().trim().split('/').last;
       final sha = e['object']['sha'].toString().trim().substring(0, 7);
       return (tag, sha);

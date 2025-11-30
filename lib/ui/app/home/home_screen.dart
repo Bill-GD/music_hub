@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     vsync: this,
   );
   bool isDarkTheme = false;
-  int _childParam = 0;
 
   @override
   void initState() {
@@ -81,11 +80,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   void dispose() {
     super.dispose();
     widget.viewModel.playerService.player.dispose();
-  }
-
-  void updateChildren() {
-    _childParam = _childParam == 0 ? 1 : 0;
-    setState(() {});
   }
 
   @override
@@ -182,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       axisDirection: .right,
                       child: TabBarView(
                         children: [
-                          SongList(param: _childParam, updateParent: setState),
+                          SongList(updateParent: setState),
                           const ArtistList(),
                           const AlbumList(),
                         ],
