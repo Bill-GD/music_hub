@@ -11,6 +11,7 @@ import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/constants.dart' show Constants;
 import 'package:music_hub/utils/globals.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final PlayerService playerService = GetIt.I();
@@ -46,8 +47,8 @@ class HomeViewModel extends ChangeNotifier {
     return storagePermissionStatus;
   }
 
-  Future<void> loadData() async {
-    await songService.loadData();
+  Future<void> load() async {
+    await loadData();
     songService.sortAllSongs();
 
     if (_configService.backupOnLaunch) {

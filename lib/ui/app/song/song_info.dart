@@ -29,7 +29,7 @@ class _SongInfoState extends State<SongInfo> {
       _artistController = TextEditingController();
   bool hasCover = false, hasChanges = false;
 
-  late final song = songService.allSongs.firstWhere((e) => e.id == widget.songID);
+  late final song = songService.getSong(widget.songID)!;
   late String imagePath = song.imagePath;
 
   @override

@@ -1,4 +1,15 @@
+import 'package:get_it/get_it.dart';
 
+import 'package:music_hub/data/services/album_service.dart';
+import 'package:music_hub/data/services/artist_service.dart';
+import 'package:music_hub/data/services/song_service.dart';
+
+/// Load/Reload all song data
+Future<void> loadData() async {
+  await GetIt.I<SongService>().updateSongList();
+  GetIt.I<ArtistService>().updateArtistList();
+  await GetIt.I<AlbumService>().updateAlbumList();
+}
 
 String sanitizeFilePath(String path) {
   return path.replaceAll(RegExp(r'[\\|?*<":>+\[\]/]'), '').replaceAll("'", '');

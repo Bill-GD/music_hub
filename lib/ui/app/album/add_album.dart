@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/album.dart';
-import 'package:music_hub/data/services/song_service.dart';
+import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
 
 class AddAlbum extends StatefulWidget {
@@ -14,12 +14,12 @@ class AddAlbum extends StatefulWidget {
 }
 
 class _AddAlbumState extends State<AddAlbum> {
-  final songService = GetIt.I<SongService>();
+  final albumService = GetIt.I<AlbumService>();
 
   final albumNameController = TextEditingController();
   String errorText = '';
   bool canAdd = false;
-  late final names = songService.albums.map((e) => e.name);
+  late final names = albumService.albums.map((e) => e.name);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class _AddAlbumState extends State<AddAlbum> {
                       name: albumNameController.text,
                       timeAdded: DateTime.now(),
                     ).insert();
-                    await songService.updateAlbumList();
+                    await albumService.updateAlbumList();
                     if (context.mounted) Navigator.of(context).pop();
                   }
                 : null,

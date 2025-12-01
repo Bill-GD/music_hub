@@ -14,6 +14,7 @@ import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class SongList extends StatefulWidget {
   const SongList({super.key});
@@ -53,7 +54,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
 
                   playerService.registerPlaylist(
                     'All songs',
-                    songService.allSongs.map((e) => e.id).toList(),
+                    songService.songs.map((e) => e.id).toList(),
                     randomSong,
                   );
                   await Navigator.of(context).push(await getMusicPlayerRoute(randomSong));
@@ -165,7 +166,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
         Expanded(
           child: RefreshIndicator(
             onRefresh: () async {
-              await songService.loadData();
+              await loadData();
               songService.sortAllSongs();
               if (context.mounted) setState(() {});
             },
@@ -173,9 +174,9 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
               interactive: true,
               thumbVisibility: true,
               radius: const .circular(16),
-              thickness: min(songService.allSongs.length ~/ 3, 8).toDouble(),
+              thickness: min(songService.songs.length ~/ 3, 8).toDouble(),
               child: ListView.builder(
-                itemCount: songService.allSongs.length,
+                itemCount: songService.songs.length,
                 itemBuilder: (context, songIndex) => ListTile(
                   contentPadding: const .symmetric(horizontal: 4),
                   leading: Column(
@@ -191,24 +192,24 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                     ],
                   ),
                   title: Text(
-                    songService.allSongs[songIndex].name,
+                    songService.songs[songIndex].name,
                     overflow: .ellipsis,
                     style: const TextStyle(fontWeight: .w600),
                   ),
                   subtitle: Text(
-                    songService.allSongs[songIndex].artist,
+                    songService.songs[songIndex].artist,
                     overflow: .ellipsis,
                     style: TextStyle(color: Colors.grey[600], fontWeight: .w400),
                   ),
                   onTap: () async {
                     playerService.registerPlaylist(
                       'All songs',
-                      songService.allSongs.map((e) => e.id).toList(),
-                      songService.allSongs[songIndex].id,
+                      songService.songs.map((e) => e.id).toList(),
+                      songService.songs[songIndex].id,
                     );
                     await Navigator.of(
                       context,
-                    ).push(await getMusicPlayerRoute(songService.allSongs[songIndex].id));
+                    ).push(await getMusicPlayerRoute(songService.songs[songIndex].id));
                     setState(() {});
                   },
                   trailing: Row(
@@ -216,22 +217,22 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                     children: [
                       Visibility(
                         visible: configService.currentSortOption == .mostPlayed,
-                        child: Text('${songService.allSongs[songIndex].timeListened}'),
+                        child: Text('${songService.songs[songIndex].timeListened}'),
                       ),
                       IconButton(
                         icon: const Icon(Icons.more_vert_rounded),
                         onPressed: () async {
                           await context.showSongOptionsMenu(
-                            songID: songService.allSongs[songIndex].id,
+                            songID: songService.songs[songIndex].id,
                             options: [
                               SongInfoOption(
-                                songID: songService.allSongs[songIndex].id,
+                                songID: songService.songs[songIndex].id,
                                 updateCallback: () {
                                   setState(() {});
                                 },
                               ),
                               DeleteSongOption(
-                                songID: songService.allSongs[songIndex].id,
+                                songID: songService.songs[songIndex].id,
                               ),
                             ],
                           );

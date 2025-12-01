@@ -10,6 +10,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/models/song_lyric.dart';
+import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
@@ -58,6 +59,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
   final lyricService = GetIt.I<LyricService>(),
       playerService = GetIt.I<PlayerService>(),
       songService = GetIt.I<SongService>(),
+      albumService = GetIt.I<AlbumService>(),
       logService = GetIt.I<LogService>();
 
   int currentDuration = 0, maxDuration = 0;
@@ -71,9 +73,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
   void updateSongInfo([int? songID]) async {
     logService.log("Updating player's UI");
 
-    song = songService.allSongs.firstWhere(
-      (e) => e.id == (songID ?? songService.currentSongID),
-    );
+    song = songService.getSong(songID ?? songService.currentSongID)!;
     currentDuration = playerService.currentDuration;
     maxDuration = playerService.totalDuration;
     updateLyric();
@@ -102,7 +102,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
       logService.log('Cover image for song found');
       coverImage = Image.file(File(song.imagePath), fit: .cover);
     } else {
-      final album = songService.albums.firstWhereOrNull(
+      final album = albumService.albums.firstWhereOrNull(
         (e) => e.name == songService.savedPlaylistName,
       );
       if (album != null && File(album.imagePath).existsSync()) {
@@ -429,9 +429,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                             CupertinoIcons.shuffle,
                             color: playerService.isShuffled
                                 ? context.colorScheme.primary
-                                : context.colorScheme.primary.withValues(
-                                    alpha: 0.3,
-                                  ),
+                                : context.colorScheme.primary.withValues(alpha: 0.3),
                             size: 30,
                           ),
                         ),

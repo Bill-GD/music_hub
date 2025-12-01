@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/models/song.dart';
+import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
@@ -31,14 +32,16 @@ class AlbumSongs extends StatefulWidget {
 }
 
 class _AlbumSongsState extends State<AlbumSongs> {
-  final songService = GetIt.I<SongService>(), playerService = GetIt.I<PlayerService>();
+  final songService = GetIt.I<SongService>(),
+      albumService = GetIt.I<AlbumService>(),
+      playerService = GetIt.I<PlayerService>();
 
   late Album album;
   List<Song> songs = [];
   late int totalSongCount;
 
   void getSongs() {
-    album = songService.albums.firstWhere((e) => e.id == widget.albumID);
+    album = albumService.albums.firstWhere((e) => e.id == widget.albumID);
     songs = [];
     for (final sId in album.songs) {
       final s = songService.getSong(sId);
@@ -109,7 +112,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                         );
                         if (needsUpdate == true) {
                           setState(() {
-                            songService.updateAlbumList();
+                            albumService.updateAlbumList();
                           });
                           if (context.mounted) Navigator.of(context).pop();
                         }
@@ -149,10 +152,10 @@ class _AlbumSongsState extends State<AlbumSongs> {
                               TextButton(
                                 onPressed: () async {
                                   deleteAlbum = true;
-                                  await songService.albums
+                                  await albumService.albums
                                       .firstWhereOrNull((a) => a.id == widget.albumID)
                                       ?.delete();
-                                  await songService.updateAlbumList();
+                                  await albumService.updateAlbumList();
                                   if (context.mounted) Navigator.of(context).pop(true);
                                 },
                                 child: const Text('Yes'),
@@ -402,7 +405,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                       ],
                     );
                     if (songRemoved) {
-                      await songService.updateAlbumList();
+                      await albumService.updateAlbumList();
                       if (mounted) Navigator.of(context).pop();
                     }
                   },

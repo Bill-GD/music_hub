@@ -14,7 +14,7 @@ class SearchViewModel extends ChangeNotifier {
   void searchSongs(String keyword) {
     filteredSongs.clear();
     filteredSongs.addAll(
-      songService.allSongs
+      songService.songs
           .where(
             (song) =>
                 song.name.toLowerCase().contains(keyword.toLowerCase()) ||

@@ -9,6 +9,8 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'package:music_hub/app.dart';
+import 'package:music_hub/data/services/album_service.dart';
+import 'package:music_hub/data/services/artist_service.dart';
 import 'package:music_hub/data/services/backup_service.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
@@ -16,6 +18,7 @@ import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/home/home_view_model.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
@@ -41,6 +44,9 @@ void main() async {
   GetIt.I.registerSingleton(ConfigService());
   GetIt.I.registerSingleton(await DatabaseService.create(path: Paths.dbPath));
   GetIt.I.registerSingleton(SongService());
+  GetIt.I.registerSingleton(AlbumService());
+  GetIt.I.registerSingleton(ArtistService());
+  GetIt.I.registerSingleton(PlaylistService());
   GetIt.I.registerSingleton(BackupService());
   GetIt.I.registerSingleton(LyricService());
   GetIt.I.registerSingleton(GithubService());

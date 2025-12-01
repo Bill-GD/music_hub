@@ -45,10 +45,10 @@ class _PlaylistSheetState extends State<PlaylistSheet> {
               ),
             ),
             title: Text(
-              songService.allSongs.firstWhere((e) => e.id == sId).name,
+              songService.songs.firstWhere((e) => e.id == sId).name,
               overflow: TextOverflow.ellipsis,
             ),
-            subtitle: Text(songService.allSongs.firstWhere((e) => e.id == sId).artist),
+            subtitle: Text(songService.songs.firstWhere((e) => e.id == sId).artist),
             trailing: songService.currentSongID != sId
                 ? IconButton(
                     icon: const Icon(Icons.playlist_add_rounded),

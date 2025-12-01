@@ -102,7 +102,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
         : animController.reverse(from: 1);
     currentLine = findCurrentLine();
 
-    song = songService.allSongs.firstWhere((e) => e.id == widget.songID);
+    song = songService.getSong(widget.songID)!;
     lyric =
         lyricService.getLyric(song.id, Paths.lyricPath + song.lyricPath) ??
         SongLyric(

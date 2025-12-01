@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:music_hub/data/models/song.dart';
+import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
@@ -64,6 +65,7 @@ class PlayerService extends BaseAudioHandler {
   final ConfigService _configService = GetIt.I();
   final DatabaseService _databaseService = GetIt.I();
   final SongService _songService = GetIt.I();
+  final AlbumService _albumService = GetIt.I();
 
   PlayerService() {
     _logService.log('Player service init');
@@ -109,7 +111,7 @@ class PlayerService extends BaseAudioHandler {
             _listenedDuration += interval;
           }
           if (!_listened && _listenedDuration >= _minTime) {
-            _songService.allSongs
+            _songService.songs
                 .firstWhere((e) => e.id == _songService.currentSongID)
                 .incrementTimePlayed();
             _listened = true;
@@ -157,7 +159,7 @@ class PlayerService extends BaseAudioHandler {
 
     assert(songID >= 0, 'Invalid song ID: $songID');
 
-    Song song = _songService.allSongs.firstWhere((e) => e.id == songID);
+    Song song = _songService.songs.firstWhere((e) => e.id == songID);
 
     _logService.log('Switching song: (${song.id}) ${song.name}');
     duration = await _player.setAudioSource(
@@ -170,7 +172,7 @@ class PlayerService extends BaseAudioHandler {
     String imgPath = song.imagePath;
     if (imgPath.isEmpty) {
       imgPath =
-          _songService.albums
+          _albumService.albums
               .firstWhereOrNull((e) => e.name == _songService.savedPlaylistName)
               ?.imagePath ??
           '';
@@ -355,7 +357,7 @@ class PlayerService extends BaseAudioHandler {
     String imgPath = song.imagePath;
     if (imgPath.isEmpty) {
       imgPath =
-          _songService.albums
+          _albumService.albums
               .firstWhereOrNull((e) => e.name == _songService.savedPlaylistName)
               ?.imagePath ??
           '';

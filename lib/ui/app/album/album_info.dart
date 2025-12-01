@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/album.dart';
+import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
-import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/file_picker.dart';
@@ -23,7 +23,7 @@ class AlbumInfo extends StatefulWidget {
 }
 
 class _AlbumInfoState extends State<AlbumInfo> {
-  final songService = GetIt.I<SongService>(), playerService = GetIt.I<PlayerService>();
+  final albumService = GetIt.I<AlbumService>(), playerService = GetIt.I<PlayerService>();
   late final TextEditingController albumController;
   late final Album album;
   String errorText = '', imagePath = '';
@@ -32,7 +32,7 @@ class _AlbumInfoState extends State<AlbumInfo> {
   @override
   void initState() {
     super.initState();
-    album = songService.albums.firstWhere((e) => e.id == widget.albumID);
+    album = albumService.albums.firstWhere((e) => e.id == widget.albumID);
     albumController = TextEditingController(text: album.name);
     imagePath = album.imagePath;
     hasCover = File(imagePath).existsSync();

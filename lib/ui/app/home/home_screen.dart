@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
         storagePermissionStatus = await Permission.manageExternalStorage.status;
       }
-      await widget.viewModel.loadData();
+      await widget.viewModel.load();
     });
 
     widget.viewModel.playerService.onPlayingChange.listen((playing) {

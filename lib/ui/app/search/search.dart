@@ -44,7 +44,7 @@ class _SearchScreenState extends State<SearchScreen> {
               padding: const .symmetric(horizontal: 15, vertical: 15),
               itemCount: vm.filteredSongs.length,
               itemBuilder: (context, index) {
-                final song = vm.songService.allSongs.firstWhere(
+                final song = vm.songService.songs.firstWhere(
                   (e) => e.path == vm.filteredSongs[index],
                 );
                 return ListTile(
@@ -62,7 +62,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     FocusManager.instance.primaryFocus?.unfocus();
                     vm.playerService.registerPlaylist(
                       'All songs',
-                      vm.songService.allSongs.map((e) => e.id).toList(),
+                      vm.songService.idList,
                       song.id,
                     );
                     await Navigator.of(context).pushReplacement(await getMusicPlayerRoute(song.id));

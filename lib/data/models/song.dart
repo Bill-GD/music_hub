@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:get_it/get_it.dart';
 
+import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/constants.dart' show Paths, TableNames;
 
 class Song {
@@ -109,7 +109,6 @@ class Song {
 
   Future<void> removeFromPlaylist(int albumID) async {
     final dbService = GetIt.I<DatabaseService>();
-    final songService = GetIt.I<SongService>();
 
     GetIt.I<LogService>().log('Removing song ($id) from album ($albumID)');
 
@@ -132,8 +131,8 @@ class Song {
       [albumID, res.first['track_order']],
     );
 
-    final otherAlbums = songService.albums.where((a) => a.id != 1 && a.id != albumID);
-    final unknown = songService.albums.firstWhere((e) => e.id == 1);
+    final otherAlbums = GetIt.I<AlbumService>().albums.where((a) => a.id != 1 && a.id != albumID);
+    final unknown = GetIt.I<AlbumService>().albums.firstWhere((e) => e.id == 1);
 
     if (otherAlbums.any((a) => a.songs.contains(id)) || unknown.songs.contains(id)) {
       return;

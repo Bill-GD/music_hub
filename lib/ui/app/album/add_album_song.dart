@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/models/song.dart';
+import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/extensions.dart' show PadInt;
@@ -19,7 +20,7 @@ class AddAlbumSong extends StatefulWidget {
 }
 
 class _AddAlbumSongState extends State<AddAlbumSong> {
-  final songService = GetIt.I<SongService>();
+  final songService = GetIt.I<SongService>(), albumService = GetIt.I<AlbumService>();
   late final Album album;
   late final List<Song> availableSongs;
   late final List<int> order;
@@ -31,9 +32,9 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
   @override
   void initState() {
     super.initState();
-    album = songService.albums.firstWhere((e) => e.id == widget.albumID);
+    album = albumService.albums.firstWhere((e) => e.id == widget.albumID);
     availableSongs =
-        songService.allSongs
+        songService.songs
             .where((e) => !album.songs.contains(e.id)) //
             .toList()
           ..sort((a, b) => a.id - b.id);
@@ -60,7 +61,7 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
                 ? () async {
                     // LogHandler.log('$order');
                     // LogHandler.log('${availableSongs.map((e) => e.id)}');
-                    final unknown = songService.albums.firstWhere((e) => e.id == 1);
+                    final unknown = albumService.albums.firstWhere((e) => e.id == 1);
                     for (final i in range(1, songAddedCount)) {
                       final si = availableSongs[order.indexOf(i)].id;
                       songService.getSong(si)?.hasAlbum = true;
@@ -69,7 +70,7 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
                     }
                     await album.update();
                     await unknown.update();
-                    await songService.updateAlbumList();
+                    await albumService.updateAlbumList();
                     if (context.mounted) Navigator.of(context).pop();
                   }
                 : null,

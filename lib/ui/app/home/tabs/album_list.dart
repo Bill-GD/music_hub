@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:music_hub/data/services/song_service.dart';
+import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/ui/app/album/add_album.dart';
 import 'package:music_hub/ui/app/album/album_songs.dart';
 import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
@@ -18,24 +18,24 @@ class AlbumList extends StatefulWidget {
 }
 
 class _AlbumListState extends State<AlbumList> {
-  final songService = GetIt.I<SongService>();
+  final albumService = GetIt.I<AlbumService>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-          await songService.updateAlbumList();
+          await albumService.updateAlbumList();
           if (context.mounted) setState(() {});
         },
         child: ListView.builder(
-          itemCount: songService.albums.length + 1,
+          itemCount: albumService.albums.length + 1,
           itemBuilder: (context, albumIndex) {
             final isNewTile = albumIndex == 0;
             final album =
-                songService.albums[min(
+                albumService.albums[min(
                   isNewTile ? 0 : albumIndex - 1,
-                  songService.albums.length - 1,
+                  albumService.albums.length - 1,
                 )];
 
             return OpenContainer(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/song.dart';
+import 'package:music_hub/data/services/artist_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/song/song_info.dart';
@@ -25,6 +26,7 @@ class SongInfoOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final songService = GetIt.I<SongService>();
+    final artistService = GetIt.I<ArtistService>();
 
     return ListTile(
       shape: RoundedRectangleBorder(borderRadius: .circular(30)),
@@ -51,7 +53,7 @@ class SongInfoOption extends StatelessWidget {
           ),
         );
         if (needsUpdate == true) {
-          songService.updateArtistList();
+          artistService.updateArtistList();
           songService.sortAllSongs();
           updateCallback();
           if (context.mounted) Navigator.pop(context);
@@ -69,7 +71,7 @@ class DeleteSongOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playerService = GetIt.I<PlayerService>(), songService = GetIt.I<SongService>();
-    Song song = songService.allSongs.firstWhere((e) => e.id == songID);
+    Song song = songService.songs.firstWhere((e) => e.id == songID);
 
     return ListTile(
       shape: RoundedRectangleBorder(borderRadius: .circular(30)),
@@ -118,7 +120,7 @@ class DeleteSongOption extends StatelessWidget {
           ],
         );
         if (songDeleted) {
-          await songService.loadData();
+          await loadData();
           songService.sortAllSongs();
           if (context.mounted) Navigator.pop(context);
         }

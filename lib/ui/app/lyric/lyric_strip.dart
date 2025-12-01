@@ -14,9 +14,7 @@ import 'package:music_hub/ui/app/lyric/lyric_editor.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart' show Paths;
-
-import 'package:music_hub/utils/extensions.dart'
-    show DurationFromNumber, LyricTimestamp;
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, LyricTimestamp;
 
 class LyricStrip extends StatefulWidget {
   const LyricStrip({super.key});
@@ -55,9 +53,7 @@ class _LyricStripState extends State<LyricStrip> {
   }
 
   void updateLyric() {
-    final song = songService.allSongs.firstWhere(
-      (e) => e.id == songService.currentSongID,
-    );
+    final song = songService.getSong(songService.currentSongID)!;
     currentSongID = song.id;
     lyric =
         lyricService.getLyric(currentSongID, Paths.lyricPath + song.lyricPath) ??

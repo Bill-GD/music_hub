@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 
+import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/constants.dart' show TableNames;
 import 'package:music_hub/utils/utils.dart';
 
@@ -80,7 +80,6 @@ class Album {
   Future<void> delete() async {
     final logService = GetIt.I<LogService>();
     final dbService = GetIt.I<DatabaseService>();
-    final songService = GetIt.I<SongService>();
 
     if (id < 0) {
       return logService.log('Trying to delete album id -1', .error);
@@ -93,8 +92,10 @@ class Album {
       whereArgs: [id],
     );
 
-    final otherAlbums = songService.albums.where((a) => a.id != 1 && a.id != id);
-    final unknown = songService.albums.firstWhere((e) => e.id == 1);
+    final otherAlbums = GetIt.I<AlbumService>().albums.where(
+      (a) => a.id != 1 && a.id != id,
+    );
+    final unknown = GetIt.I<AlbumService>().albums.firstWhere((e) => e.id == 1);
 
     for (final s in songs) {
       if (otherAlbums.any((a) => a.songs.contains(s)) || unknown.songs.contains(s)) {

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
 
-import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
@@ -104,7 +103,8 @@ extension WidgetWithContext on BuildContext {
     required int songID,
     required List<Widget> options,
   }) async {
-    Song song = GetIt.I<SongService>().allSongs.firstWhere((e) => e.id == songID);
+    final song = GetIt.I<SongService>().getSong(songID);
+    if (song == null) return;
     await getBottomSheet(
       Text(
         song.name,

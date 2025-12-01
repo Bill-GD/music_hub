@@ -27,7 +27,7 @@ class _ArtistSongsState extends State<ArtistSongs> {
   late List<Song> songs;
 
   void getSongs() {
-    songs = songService.allSongs.where((s) => s.artist == widget.artistName).toList()
+    songs = songService.songs.where((s) => s.artist == widget.artistName).toList()
       ..sort(
         (track1, track2) =>
             track1.name.toLowerCase().compareTo(track2.name.toLowerCase()),
