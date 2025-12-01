@@ -27,29 +27,28 @@ class DatabaseService {
 
     _db = await openDatabase(
       _path,
-      // prev = 3
-      version: 4,
+      version: 5,
       readOnly: false,
-      onCreate: (db, version) async {
-        _logService.log('Creating tables');
-        await _createTables(db, version);
+      onCreate: (db, _) async {
+        await _createTables();
         _logService.log(
           'Song count: ${(await db.rawQuery('select count(*) count from music_track')).first['count']}',
         );
       },
-      onUpgrade: (db, _, newVersion) async {
-        _logService.log('Upgrading database to version $newVersion');
-        await _createTables(db, newVersion);
-        await updateTables(db, newVersion);
+      onUpgrade: (db, oldVersion, newVersion) async {
+        _logService.log('Upgrading database: $oldVersion -> $newVersion');
+        await _createTables();
+        await updateTables(oldVersion);
       },
       onOpen: (db) async {
-        _logService.log('Database opened');
+        _logService.log('Database opened, version ${await db.getVersion()}');
       },
     );
   }
 
-  Future<void> _createTables(Database db, [int newVersion = 1]) async {
-    await db.execute(
+  Future<void> _createTables() async {
+    _logService.log('Creating tables');
+    await _db.execute(
       'create table if not exists ${TableNames.songTable} ('
       'id integer primary key,'
       'path text not null,' // the path is relative to /storage/emulated/0/Download, basically the file name only
@@ -58,10 +57,11 @@ class DatabaseService {
       'time_listened integer default 0,'
       'lyric_path text not null default "",'
       'image_path text not null default "",'
-      'time_added datetime not null'
+      'time_added datetime not null,'
+      'deleted boolean not null check (deleted in (0, 1)) default 0'
       ');',
     );
-    await db.execute(
+    await _db.execute(
       'create table if not exists ${TableNames.albumTable} ('
       'id integer primary key,'
       'name text not null,'
@@ -69,7 +69,7 @@ class DatabaseService {
       'time_added datetime not null'
       ');',
     );
-    await db.execute(
+    await _db.execute(
       'create table if not exists ${TableNames.albumSongsTable} ('
       'track_order integer not null,'
       'track_id integer not null,'
@@ -79,8 +79,7 @@ class DatabaseService {
       'foreign key (album_id) references album (id)'
       ');',
     );
-    // LogHandler.log("Creating '${Globals.playlistTable}' table");
-    await db.execute(
+    await _db.execute(
       'create table if not exists ${TableNames.playlistTable} ('
       'id integer primary key,'
       'list_name text not null,'
@@ -90,8 +89,8 @@ class DatabaseService {
     );
   }
 
-  Future<void> updateTables(Database db, int newVersion) async {
-    if (newVersion == 3) {
+  Future<void> updateTables(int oldVersion) async {
+    if (oldVersion < 3) {
       _logService.log(
         "Adding 'lyric_path' to ${TableNames.songTable}, renaming columns to snake_case",
       );
@@ -108,13 +107,19 @@ class DatabaseService {
         'alter table ${TableNames.albumTable} rename column "timeAdded" to "time_added";',
       );
     }
-    if (newVersion == 4) {
+    if (oldVersion < 4) {
       _logService.log('Adding image_path column to ${TableNames.songTable}');
       await db.execute(
         'alter table ${TableNames.songTable} add column image_path text not null default "";',
       );
       await db.execute(
         'alter table ${TableNames.albumTable} add column image_path text not null default "";',
+      );
+    }
+    if (oldVersion < 5) {
+      _logService.log('Adding deleted flag to ${TableNames.songTable}');
+      await _db.execute(
+        'alter table ${TableNames.songTable} add column deleted boolean not null check (deleted in (0, 1)) default 0;',
       );
     }
   }

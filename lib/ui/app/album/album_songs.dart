@@ -41,7 +41,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
     album = songService.albums.firstWhere((e) => e.id == widget.albumID);
     songs = [];
     for (final sId in album.songs) {
-      final s = songService.allSongs.firstWhereOrNull((s) => s.id == sId);
+      final s = songService.getSong(sId);
       if (s != null) songs.add(s);
     }
     totalSongCount = songs.length;

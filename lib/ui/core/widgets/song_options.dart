@@ -51,7 +51,7 @@ class SongInfoOption extends StatelessWidget {
           ),
         );
         if (needsUpdate == true) {
-          songService.updateArtistsList();
+          songService.updateArtistList();
           songService.sortAllSongs();
           updateCallback();
           if (context.mounted) Navigator.pop(context);
@@ -118,7 +118,7 @@ class DeleteSongOption extends StatelessWidget {
           ],
         );
         if (songDeleted) {
-          await songService.updateMusicData();
+          await songService.loadData();
           songService.sortAllSongs();
           if (context.mounted) Navigator.pop(context);
         }

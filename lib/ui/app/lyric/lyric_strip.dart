@@ -14,7 +14,9 @@ import 'package:music_hub/ui/app/lyric/lyric_editor.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart' show Paths;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, LyricTimestamp, WhereOrNull;
+
+import 'package:music_hub/utils/extensions.dart'
+    show DurationFromNumber, LyricTimestamp;
 
 class LyricStrip extends StatefulWidget {
   const LyricStrip({super.key});
@@ -233,9 +235,7 @@ class _LyricStripState extends State<LyricStrip> {
                       TextButton(
                         child: const Text('Yes'),
                         onPressed: () {
-                          final song = songService.allSongs.firstWhereOrNull(
-                            (e) => e.id == lyric.songId,
-                          );
+                          final song = songService.getSong(lyric.songId);
                           if (song != null) {
                             logService.log('Removing lyric for ${song.id}');
                             song.lyricPath = '';

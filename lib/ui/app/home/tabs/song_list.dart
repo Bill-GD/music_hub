@@ -48,9 +48,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                   style: TextStyle(fontWeight: .w700, color: context.iconColor()),
                 ),
                 onPressed: () async {
-                  final randomSong = songService
-                      .allSongs[Random().nextInt(songService.allSongs.length)]
-                      .id;
+                  final randomSong = songService.random.id;
                   if (!playerService.isShuffled) playerService.changeShuffleMode();
 
                   playerService.registerPlaylist(
@@ -167,7 +165,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
         Expanded(
           child: RefreshIndicator(
             onRefresh: () async {
-              await songService.updateMusicData();
+              await songService.loadData();
               songService.sortAllSongs();
               if (context.mounted) setState(() {});
             },

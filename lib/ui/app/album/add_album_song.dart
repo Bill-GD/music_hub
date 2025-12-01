@@ -6,7 +6,7 @@ import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
-import 'package:music_hub/utils/extensions.dart' show PadInt, WhereOrNull;
+import 'package:music_hub/utils/extensions.dart' show PadInt;
 import 'package:music_hub/utils/utils.dart';
 
 class AddAlbumSong extends StatefulWidget {
@@ -63,8 +63,7 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
                     final unknown = songService.albums.firstWhere((e) => e.id == 1);
                     for (final i in range(1, songAddedCount)) {
                       final si = availableSongs[order.indexOf(i)].id;
-                      songService.allSongs.firstWhereOrNull((e) => e.id == si)?.hasAlbum =
-                          true;
+                      songService.getSong(si)?.hasAlbum = true;
                       album.songs.add(si);
                       unknown.songs.remove(si);
                     }

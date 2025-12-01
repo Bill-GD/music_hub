@@ -16,7 +16,7 @@ import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/constants.dart' show Constants;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, WhereOrNull;
+import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
 import 'package:music_hub/utils/globals.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
         storagePermissionStatus = await Permission.manageExternalStorage.status;
       }
-      await widget.viewModel.loadSongs();
+      await widget.viewModel.loadData();
     });
 
     widget.viewModel.playerService.onPlayingChange.listen((playing) {
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             ),
                             title: Text(
                               vm.songService.currentSongID >= 0 && !vm.loading
-                                  ? '${vm.songService.allSongs.firstWhereOrNull((e) => e.id == vm.songService.currentSongID)?.name}'
+                                  ? '${vm.songService.getSong(vm.songService.currentSongID)?.name}'
                                   : 'None',
                               overflow: .ellipsis,
                               style: const TextStyle(
@@ -210,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             ),
                             subtitle: Text(
                               vm.songService.currentSongID >= 0 && !vm.loading
-                                  ? '${vm.songService.allSongs.firstWhereOrNull((e) => e.id == vm.songService.currentSongID)?.artist}'
+                                  ? '${vm.songService.getSong(vm.songService.currentSongID)?.artist}'
                                   : 'None',
                             ),
                             onTap: vm.loading

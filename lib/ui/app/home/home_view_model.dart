@@ -10,7 +10,6 @@ import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/constants.dart' show Constants;
-import 'package:music_hub/utils/extensions.dart' show WhereOrNull;
 import 'package:music_hub/utils/globals.dart';
 
 class HomeViewModel extends ChangeNotifier {
@@ -47,17 +46,15 @@ class HomeViewModel extends ChangeNotifier {
     return storagePermissionStatus;
   }
 
-  Future<void> loadSongs() async {
-    await songService.updateMusicData();
+  Future<void> loadData() async {
+    await songService.loadData();
     songService.sortAllSongs();
 
     if (_configService.backupOnLaunch) {
       _backupService.backupData();
     }
     await playerService.recoverSavedPlaylist();
-    Globals.showMinimizedPlayer.value =
-        songService.allSongs.firstWhereOrNull((e) => e.id == songService.currentSongID) !=
-        null;
+    Globals.showMinimizedPlayer.value = songService.hasSong(songService.currentSongID);
 
     _logService.log('App is ready');
     loading = false;

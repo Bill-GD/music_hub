@@ -66,7 +66,7 @@ class PlayerService extends BaseAudioHandler {
   final SongService _songService = GetIt.I();
 
   PlayerService() {
-    _logService.log('Audio Handler init');
+    _logService.log('Player service init');
     onSongChange = _onSongChangeController.stream;
     onPlayingChange = _onPlayingChangeController.stream;
 
@@ -345,7 +345,7 @@ class PlayerService extends BaseAudioHandler {
 
   Future<void> updateNotificationInfo({required int songID, Duration? duration}) async {
     if (mediaItem.value == null) return;
-    final song = _songService.allSongs.firstWhereOrNull((e) => e.id == songID);
+    final song = _songService.getSong(songID);
     _logService.log('Updating media item of $songID');
 
     if (song == null) {

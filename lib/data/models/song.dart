@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
@@ -13,6 +12,7 @@ class Song {
   String path, name, artist, lyricPath, imagePath;
   DateTime timeAdded = DateTime.now();
   bool hasAlbum = false;
+  bool deleted = false;
 
   String get fullPath => Paths.downloadPath + path;
 
@@ -39,9 +39,8 @@ class Song {
       imagePath = json['image_path'] ?? '',
       timeAdded = json['time_added'] != null
           ? DateTime.parse(json['time_added'])
-          : File('${Paths.downloadPath}${json['path']}').statSync().modified;
-
-  Song.fromJsonString(String jsonString) : this.fromJson(jsonDecode(jsonString));
+          : File('${Paths.downloadPath}${json['path']}').statSync().modified,
+      deleted = json['delete'] ?? false;
 
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -63,7 +62,7 @@ class Song {
   Future<void> insert() async {
     final logService = GetIt.I<LogService>();
     if (id >= 0) {
-      return logService.log('Trying to insert duplicate song id ($id)', .error);
+      return logService.log('Trying to duplicate song record (id=$id)', .error);
     }
     id = await GetIt.I<DatabaseService>().db.insert(
       TableNames.songTable,
@@ -93,7 +92,13 @@ class Song {
     if (id < 0) {
       return logService.log('Trying to delete song id -1', .error);
     }
-    await dbService.db.delete(TableNames.songTable, where: 'id = ?', whereArgs: [id]);
+    // await dbService.db.delete(TableNames.songTable, where: 'id = ?', whereArgs: [id]);
+    await GetIt.I<DatabaseService>().db.update(
+      TableNames.songTable,
+      {'deleted': true},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
     await dbService.db.delete(
       TableNames.albumSongsTable,
       where: 'track_id = ?',
@@ -127,9 +132,7 @@ class Song {
       [albumID, res.first['track_order']],
     );
 
-    final otherAlbums = songService.albums.where(
-      (a) => a.id != 1 && a.id != albumID,
-    );
+    final otherAlbums = songService.albums.where((a) => a.id != 1 && a.id != albumID);
     final unknown = songService.albums.firstWhere((e) => e.id == 1);
 
     if (otherAlbums.any((a) => a.songs.contains(id)) || unknown.songs.contains(id)) {
