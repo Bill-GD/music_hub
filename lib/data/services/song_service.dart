@@ -14,22 +14,22 @@ import 'package:music_hub/utils/constants.dart' show Paths, TableNames;
 import 'package:music_hub/utils/extensions.dart' show WhereOrNull;
 
 class SongService {
-  List<Song> allSongs = [];
-  Map<String, int> artists = {};
-  List<Album> albums = [];
+  final LogService _logService = GetIt.I();
+  final ConfigService _configService = GetIt.I();
+  final DatabaseService _databaseService = GetIt.I();
+
+  final List<Song> allSongs = [];
+  final Map<String, int> artists = {};
+  final List<Album> albums = [];
 
   int currentSongID = -1;
   String? savedPlaylistName;
 
   final lyricChangedController = StreamController<void>.broadcast();
 
-  final LogService _logService = GetIt.I();
-  final ConfigService _configService = GetIt.I();
-  final DatabaseService _databaseService = GetIt.I();
-
   /// Get all songs (from storage & saved)
   Future<void> updateMusicData() async {
-    await updateListOfSongs();
+    await _updateListOfSongs();
     updateArtistsList();
     await updateAlbumList();
   }
@@ -39,7 +39,7 @@ class SongService {
   }
 
   /// Updates all songs with saved data
-  Future<void> updateListOfSongs() async {
+  Future<void> _updateListOfSongs() async {
     List<Song> storageSongs = await _getSongsFromStorage();
     List<Song> savedSongs = await _getSavedMusicData();
 
@@ -73,7 +73,8 @@ class SongService {
         await s.insert();
       }
     }
-    allSongs = storageSongs;
+    allSongs.clear();
+    allSongs .addAll( storageSongs);
   }
 
   Future<List<Song>> _getSongsFromStorage() async {
@@ -126,25 +127,22 @@ class SongService {
     _configService.currentSortOption = sortType ?? _configService.currentSortOption;
     _logService.log('Sorting all songs: ${_configService.currentSortOption.name}');
     switch (_configService.currentSortOption) {
-      case SortOptions.id:
+      case .id:
         tracks.sort((track1, track2) => track1.id.compareTo(track2.id));
-        break;
-      case SortOptions.name:
+      case .name:
         tracks.sort(
           (track1, track2) =>
               track1.name.toLowerCase().compareTo(track2.name.toLowerCase()),
         );
-        break;
-      case SortOptions.mostPlayed:
+      case .mostPlayed:
         tracks.sort(
           (track1, track2) => track2.timeListened.compareTo(track1.timeListened),
         );
-        break;
-      case SortOptions.recentlyAdded:
+      case .recentlyAdded:
         tracks.sort((track1, track2) => track2.timeAdded.compareTo(track1.timeAdded));
-        break;
     }
-    allSongs = tracks;
+    allSongs.clear();
+    allSongs.addAll(tracks);
   }
 
   void updateArtistsList() {
@@ -154,9 +152,12 @@ class SongService {
         for (final song in allSongs) //
           song.artist: allSongs.where((s) => s.artist == song.artist).length,
       });
-    artists = SplayTreeMap.from(
-      unsortedArtists,
-      (key1, key2) => key1.toLowerCase().compareTo(key2.toLowerCase()),
+    artists.clear();
+    artists.addAll(
+      SplayTreeMap.from(
+        unsortedArtists,
+        (key1, key2) => key1.toLowerCase().compareTo(key2.toLowerCase()),
+      ),
     );
   }
 
@@ -165,13 +166,14 @@ class SongService {
     final fetchedAlbums = (await _databaseService.db.query(
       TableNames.albumTable,
     )).map(Album.fromJson).toList();
+    albums.clear();
 
     if (fetchedAlbums.isEmpty) {
       _logService.log("No album exists, creating default album 'Unknown'");
       final unknown = Album(name: 'Unknown', id: -1, timeAdded: DateTime.now())
         ..songs = allSongs.map((e) => e.id).toList()
         ..insert();
-      albums = [unknown];
+      albums.add(unknown);
       return;
     }
 
@@ -209,6 +211,6 @@ class SongService {
       unknown.update();
     }
 
-    albums = fetchedAlbums;
+    albums.addAll(fetchedAlbums);
   }
 }

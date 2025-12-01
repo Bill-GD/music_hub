@@ -34,10 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
             constraints: BoxConstraints.loose(
               Size.fromHeight(AppBar().preferredSize.height * 0.65),
             ),
-            prefixIcon: Icon(
-              Icons.search_rounded,
-              color: context.colorScheme.primary,
-            ),
+            prefixIcon: Icon(Icons.search_rounded, color: context.colorScheme.primary),
           ),
         ),
         body: ListenableBuilder(
@@ -51,7 +48,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   (e) => e.path == vm.filteredSongs[index],
                 );
                 return ListTile(
-                  // contentPadding: const EdgeInsets.symmetric(horizontal: 30),
                   title: Text(
                     song.name,
                     overflow: .ellipsis,
@@ -69,8 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       vm.songService.allSongs.map((e) => e.id).toList(),
                       song.id,
                     );
-                    await Navigator.of(context).push(await getMusicPlayerRoute(song.id));
-                    setState(() {});
+                    await Navigator.of(context).pushReplacement(await getMusicPlayerRoute(song.id));
                   },
                 );
               },

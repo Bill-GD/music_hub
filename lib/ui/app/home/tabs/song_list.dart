@@ -16,9 +16,7 @@ import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
 
 class SongList extends StatefulWidget {
-  final void Function(void Function()) updateParent;
-
-  const SongList({super.key, required this.updateParent});
+  const SongList({super.key});
 
   @override
   State<SongList> createState() => _SongListState();
@@ -239,7 +237,6 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                               ),
                             ],
                           );
-                          widget.updateParent(() {});
                         },
                       ),
                     ],

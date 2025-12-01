@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:music_hub/ui/app/home/drawer.dart';
@@ -35,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     reverseDuration: 300.ms,
     vsync: this,
   );
-  bool isDarkTheme = false;
 
   @override
   void initState() {
@@ -110,12 +108,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     await Navigator.of(context).push(
                       PageRouteBuilder(
                         pageBuilder: (context, _, _) {
-                          return SearchScreen(
-                            viewModel: SearchViewModel(
-                              playerService: GetIt.I(),
-                              songService: GetIt.I(),
-                            ),
-                          );
+                          return SearchScreen(viewModel: SearchViewModel());
                         },
                         transitionDuration: 400.ms,
                         transitionsBuilder: (_, anim, _, child) {
@@ -138,10 +131,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   indicator: UnderlineTabIndicator(
                     borderRadius: .circular(10),
                     insets: const .symmetric(vertical: 6),
-                    borderSide: BorderSide(
-                      width: 3,
-                      color: context.colorScheme.primary,
-                    ),
+                    borderSide: BorderSide(width: 3, color: context.colorScheme.primary),
                   ),
                   labelStyle: const TextStyle(
                     fontWeight: .bold,
@@ -161,10 +151,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   : StretchingOverscrollIndicator(
                       axisDirection: .right,
                       child: TabBarView(
-                        children: [
-                          SongList(updateParent: setState),
-                          const ArtistList(),
-                          const AlbumList(),
+                        children: const [
+                          SongList(), //
+                          ArtistList(),
+                          AlbumList(),
                         ],
                       ),
                     ),
