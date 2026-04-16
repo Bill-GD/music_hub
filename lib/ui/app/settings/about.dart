@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/settings/version_list.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/constants.dart' show Constants;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -18,7 +18,7 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-  final logService = GetIt.I<LogService>();
+  final logService = get<LogService>();
 
   @override
   Widget build(BuildContext context) {

@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/ui/app/settings/about.dart';
 import 'package:music_hub/ui/app/settings/backup.dart';
 import 'package:music_hub/ui/app/settings/theme_setting.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/constants.dart' show Constants;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -20,8 +19,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final configService = GetIt.I<ConfigService>(),
-      playerService = GetIt.I<PlayerService>();
+  final configService = get<ConfigService>(),
+      playerService = get<PlayerService>();
   bool hasChanges = false;
 
   late bool autoBackup = configService.backupOnLaunch;

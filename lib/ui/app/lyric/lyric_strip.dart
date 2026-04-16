@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/song_lyric.dart';
 import 'package:music_hub/data/services/log_service.dart';
@@ -13,8 +12,9 @@ import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/lyric/lyric_editor.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/constants.dart' show Paths;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, LyricTimestamp;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class LyricStrip extends StatefulWidget {
   const LyricStrip({super.key});
@@ -24,10 +24,10 @@ class LyricStrip extends StatefulWidget {
 }
 
 class _LyricStripState extends State<LyricStrip> {
-  final lyricService = GetIt.I<LyricService>(),
-      logService = GetIt.I<LogService>(),
-      songService = GetIt.I<SongService>(),
-      playerService = GetIt.I<PlayerService>();
+  final lyricService = get<LyricService>(),
+      logService = get<LogService>(),
+      songService = get<SongService>(),
+      playerService = get<PlayerService>();
 
   final scrollController = PageController(viewportFraction: 0.3);
   final List<StreamSubscription> subs = [];

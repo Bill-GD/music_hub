@@ -1,9 +1,7 @@
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/constants.dart' show TableNames;
+import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/utils.dart';
 
 class Album {
@@ -29,8 +27,8 @@ class Album {
   };
 
   Future<void> insert() async {
-    final logService = GetIt.I<LogService>();
-    final dbService = GetIt.I<DatabaseService>();
+    final logService = get<LogService>();
+    final dbService = get<DatabaseService>();
 
     if (id >= 0) {
       return logService.log('Trying to insert duplicate album id ($id)', .error);
@@ -47,8 +45,8 @@ class Album {
   }
 
   Future<void> update() async {
-    final logService = GetIt.I<LogService>();
-    final dbService = GetIt.I<DatabaseService>();
+    final logService = get<LogService>();
+    final dbService = get<DatabaseService>();
 
     if (id < 0) {
       return logService.log('Trying to update album id -1', .error);
@@ -78,8 +76,8 @@ class Album {
   }
 
   Future<void> delete() async {
-    final logService = GetIt.I<LogService>();
-    final dbService = GetIt.I<DatabaseService>();
+    final logService = get<LogService>();
+    final dbService = get<DatabaseService>();
 
     if (id < 0) {
       return logService.log('Trying to delete album id -1', .error);
@@ -92,10 +90,8 @@ class Album {
       whereArgs: [id],
     );
 
-    final otherAlbums = GetIt.I<AlbumService>().albums.where(
-      (a) => a.id != 1 && a.id != id,
-    );
-    final unknown = GetIt.I<AlbumService>().albums.firstWhere((e) => e.id == 1);
+    final otherAlbums = get<AlbumService>().albums.where((a) => a.id != 1 && a.id != id);
+    final unknown = get<AlbumService>().albums.firstWhere((e) => e.id == 1);
 
     for (final s in songs) {
       if (otherAlbums.any((a) => a.songs.contains(s)) || unknown.songs.contains(s)) {

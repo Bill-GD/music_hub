@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 
 import 'package:animations/animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/album/add_album_song.dart';
 import 'package:music_hub/ui/app/album/album_info.dart';
@@ -19,7 +18,7 @@ import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, WhereOrNull;
+import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
 
 class AlbumSongs extends StatefulWidget {
@@ -32,9 +31,10 @@ class AlbumSongs extends StatefulWidget {
 }
 
 class _AlbumSongsState extends State<AlbumSongs> {
-  final songService = GetIt.I<SongService>(),
-      albumService = GetIt.I<AlbumService>(),
-      playerService = GetIt.I<PlayerService>();
+  final songService = get<SongService>(),
+      albumService = get<AlbumService>(),
+      logService = get<LogService>(),
+      playlistService = get<PlaylistService>();
 
   late Album album;
   List<Song> songs = [];
@@ -198,11 +198,11 @@ class _AlbumSongsState extends State<AlbumSongs> {
                       ? null
                       : () async {
                           final randomSong = songs[Random().nextInt(songs.length)].id;
-                          if (!playerService.isShuffled) {
-                            playerService.changeShuffleMode();
+                          if (!playlistService.isShuffled) {
+                            playlistService.changeShuffleMode();
                           }
                           // get artistName or album.name depend on category
-                          playerService.registerPlaylist(
+                          playlistService.registerPlaylist(
                             album.name,
                             songs.map((e) => e.id).toList(),
                             randomSong,
@@ -215,7 +215,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                 TextButton.icon(
                   style: const ButtonStyle(splashFactory: NoSplash.splashFactory),
                   icon: FaIcon(
-                    Icons.play_circle_filled_rounded,
+                    FaIconData(Icons.play_circle_filled_rounded),
                     size: 30,
                     color: context.iconColor(songs.isEmpty ? 0.5 : 1),
                   ),
@@ -230,11 +230,11 @@ class _AlbumSongsState extends State<AlbumSongs> {
                       ? null
                       : () async {
                           final first = songs[0].id;
-                          if (playerService.isShuffled) {
-                            playerService.changeShuffleMode();
+                          if (playlistService.isShuffled) {
+                            playlistService.changeShuffleMode();
                           }
                           // get artistName or album.name depend on category
-                          playerService.registerPlaylist(
+                          playlistService.registerPlaylist(
                             album.name,
                             songs.map((e) => e.id).toList(),
                             first,
@@ -268,7 +268,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                           return;
                         }
                         final oldSongId = songs[oIdx].id, newSongId = songs[nIdx].id;
-                        GetIt.I<LogService>().log(
+                        logService.log(
                           'Reorder album: $oIdx (id=$oldSongId) -> $nIdx (id=$newSongId)',
                         );
                         album.songs.insert(nIdx, album.songs.removeAt(oIdx));
@@ -348,7 +348,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
         style: TextStyle(color: Colors.grey[600], fontWeight: .w400),
       ),
       onTap: () async {
-        playerService.registerPlaylist(
+        playlistService.registerPlaylist(
           album.name,
           songs.map((e) => e.id).toList(),
           song.id,

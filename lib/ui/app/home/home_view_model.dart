@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:music_hub/data/services/backup_service.dart';
@@ -8,18 +7,20 @@ import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
-import 'package:music_hub/utils/constants.dart' show Constants;
+import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/utils.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  final PlayerService playerService = GetIt.I();
-  final SongService songService = GetIt.I();
-  final LogService _logService = GetIt.I();
-  final ConfigService _configService = GetIt.I();
-  final BackupService _backupService = GetIt.I();
-  final GithubService _githubService = GetIt.I();
+  final playerService = get<PlayerService>(),
+      playlistService = get<PlaylistService>(),
+      songService = get<SongService>(),
+      _logService = get<LogService>(),
+      _configService = get<ConfigService>(),
+      _backupService = get<BackupService>(),
+      _githubService = get<GithubService>();
 
   bool loading = true;
 
@@ -54,7 +55,7 @@ class HomeViewModel extends ChangeNotifier {
     if (_configService.backupOnLaunch) {
       _backupService.backupData();
     }
-    await playerService.recoverSavedPlaylist();
+    await playlistService.recoverSavedPlaylist();
     Globals.showMinimizedPlayer.value = songService.hasSong(songService.currentSongID);
 
     _logService.log('App is ready');

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class AddAlbum extends StatefulWidget {
   const AddAlbum({super.key});
@@ -14,7 +13,7 @@ class AddAlbum extends StatefulWidget {
 }
 
 class _AddAlbumState extends State<AddAlbum> {
-  final albumService = GetIt.I<AlbumService>();
+  final albumService = get<AlbumService>();
 
   final albumNameController = TextEditingController();
   String errorText = '';

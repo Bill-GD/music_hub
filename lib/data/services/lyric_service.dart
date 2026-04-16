@@ -1,17 +1,14 @@
 import 'dart:io';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/models/lyric_item.dart';
 import 'package:music_hub/data/models/song_lyric.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/constants.dart' show Paths, Constants;
-
-import 'package:music_hub/utils/extensions.dart'
-    show DurationFromNumber, LyricTimestamp, WhereOrNull;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class LyricService {
-  final LogService _logService = GetIt.I();
+  final LogService _logService = get();
 
   String? _getMetadata(List<String> lines, String begin) => lines
       .firstWhereOrNull((e) => e.startsWith(begin))

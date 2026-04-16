@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/constants.dart' show Constants;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class GithubService {
-  final LogService _logService = GetIt.I();
-  final Dio _dio = GetIt.I();
+  final LogService _logService = get();
+  final Dio _dio = get();
 
   Future<Response> apiQuery(String query) {
     const baseApiUrl = 'https://api.github.com/repos/Bill-GD/music_hub';

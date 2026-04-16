@@ -3,15 +3,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/song.dart';
-import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class ArtistSongs extends StatefulWidget {
   final String artistName;
@@ -23,7 +23,8 @@ class ArtistSongs extends StatefulWidget {
 }
 
 class _ArtistSongsState extends State<ArtistSongs> {
-  final songService = GetIt.I<SongService>(), playerService = GetIt.I<PlayerService>();
+  final songService = get<SongService>(),
+      playlistService = get<PlaylistService>();
   late List<Song> songs;
 
   void getSongs() {
@@ -81,11 +82,11 @@ class _ArtistSongsState extends State<ArtistSongs> {
                       ? null
                       : () async {
                           final randomSong = songs[Random().nextInt(songs.length)].id;
-                          if (!playerService.isShuffled) {
-                            playerService.changeShuffleMode();
+                          if (!playlistService.isShuffled) {
+                            playlistService.changeShuffleMode();
                           }
                           // get artistName or album.name depend on category
-                          playerService.registerPlaylist(
+                          playlistService.registerPlaylist(
                             widget.artistName,
                             songs.map((e) => e.id).toList(),
                             randomSong,
@@ -98,7 +99,7 @@ class _ArtistSongsState extends State<ArtistSongs> {
                 TextButton.icon(
                   style: const ButtonStyle(splashFactory: NoSplash.splashFactory),
                   icon: FaIcon(
-                    Icons.play_circle_filled_rounded,
+                    FaIconData(Icons.play_circle_filled_rounded),
                     size: 30,
                     color: context.iconColor(songs.isEmpty ? 0.5 : 1),
                   ),
@@ -113,11 +114,11 @@ class _ArtistSongsState extends State<ArtistSongs> {
                       ? null
                       : () async {
                           final first = songs[0].id;
-                          if (playerService.isShuffled) {
-                            playerService.changeShuffleMode();
+                          if (playlistService.isShuffled) {
+                            playlistService.changeShuffleMode();
                           }
                           // get artistName or album.name depend on category
-                          playerService.registerPlaylist(
+                          playlistService.registerPlaylist(
                             widget.artistName,
                             songs.map((e) => e.id).toList(),
                             first,
@@ -152,13 +153,10 @@ class _ArtistSongsState extends State<ArtistSongs> {
                     subtitle: Text(
                       songs[songIndex].artist,
                       overflow: .ellipsis,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontWeight: .w400,
-                      ),
+                      style: TextStyle(color: Colors.grey[600], fontWeight: .w400),
                     ),
                     onTap: () async {
-                      playerService.registerPlaylist(
+                      playlistService.registerPlaylist(
                         widget.artistName,
                         songs.map((e) => e.id).toList(),
                         songs[songIndex].id,

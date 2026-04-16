@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/models/song_lyric.dart';
@@ -14,6 +13,7 @@ import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/lyric/lyric_editor.dart';
 import 'package:music_hub/ui/app/lyric/lyric_strip.dart';
@@ -25,12 +25,13 @@ import 'package:music_hub/ui/core/widgets/file_picker.dart';
 import 'package:music_hub/ui/core/widgets/page_indicator.dart';
 import 'package:music_hub/ui/core/widgets/playlist_sheet.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
-import 'package:music_hub/utils/constants.dart' show Paths;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, WhereOrNull;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals.dart';
+import 'package:music_hub/utils/utils.dart';
 
 Future<Route> getMusicPlayerRoute(int songID) async {
-  await GetIt.I<PlayerService>().setPlayerSong(songID, shouldPlay: !Globals.setDuplicate);
+  await get<PlayerService>().setPlayerSong(songID, shouldPlay: !Globals.setDuplicate);
   return PageRouteBuilder(
     pageBuilder: (context, _, _) => MusicPlayer(songID: songID),
     transitionDuration: 400.ms,
@@ -56,11 +57,12 @@ class MusicPlayer extends StatefulWidget {
 }
 
 class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin {
-  final lyricService = GetIt.I<LyricService>(),
-      playerService = GetIt.I<PlayerService>(),
-      songService = GetIt.I<SongService>(),
-      albumService = GetIt.I<AlbumService>(),
-      logService = GetIt.I<LogService>();
+  final lyricService = get<LyricService>(),
+      playerService = get<PlayerService>(),
+      playlistService = get<PlaylistService>(),
+      songService = get<SongService>(),
+      albumService = get<AlbumService>(),
+      logService = get<LogService>();
 
   int currentDuration = 0, maxDuration = 0;
   final List<StreamSubscription> subs = [];
@@ -103,7 +105,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
       coverImage = Image.file(File(song.imagePath), fit: .cover);
     } else {
       final album = albumService.albums.firstWhereOrNull(
-        (e) => e.name == songService.savedPlaylistName,
+        (e) => e.name == playlistService.playlistName,
       );
       if (album != null && File(album.imagePath).existsSync()) {
         logService.log('Cover image for album found');
@@ -340,7 +342,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                           const Icon(Icons.list_rounded),
                           const SizedBox(width: 5),
                           Text(
-                            playerService.playlistDisplayName,
+                            playlistService.playlistDisplayName,
                             style: const TextStyle(
                               fontWeight: .w600,
                               fontSize: FontSize.small,
@@ -422,12 +424,12 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                       children: [
                         IconButton(
                           onPressed: () {
-                            playerService.changeShuffleMode();
+                            playlistService.changeShuffleMode();
                             setState(() {});
                           },
                           icon: Icon(
                             CupertinoIcons.shuffle,
-                            color: playerService.isShuffled
+                            color: playlistService.isShuffled
                                 ? context.colorScheme.primary
                                 : context.colorScheme.primary.withValues(alpha: 0.3),
                             size: 30,
@@ -480,14 +482,14 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                         ),
                         IconButton(
                           onPressed: () async {
-                            await playerService.changeRepeatMode();
+                            await playlistService.changeRepeatMode();
                             setState(() {});
                           },
                           icon: Icon(
-                            playerService.repeatMode == .one
+                            playlistService.repeatMode == .one
                                 ? CupertinoIcons.repeat_1
                                 : CupertinoIcons.repeat,
-                            color: playerService.repeatMode == .none
+                            color: playlistService.repeatMode == .none
                                 ? context.colorScheme.primary.withValues(alpha: 0.3)
                                 : context.colorScheme.primary,
                             size: 35,

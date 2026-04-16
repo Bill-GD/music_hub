@@ -18,10 +18,8 @@ dependencies:
   get_it: ^9.1.1
   theme_provider: ^0.6.0
   animations: ^2.1.1
-#  flutter_animate: <=4.5.0
-  font_awesome_flutter: ^10.12.0
+  font_awesome_flutter: ^11.0.0
   youtube_explode_dart: ^3.0.5
-#  http: ^1.2.2
   dio: ^5.9.0
   flutter_media_metadata: ^1.0.0+1
   just_audio: ^0.10.5
@@ -38,14 +36,15 @@ dependency_overrides:
 dev_dependencies:
   # change_app_package_name: <=1.1.0
   # flutter_launcher_icons: ^0.14.4
-  import_sorter: ^4.6.0
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  import_sorter: ^4.6.0
 
 import_sorter:
   comments: false
   # dart run import_sorter:main
+
 # flutter_launcher_icons:
 #   android: true
 #   image_path: 'assets/images/icon.png'

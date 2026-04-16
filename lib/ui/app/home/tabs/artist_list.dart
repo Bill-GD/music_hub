@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:animations/animations.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/services/artist_service.dart';
 import 'package:music_hub/ui/app/artist/artist_songs.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class ArtistList extends StatefulWidget {
   const ArtistList({super.key});
@@ -16,7 +16,7 @@ class ArtistList extends StatefulWidget {
 }
 
 class _ArtistListState extends State<ArtistList> {
-  final artistService = GetIt.I<ArtistService>();
+  final artistService = get<ArtistService>();
 
   @override
   Widget build(BuildContext context) {

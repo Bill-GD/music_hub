@@ -60,12 +60,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   onTap: () async {
                     FocusManager.instance.primaryFocus?.unfocus();
-                    vm.playerService.registerPlaylist(
+                    vm.playlistService.registerPlaylist(
                       'All songs',
                       vm.songService.idList,
                       song.id,
                     );
-                    await Navigator.of(context).pushReplacement(await getMusicPlayerRoute(song.id));
+                    await Navigator.of(
+                      context,
+                    ).pushReplacement(await getMusicPlayerRoute(song.id));
                   },
                 );
               },

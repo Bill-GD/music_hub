@@ -5,14 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
-import 'package:get_it/get_it.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import 'package:music_hub/data/models/online_song.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/constants.dart' show Paths;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
 
 class DownloaderViewModel extends ChangeNotifier {
@@ -24,7 +23,7 @@ class DownloaderViewModel extends ChangeNotifier {
     r'^(?:https://)?(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/)([a-zA-Z0-9-_]{11})(?:\S+)?$',
   );
 
-  final _logService = GetIt.I<LogService>(), _dio = GetIt.I<Dio>();
+  final _logService = get<LogService>(), _dio = get<Dio>();
   final _baseSoundcloudApiUrl = 'https://api-v2.soundcloud.com';
   final _cancelToken = CancelToken();
   final urlController = TextEditingController();
@@ -150,7 +149,7 @@ class DownloaderViewModel extends ChangeNotifier {
   Future<void> _downloadYoutube(String url) async {
     if (_fetchedSong == null) throw Exception('No song fetched, aborting download.');
 
-    final navKey = GetIt.I<GlobalKey<NavigatorState>>();
+    final navKey = get<GlobalKey<NavigatorState>>();
     final yt = YoutubeExplode();
     final file = File(
       '${Paths.downloadPath}${sanitizeFilePath(_fetchedSong!.title)}.mp3',
@@ -196,7 +195,7 @@ class DownloaderViewModel extends ChangeNotifier {
     }
     // const String clientId = 'client_id=8BBZpqUP1KSN4W6YB64xog2PX4Dw98b1';
     const String clientId = 'client_id=57GDonO1e5SInnyt8DyMGWwbrg0AOq1H';
-    final navKey = GetIt.I<GlobalKey<NavigatorState>>();
+    final navKey = get<GlobalKey<NavigatorState>>();
 
     final url = urlText.split('?').first;
     final author = url.split('/').elementAt(3);

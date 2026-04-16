@@ -4,11 +4,15 @@ import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/artist_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 
+T get<T extends Object>() {
+  return GetIt.I<T>();
+}
+
 /// Load/Reload all song data
 Future<void> loadData() async {
-  await GetIt.I<SongService>().updateSongList();
-  GetIt.I<ArtistService>().updateArtistList();
-  await GetIt.I<AlbumService>().updateAlbumList();
+  await get<SongService>().updateSongList();
+  get<ArtistService>().updateArtistList();
+  await get<AlbumService>().updateAlbumList();
 }
 
 String sanitizeFilePath(String path) {

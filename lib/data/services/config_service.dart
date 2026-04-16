@@ -1,12 +1,13 @@
-import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/playlist_service.dart';
+import 'package:music_hub/utils/utils.dart';
 
 /// All user configurations, expose to user in setting page.
 class ConfigService {
-  final LogService _logService = GetIt.I();
+  final LogService _logService = get();
 
   /// Whether the app should backup data on launch.
   bool backupOnLaunch = false;
@@ -46,7 +47,7 @@ class ConfigService {
 
   Future<void> saveConfig() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final playerService = GetIt.I<PlayerService>();
+    final playlistService = get<PlaylistService>();
 
     await prefs.setBool('backupOnLaunch', backupOnLaunch);
     await prefs.setBool('enableSongFiltering', enableSongFiltering);
@@ -57,8 +58,8 @@ class ConfigService {
     await prefs.setDouble('volume', volume);
     await prefs.setInt('backupCount', backupCount);
     await prefs.setString('currentSortOption', currentSortOption.name);
-    await prefs.setBool('isShuffled', playerService.isShuffled);
-    await prefs.setString('repeatMode', playerService.repeatMode.name);
+    await prefs.setBool('isShuffled', playlistService.isShuffled);
+    await prefs.setString('repeatMode', playlistService.repeatMode.name);
     _logService.log('Config saved');
   }
 
@@ -79,7 +80,7 @@ class ConfigService {
       orElse: () => .name,
     );
 
-    GetIt.I<PlayerService>().loadConfig(
+    get<PlayerService>().loadConfig(
       prefs.getBool('isShuffled'),
       prefs.getString('repeatMode'),
     );

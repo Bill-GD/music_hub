@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
-import 'package:music_hub/utils/constants.dart' show Paths;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
 
 extension WidgetWithContext on BuildContext {
@@ -103,7 +101,7 @@ extension WidgetWithContext on BuildContext {
     required int songID,
     required List<Widget> options,
   }) async {
-    final song = GetIt.I<SongService>().getSong(songID);
+    final song = get<SongService>().getSong(songID);
     if (song == null) return;
     await getBottomSheet(
       Text(

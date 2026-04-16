@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/settings/version_dialog.dart';
-import 'package:music_hub/utils/constants.dart' show Constants;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class VersionList extends StatefulWidget {
   const VersionList({super.key});
@@ -16,7 +15,7 @@ class VersionList extends StatefulWidget {
 }
 
 class _VersionListState extends State<VersionList> {
-  final logService = GetIt.I<LogService>(), githubService = GetIt.I<GithubService>();
+  final logService = get<LogService>(), githubService = get<GithubService>();
   List<String> tags = [], shas = [];
   int versionCount = 0;
   bool loading = true;

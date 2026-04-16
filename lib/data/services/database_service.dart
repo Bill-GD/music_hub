@@ -1,14 +1,14 @@
 import 'dart:io';
 
-import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/constants.dart' show TableNames;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class DatabaseService {
   final String _path;
-  final LogService _logService = GetIt.I();
+  final LogService _logService = get();
   late final Database _db;
 
   Database get db => _db;

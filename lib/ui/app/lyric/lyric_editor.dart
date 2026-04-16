@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/lyric_item.dart';
 import 'package:music_hub/data/models/song.dart';
@@ -19,9 +18,10 @@ import 'package:music_hub/ui/app/lyric/type_lyric.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
-import 'package:music_hub/utils/constants.dart' show Paths;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber, LyricTimestamp;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class LyricEditor extends StatefulWidget {
   final int songID;
@@ -33,11 +33,11 @@ class LyricEditor extends StatefulWidget {
 }
 
 class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStateMixin {
-  final lyricService = GetIt.I<LyricService>(),
-      songService = GetIt.I<SongService>(),
-      playerService = GetIt.I<PlayerService>(),
-      logService = GetIt.I<LogService>(),
-      configService = GetIt.I<ConfigService>();
+  final lyricService = get<LyricService>(),
+      songService = get<SongService>(),
+      playerService = get<PlayerService>(),
+      logService = get<LogService>(),
+      configService = get<ConfigService>();
 
   late final AnimationController animController;
   late final Song song;

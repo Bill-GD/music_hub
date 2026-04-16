@@ -6,10 +6,8 @@ import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/button.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
+import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals.dart';
-
-import 'package:music_hub/utils/extensions.dart'
-    show DurationExtension, DurationFromNumber;
 
 class MusicDownloaderScreen extends StatefulWidget {
   final DownloaderViewModel viewModel;

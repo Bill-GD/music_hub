@@ -1,16 +1,15 @@
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class AlbumService {
-  final _logService = GetIt.I<LogService>();
-  final _databaseService = GetIt.I<DatabaseService>();
-  final _songService = GetIt.I<SongService>();
+  final _logService = get<LogService>(),
+      _databaseService = get<DatabaseService>(),
+      _songService = get<SongService>();
 
   final List<Album> _albums = [];
 
@@ -43,7 +42,9 @@ class AlbumService {
         orderBy: 'track_order',
       );
       // LogHandler.log('$s');
-      final idList = s.map((e) => e['track_id'] as int).where((e) => _songService.hasSong(e));
+      final idList = s
+          .map((e) => e['track_id'] as int)
+          .where((e) => _songService.hasSong(e));
       for (final id in idList) {
         final addingSongIdx = allSongs.indexWhere((e) => e.id == id);
         if (addingSongIdx < 0 || allSongs[addingSongIdx].hasAlbum) continue;

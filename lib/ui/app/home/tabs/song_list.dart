@@ -4,10 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/services/config_service.dart';
-import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
@@ -24,9 +23,9 @@ class SongList extends StatefulWidget {
 }
 
 class _SongListState extends State<SongList> with TickerProviderStateMixin {
-  final playerService = GetIt.I<PlayerService>(),
-      songService = GetIt.I<SongService>(),
-      configService = GetIt.I<ConfigService>();
+  final playlistService = get<PlaylistService>(),
+      songService = get<SongService>(),
+      configService = get<ConfigService>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +49,9 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                 ),
                 onPressed: () async {
                   final randomSong = songService.random.id;
-                  if (!playerService.isShuffled) playerService.changeShuffleMode();
+                  if (!playlistService.isShuffled) playlistService.changeShuffleMode();
 
-                  playerService.registerPlaylist(
+                  playlistService.registerPlaylist(
                     'All songs',
                     songService.songs.map((e) => e.id).toList(),
                     randomSong,
@@ -202,7 +201,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                     style: TextStyle(color: Colors.grey[600], fontWeight: .w400),
                   ),
                   onTap: () async {
-                    playerService.registerPlaylist(
+                    playlistService.registerPlaylist(
                       'All songs',
                       songService.songs.map((e) => e.id).toList(),
                       songService.songs[songIndex].id,

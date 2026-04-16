@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/constants.dart' show Paths, TableNames;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class Song {
   int id, timeListened;
@@ -55,16 +54,16 @@ class Song {
 
   Future<void> incrementTimePlayed() async {
     timeListened++;
-    GetIt.I<LogService>().log('Play count +1 for ($id)');
+    get<LogService>().log('Play count +1 for ($id)');
     await update(false);
   }
 
   Future<void> insert() async {
-    final logService = GetIt.I<LogService>();
+    final logService = get<LogService>();
     if (id >= 0) {
       return logService.log('Trying to duplicate song record (id=$id)', .error);
     }
-    id = await GetIt.I<DatabaseService>().db.insert(
+    id = await get<DatabaseService>().db.insert(
       TableNames.songTable,
       toJson()..remove('id'),
     );
@@ -72,12 +71,12 @@ class Song {
   }
 
   Future<void> update([bool log = true]) async {
-    final logService = GetIt.I<LogService>();
+    final logService = get<LogService>();
     if (id < 0) {
       return logService.log('Trying to update song id -1', .error);
     }
     if (log) logService.log('Updating song: $id');
-    await GetIt.I<DatabaseService>().db.update(
+    await get<DatabaseService>().db.update(
       TableNames.songTable,
       toJson(),
       where: 'id = ?',
@@ -86,14 +85,14 @@ class Song {
   }
 
   Future<void> delete() async {
-    final logService = GetIt.I<LogService>();
-    final dbService = GetIt.I<DatabaseService>();
+    final logService = get<LogService>();
+    final dbService = get<DatabaseService>();
 
     if (id < 0) {
       return logService.log('Trying to delete song id -1', .error);
     }
     // await dbService.db.delete(TableNames.songTable, where: 'id = ?', whereArgs: [id]);
-    await GetIt.I<DatabaseService>().db.update(
+    await get<DatabaseService>().db.update(
       TableNames.songTable,
       {'deleted': true},
       where: 'id = ?',
@@ -108,9 +107,9 @@ class Song {
   }
 
   Future<void> removeFromPlaylist(int albumID) async {
-    final dbService = GetIt.I<DatabaseService>();
+    final dbService = get<DatabaseService>();
 
-    GetIt.I<LogService>().log('Removing song ($id) from album ($albumID)');
+    get<LogService>().log('Removing song ($id) from album ($albumID)');
 
     final res = await dbService.db.query(
       TableNames.albumSongsTable,
@@ -131,8 +130,8 @@ class Song {
       [albumID, res.first['track_order']],
     );
 
-    final otherAlbums = GetIt.I<AlbumService>().albums.where((a) => a.id != 1 && a.id != albumID);
-    final unknown = GetIt.I<AlbumService>().albums.firstWhere((e) => e.id == 1);
+    final otherAlbums = get<AlbumService>().albums.where((a) => a.id != 1 && a.id != albumID);
+    final unknown = get<AlbumService>().albums.firstWhere((e) => e.id == 1);
 
     if (otherAlbums.any((a) => a.songs.contains(id)) || unknown.songs.contains(id)) {
       return;

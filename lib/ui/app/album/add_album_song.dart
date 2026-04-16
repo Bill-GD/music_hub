@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
-import 'package:music_hub/utils/extensions.dart' show PadInt;
+import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
 
 class AddAlbumSong extends StatefulWidget {
@@ -20,7 +18,7 @@ class AddAlbumSong extends StatefulWidget {
 }
 
 class _AddAlbumSongState extends State<AddAlbumSong> {
-  final songService = GetIt.I<SongService>(), albumService = GetIt.I<AlbumService>();
+  final songService = get<SongService>(), albumService = get<AlbumService>();
   late final Album album;
   late final List<Song> availableSongs;
   late final List<int> order;

@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/artist_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
@@ -12,8 +10,8 @@ import 'package:music_hub/ui/app/song/song_info.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/constants.dart' show Paths;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/utils.dart';
 
@@ -25,8 +23,8 @@ class SongInfoOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final songService = GetIt.I<SongService>();
-    final artistService = GetIt.I<ArtistService>();
+    final songService = get<SongService>();
+    final artistService = get<ArtistService>();
 
     return ListTile(
       shape: RoundedRectangleBorder(borderRadius: .circular(30)),
@@ -70,7 +68,7 @@ class DeleteSongOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playerService = GetIt.I<PlayerService>(), songService = GetIt.I<SongService>();
+    final playerService = get<PlayerService>(), songService = get<SongService>();
     Song song = songService.songs.firstWhere((e) => e.id == songID);
 
     return ListTile(

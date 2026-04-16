@@ -1,13 +1,11 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:get_it/get_it.dart';
-
-import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class SearchViewModel extends ChangeNotifier {
-  final PlayerService playerService = GetIt.I();
-  final SongService songService = GetIt.I();
+  final playlistService = get<PlaylistService>(), songService = get<SongService>();
 
   final List<String> filteredSongs = [];
 

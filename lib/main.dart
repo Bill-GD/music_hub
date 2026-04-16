@@ -23,8 +23,8 @@ import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/home/home_view_model.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/constants.dart' show Constants, Paths;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

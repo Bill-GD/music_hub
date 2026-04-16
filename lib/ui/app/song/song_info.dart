@@ -2,16 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/file_picker.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
-import 'package:music_hub/utils/constants.dart' show Paths;
-import 'package:music_hub/utils/extensions.dart' show DateString;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class SongInfo extends StatefulWidget {
   final int songID;
@@ -23,7 +22,7 @@ class SongInfo extends StatefulWidget {
 }
 
 class _SongInfoState extends State<SongInfo> {
-  final songService = GetIt.I<SongService>(), playerService = GetIt.I<PlayerService>();
+  final songService = get<SongService>(), playerService = get<PlayerService>();
 
   final _songController = TextEditingController(),
       _artistController = TextEditingController();

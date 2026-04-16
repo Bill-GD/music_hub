@@ -7,7 +7,7 @@ import 'package:music_hub/ui/app/downloader/downloader_view_model.dart';
 import 'package:music_hub/ui/app/settings/setting.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/constants.dart' show Constants;
+import 'package:music_hub/utils/constants.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer({super.key});
@@ -106,7 +106,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   _listItemDivider(),
                   ListTile(
                     shape: RoundedRectangleBorder(borderRadius: .circular(30)),
-                    leading: FaIcon(Icons.logo_dev, color: context.iconColor()),
+                    leading: FaIcon(FaIconData(Icons.logo_dev), color: context.iconColor()),
                     title: const Text(
                       'Log',
                       style: TextStyle(fontSize: FontSize.mediumSmall),

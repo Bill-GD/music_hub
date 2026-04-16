@@ -4,10 +4,9 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class FilePicker extends StatefulWidget {
   /// LIst of allowed file extensions, example: ['mp3', 'lrc']
@@ -79,6 +78,7 @@ class FilePicker extends StatefulWidget {
 }
 
 class _FilePickerState extends State<FilePicker> {
+  final logService = get<LogService>();
   var fileEntities = <String>[], isDirectory = <bool>[], crumbs = <String>[];
   String currentRootPath = '';
   int depth = 0;
@@ -86,7 +86,7 @@ class _FilePickerState extends State<FilePicker> {
   @override
   void initState() {
     super.initState();
-    GetIt.I<LogService>().log('File picker: ${widget.rootDirectory}');
+    logService.log('File picker: ${widget.rootDirectory}');
     getEntities(widget.rootDirectory);
     getCrumbs();
   }
@@ -100,7 +100,7 @@ class _FilePickerState extends State<FilePicker> {
           .split('/')
           .where((e) => e.isNotEmpty),
     ];
-    GetIt.I<LogService>().log('Parts: $parts');
+    logService.log('Parts: $parts');
 
     crumbs.clear();
     for (final c in parts) {
@@ -150,7 +150,7 @@ class _FilePickerState extends State<FilePicker> {
     currentRootPath = root.absolute.path;
     if (!currentRootPath.endsWith('/')) currentRootPath += '/';
 
-    GetIt.I<LogService>().log('Getting file entities from $currentRootPath');
+    logService.log('Getting file entities from $currentRootPath');
 
     for (final entity in entities) {
       fileEntities.add(entity.path.split(currentRootPath).last.split('/').last);

@@ -1,5 +1,5 @@
 import 'package:music_hub/data/models/lyric_item.dart';
-import 'package:music_hub/utils/extensions.dart' show LyricTimestamp;
+import 'package:music_hub/utils/extensions.dart';
 
 class SongLyric {
   final int songId;

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/extensions.dart';
 
 class HoldingGesture extends StatefulWidget {
   final VoidCallback callback;

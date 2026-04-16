@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:animations/animations.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/ui/app/album/add_album.dart';
 import 'package:music_hub/ui/app/album/album_songs.dart';
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class AlbumList extends StatefulWidget {
   const AlbumList({super.key});
@@ -18,7 +18,7 @@ class AlbumList extends StatefulWidget {
 }
 
 class _AlbumListState extends State<AlbumList> {
-  final albumService = GetIt.I<AlbumService>();
+  final albumService = get<AlbumService>();
 
   @override
   Widget build(BuildContext context) {

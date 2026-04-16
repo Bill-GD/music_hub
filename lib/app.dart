@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/home/home_screen.dart';
 import 'package:music_hub/ui/core/widgets/errored_widget.dart';
-import 'package:music_hub/utils/constants.dart' show Constants;
+import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/globals.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class MusicHubApp extends StatefulWidget {
   final GlobalKey<NavigatorState> navKey;
@@ -25,6 +25,7 @@ class MusicHubApp extends StatefulWidget {
 
 class _MusicHubAppState extends State<MusicHubApp> {
   late final StreamSubscription<List<ConnectivityResult>> connectionSubscription;
+  final logService = get<LogService>();
 
   @override
   void initState() {
@@ -36,9 +37,7 @@ class _MusicHubAppState extends State<MusicHubApp> {
       Globals.isInternetConnected.value = !connectivityResult.contains(
         ConnectivityResult.none,
       );
-      GetIt.I<LogService>().log(
-        'Internet connected: ${Globals.isInternetConnected.value}',
-      );
+      logService.log('Internet connected: ${Globals.isInternetConnected.value}');
     });
   }
 
@@ -92,7 +91,7 @@ class _MusicHubAppState extends State<MusicHubApp> {
               navigatorKey: widget.navKey,
               builder: (context, child) {
                 ErrorWidget.builder = (errorDetails) {
-                  GetIt.I<LogService>().log(errorDetails.exception.toString(), .error);
+                  logService.log(errorDetails.exception.toString(), .error);
                   return ErroredWidget(e: errorDetails);
                 };
                 return child!;

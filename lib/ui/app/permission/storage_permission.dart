@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class StoragePermissionDialog extends StatelessWidget {
-  const StoragePermissionDialog({super.key});
+  final _logService = get<LogService>();
+
+  StoragePermissionDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class StoragePermissionDialog extends StatelessWidget {
         TextButton(
           child: const Text('No'),
           onPressed: () {
-            GetIt.I<LogService>().log('Storage permission denied, exiting app');
+            _logService.log('Storage permission denied, exiting app');
             SystemNavigator.pop();
           },
         ),
@@ -38,7 +40,7 @@ class StoragePermissionDialog extends StatelessWidget {
           onPressed: () {
             Permission.manageExternalStorage.request().then((status) async {
               if (status.isPermanentlyDenied) {
-                GetIt.I<LogService>().log('Opening app settings to request permission');
+                _logService.log('Opening app settings to request permission');
                 await openAppSettings();
               }
               if (status.isGranted && context.mounted) {

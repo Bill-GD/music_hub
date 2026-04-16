@@ -1,7 +1,7 @@
 - Migrated from Flutter 3.22/Dart 3.4 to Flutter 3.38/Dart 3.10
   + Added locally patched plugin `flutter_media_metadata`
   + Added `flutter_dotenv` to work around the removal of `--dart-define-from-file`
-- Updated packages to the newest versions
+- Updated packages to the newest versions (with actual changes)
 - Refactored large portion of the code:
   + Reorganized files
   + Added `BuildContext` extensions: theme, widgets, dialogs

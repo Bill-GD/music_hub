@@ -2,16 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/services/album_service.dart';
-import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/file_picker.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
-import 'package:music_hub/utils/extensions.dart' show DateString;
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class AlbumInfo extends StatefulWidget {
   final int albumID;
@@ -23,7 +22,7 @@ class AlbumInfo extends StatefulWidget {
 }
 
 class _AlbumInfoState extends State<AlbumInfo> {
-  final albumService = GetIt.I<AlbumService>(), playerService = GetIt.I<PlayerService>();
+  final albumService = get<AlbumService>(), playlistService = get<PlaylistService>();
   late final TextEditingController albumController;
   late final Album album;
   String errorText = '', imagePath = '';
@@ -63,7 +62,7 @@ class _AlbumInfoState extends State<AlbumInfo> {
                       FocusManager.instance.primaryFocus?.unfocus();
 
                       album.name = albumController.text.trim();
-                      playerService.playlistName = album.name;
+                      playlistService.playlistName = album.name;
                       album.imagePath = imagePath;
                       await album.update();
 

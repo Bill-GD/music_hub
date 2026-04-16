@@ -2,14 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/services/backup_service.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/widgets/button.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
-import 'package:music_hub/utils/extensions.dart' show DateString, DurationFromNumber;
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class BackupScreen extends StatefulWidget {
   const BackupScreen({super.key});
@@ -19,8 +18,8 @@ class BackupScreen extends StatefulWidget {
 }
 
 class _BackupScreenState extends State<BackupScreen> {
-  final backupService = GetIt.I<BackupService>(),
-      configService = GetIt.I<ConfigService>();
+  final backupService = get<BackupService>(),
+      configService = get<ConfigService>();
   List<FileSystemEntity> backupFiles = [];
 
   void updateBackupList() {
@@ -93,7 +92,7 @@ class _BackupScreenState extends State<BackupScreen> {
                     outline: true,
                     onPressed: () async {
                       if (backupService.getBackups().isEmpty) {
-                        GetIt.I<LogService>().log('No backup data found');
+                        get<LogService>().log('No backup data found');
                         context.showToast('No backup data found');
                         return;
                       }

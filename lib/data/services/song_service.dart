@@ -3,24 +3,23 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/utils/constants.dart' show Paths;
-import 'package:music_hub/utils/extensions.dart' show WhereOrNull;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class SongService {
-  final _logService = GetIt.I<LogService>();
-  final _configService = GetIt.I<ConfigService>();
-  final _databaseService = GetIt.I<DatabaseService>();
+  final _logService = get<LogService>(),
+      _configService = get<ConfigService>(),
+      _databaseService = get<DatabaseService>();
 
   final List<Song> _songs = [];
 
   int currentSongID = -1;
-  String? savedPlaylistName;
 
   final lyricChangedController = StreamController<void>.broadcast();
 

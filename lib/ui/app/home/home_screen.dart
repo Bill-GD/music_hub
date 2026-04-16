@@ -15,8 +15,8 @@ import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
-import 'package:music_hub/utils/constants.dart' show Constants;
-import 'package:music_hub/utils/extensions.dart' show DurationFromNumber;
+import 'package:music_hub/utils/constants.dart';
+import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       if (!storagePermissionStatus.isGranted && mounted) {
         await showDialog(
           context: context,
-          builder: (_) => const StoragePermissionDialog(),
+          builder: (_) => StoragePermissionDialog(),
           barrierDismissible: false,
         );
 

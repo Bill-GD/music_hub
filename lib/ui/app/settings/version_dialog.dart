@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
-import 'package:music_hub/utils/extensions.dart' show DateString;
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class VersionDialog extends StatefulWidget {
   final String tag;
@@ -27,7 +27,7 @@ class VersionDialog extends StatefulWidget {
 }
 
 class _VersionDialogState extends State<VersionDialog> {
-  final logService = GetIt.I<LogService>(), githubService = GetIt.I<GithubService>();
+  final logService = get<LogService>(), githubService = get<GithubService>();
   bool loading = true;
   String body = '', timeUploaded = '';
 

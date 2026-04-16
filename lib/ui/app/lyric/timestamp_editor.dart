@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:get_it/get_it.dart';
-
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/hold_gesture.dart';
-import 'package:music_hub/utils/extensions.dart' show LyricTimestamp, PadInt;
+import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class TimestampEditor extends StatefulWidget {
   final (int, int, int) timestamp;
@@ -165,7 +164,7 @@ class _TimestampEditorState extends State<TimestampEditor> {
         TextButton(
           child: const Text('Save'),
           onPressed: () {
-            GetIt.I<LogService>().log('Edited timestamp: ${widget.timestamp} -> $edit');
+            get<LogService>().log('Edited timestamp: ${widget.timestamp} -> $edit');
             Navigator.of(context).pop(edit);
           },
         ),
