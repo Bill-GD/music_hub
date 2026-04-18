@@ -52,8 +52,9 @@ class MusicDatabase extends _$MusicDatabase {
 
     final newPath = '${internalStorage.absolute.path}/database.sqlite';
     final newFile = File(newPath);
-    final logService = get<LogService>();
+    if (newFile.existsSync()) return;
 
+    final logService = get<LogService>();
     try {
       oldFile.copySync(newPath);
 

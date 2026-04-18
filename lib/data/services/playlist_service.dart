@@ -1,11 +1,9 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:drift/drift.dart';
-import 'package:just_audio/just_audio.dart';
 
 import 'package:music_hub/data/database/database.dart';
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals.dart';
@@ -14,7 +12,6 @@ import 'package:music_hub/utils/utils.dart';
 class PlaylistService {
   final _logService = get<LogService>(),
       _configService = get<ConfigService>(),
-      _playerService = get<PlayerService>(),
       _songService = get<SongService>(),
       _database = get<MusicDatabase>();
 
@@ -61,92 +58,79 @@ class PlaylistService {
     _logService.log('Registered playlist: $playlistName ($songCount songs)');
   }
 
-  void nextSong({bool shouldDelay = false}) async {
-    if (_skipping) return;
+  void toggleSkippingCooldown(bool val) {
+    _skipping = val;
+  }
+
+  Future<(int?, String?, LogLevel?)> nextSong() async {
+    if (_skipping) return (null, null, null);
 
     _logService.log('Skipping to next song');
-    _skipping = true;
+    toggleSkippingCooldown(true);
 
     if (_playlist.isEmpty) {
-      _playerService.pause();
-      return _logService.log('Playlist is empty, this should not be the case', .error);
+      return (null, 'Playlist is empty, this should not be the case', LogLevel.error);
     }
 
     if (_playlist.length == 1) {
-      return _logService.log('Playlist only has one song, skipping action');
+      return (null, 'Playlist only has one song, skipping action', LogLevel.info);
     }
 
     int currentIndex = _playlist.indexWhere((e) => e == _songService.currentSongID);
 
     if (currentIndex < 0) {
-      _playerService.pause();
-      return _logService.log(
+      return (
+        null,
         "Can't find song in playlist, this should not be the case",
-        .error,
-      );
-    }
-
-    if (shouldDelay && _configService.delayMilliseconds > 0) {
-      await Future.delayed(
-        _configService.delayMilliseconds.ms,
-        () => _logService.log('Delayed for ${_configService.delayMilliseconds}ms'),
+        LogLevel.error,
       );
     }
 
     if (currentIndex == _playlist.length - 1) {
       switch (_repeat) {
-        case AudioServiceRepeatMode.all:
+        case .all:
           _logService.log('Repeat all');
           if (isShuffled) _shufflePlaylist(currentToStart: false);
-          await _playerService.setPlayerSong(_playlist[0]);
-          await updateSavedPlaylist(currentIndex, 0);
-          break;
-        case AudioServiceRepeatMode.none:
-          if (_playerService.player.processingState == ProcessingState.completed) {
-            _logService.log('Repeat none');
-            _playerService.pause();
-          }
-          break;
+          await updateSavedCurrentSong(_songService.currentSongID, _playlist[0]);
+          return (_playlist[0], null, null);
+        case .none:
+          return (null, 'Repeat none', LogLevel.info);
         default:
-          await _playerService.setPlayerSong(_playlist[0]);
-          await updateSavedPlaylist(currentIndex, 0);
-          break;
+          await updateSavedCurrentSong(_songService.currentSongID, _playlist[0]);
+          return (_playlist[0], null, null);
       }
     } else {
-      await _playerService.setPlayerSong(_playlist[currentIndex + 1]);
-      await updateSavedPlaylist(_playlist[currentIndex], _playlist[currentIndex + 1]);
+      await updateSavedCurrentSong(
+        _songService.currentSongID,
+        _playlist[currentIndex + 1],
+      );
+      return (_playlist[currentIndex + 1], null, null);
     }
-    _skipping = false;
   }
 
-  void prevSong() async {
-    if (_skipping) return;
+  Future<(int?, String?, LogLevel?)> prevSong() async {
+    if (_skipping) return (null, null, null);
 
     _logService.log('Skipping to previous song');
-    _skipping = true;
+    toggleSkippingCooldown(true);
 
     if (_playlist.isEmpty) {
-      _playerService.pause();
-      return _logService.log('Playlist is empty, this should not be the case', .error);
+      return (null, 'Playlist is empty, this should not be the case', LogLevel.error);
     }
-
     if (_playlist.length == 1) {
-      return _logService.log('Playlist only contains one song, skipping action');
+      return (null, 'Playlist only contains one song, skipping action', LogLevel.info);
     }
 
     int currentIndex = _playlist.indexWhere((e) => e == _songService.currentSongID);
 
     if (currentIndex < 0) {
-      _playerService.pause();
-      return _logService.log('Current ID is < 0, this should not be the case', .error);
+      return (null, 'Current ID is < 0, this should not be the case', LogLevel.error);
     }
 
     final newIndex = (currentIndex == 0 ? _playlist.length : currentIndex) - 1;
 
-    await updateSavedPlaylist(_songService.currentSongID, _playlist[newIndex]);
-    await _playerService.setPlayerSong(_playlist[newIndex]);
-
-    _skipping = false;
+    await updateSavedCurrentSong(_songService.currentSongID, _playlist[newIndex]);
+    return (_playlist[newIndex], null, null);
   }
 
   void savePlaylist(int currentID) {
@@ -167,7 +151,7 @@ class PlaylistService {
     });
   }
 
-  Future<void> updateSavedPlaylist(int oldID, int newID) async {
+  Future<void> updateSavedCurrentSong(int oldID, int newID) async {
     if (playlistName != playlistName) return savePlaylist(newID);
 
     _logService.log('Update current ID of saved: $oldID -> $newID');

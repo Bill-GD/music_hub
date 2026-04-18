@@ -25,7 +25,6 @@ import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';
-import 'package:music_hub/utils/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

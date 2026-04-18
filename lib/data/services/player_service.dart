@@ -59,7 +59,7 @@ class PlayerService extends BaseAudioHandler {
             _logService.log('Repeat one, restarting song');
             await seek(0.ms);
           case .all:
-          // skipToNext(shouldDelay: true);
+            skipToNext(shouldDelay: true);
           case .none:
             pause();
           default:
@@ -226,6 +226,38 @@ class PlayerService extends BaseAudioHandler {
   }
 
   Future<void> setVolume(double volume) async => _player.setVolume(volume);
+
+  @override
+  Future<void> skipToNext({bool shouldDelay = false}) async {
+    final (songIndex, message, logLevel) = await _playlistService.nextSong();
+    if ((_playlistService.repeatMode == .none && _player.processingState == .completed) ||
+        (songIndex == null && message != null && logLevel != null)) {
+      pause();
+      _logService.log(message!, logLevel!);
+      return;
+    }
+
+    if (shouldDelay && _configService.delayMilliseconds > 0) {
+      await Future.delayed(
+        _configService.delayMilliseconds.ms,
+        () => _logService.log('Delayed for ${_configService.delayMilliseconds}ms'),
+      );
+    }
+    await setPlayerSong(songIndex!);
+    _playlistService.toggleSkippingCooldown(false);
+  }
+
+  @override
+  Future<void> skipToPrevious() async {
+    final (songIndex, message, logLevel) = await _playlistService.prevSong();
+    if (songIndex == null && message != null && logLevel != null) {
+      pause();
+      _logService.log(message, logLevel);
+      return;
+    }
+    await setPlayerSong(songIndex!);
+    _playlistService.toggleSkippingCooldown(false);
+  }
 
   @override
   Future<void> play() async {
