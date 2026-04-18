@@ -1,17 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/home/home_screen.dart';
+import 'package:music_hub/ui/app/home/home_view_model.dart';
 import 'package:music_hub/ui/core/widgets/errored_widget.dart';
 import 'package:music_hub/utils/constants.dart';
-import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/utils.dart';
 
 class MusicHubApp extends StatefulWidget {
@@ -24,28 +21,7 @@ class MusicHubApp extends StatefulWidget {
 }
 
 class _MusicHubAppState extends State<MusicHubApp> {
-  late final StreamSubscription<List<ConnectivityResult>> connectionSubscription;
   final logService = get<LogService>();
-
-  @override
-  void initState() {
-    super.initState();
-    connectionSubscription = Connectivity().onConnectivityChanged.listen((
-      newResults,
-    ) async {
-      final connectivityResult = newResults;
-      Globals.isInternetConnected.value = !connectivityResult.contains(
-        ConnectivityResult.none,
-      );
-      logService.log('Internet connected: ${Globals.isInternetConnected.value}');
-    });
-  }
-
-  @override
-  void dispose() {
-    connectionSubscription.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +74,10 @@ class _MusicHubAppState extends State<MusicHubApp> {
               },
               theme: ThemeProvider.themeOf(context).data,
               title: Constants.appName,
-              home: HomeScreen(viewModel: context.read()),
+              home: ChangeNotifierProvider(
+                create: (_) => HomeViewModel(),
+                child: HomeScreen(viewModel: context.read()),
+              ),
             );
           },
         ),

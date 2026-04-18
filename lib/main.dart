@@ -8,7 +8,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import 'package:music_hub/app.dart';
 import 'package:music_hub/data/database/database.dart';
 import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/artist_service.dart';
@@ -20,7 +19,8 @@ import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
-import 'package:music_hub/ui/app/home/home_view_model.dart';
+import 'package:music_hub/ui/app/app.dart';
+import 'package:music_hub/ui/app/app_view_model.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart';
@@ -90,9 +90,12 @@ void main() async {
   };
 
   runApp(
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => HomeViewModel())],
-      child: MusicHubApp(navKey: navigatorKey),
+    ChangeNotifierProvider(
+      create: (_) => AppViewModel(),
+      child: Consumer<AppViewModel>(
+        child: MusicHubApp(navKey: navigatorKey),
+        builder: (_, vm, child) => child!,
+      ),
     ),
   );
 }
