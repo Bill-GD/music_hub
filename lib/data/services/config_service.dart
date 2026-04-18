@@ -1,7 +1,7 @@
+import 'package:music_hub/data/services/player_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/utils/utils.dart';
 
@@ -80,7 +80,8 @@ class ConfigService {
       orElse: () => .name,
     );
 
-    get<PlayerService>().loadConfig(
+    get<PlayerService>().loadConfig();
+    get<PlaylistService>().loadConfig(
       prefs.getBool('isShuffled'),
       prefs.getString('repeatMode'),
     );

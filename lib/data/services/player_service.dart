@@ -292,7 +292,7 @@ class PlayerService extends BaseAudioHandler {
     if (!playbackState.value.playing) stop();
   }
 
-  void loadConfig(bool? shuffle, String? repeat) {
+  void loadConfig() {
     setVolume(_configService.volume);
   }
 }
