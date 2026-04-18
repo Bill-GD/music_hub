@@ -80,15 +80,7 @@ class SongService {
         continue;
       }
 
-      final updated = savedSongs[i].copyWith(
-        id: matchingSong.id.value,
-        name: matchingSong.name.value,
-        artist: matchingSong.artist.value,
-        timeListened: matchingSong.timeListened.value,
-        lyricPath: matchingSong.lyricPath.value,
-        imagePath: matchingSong.imagePath.value,
-        deleted: false,
-      );
+      final updated = savedSongs[i].copyWith(name: matchingSong.name.value);
       await _database.update(_database.song).replace(updated);
       storageSongs.remove(matchingSong);
     }
@@ -114,40 +106,53 @@ class SongService {
         .where((e) => e.path.endsWith('.mp3'))
         .toList();
 
-    if (!_configService.enableSongFiltering) {
-      return mp3Files.map((e) {
-        final fileName = e.path.split(Paths.downloadPath).last;
-        final displayName = fileName.split('.mp3').first;
+    _logService.log('Found ${mp3Files.length} mp3 files');
 
-        return SongCompanion.insert(
-          path: fileName,
-          name: displayName,
-          artist: '',
-          timeAdded: Value(e.statSync().modified),
-        );
-      }).toList();
+    Future<SongCompanion> makeCompanion(FileSystemEntity e) async {
+      final file = File(e.path);
+      final stat = await file.stat();
+      final fileName = e.path.split(Paths.downloadPath).last;
+      final displayName = fileName.split('.mp3').first;
+      return SongCompanion.insert(
+        path: fileName,
+        name: displayName,
+        artist: 'Unknown',
+        timeAdded: Value(stat.modified),
+      );
+    }
+
+    if (!_configService.enableSongFiltering) {
+      return await Future.wait(mp3Files.map(makeCompanion).toList());
     }
 
     _logService.log(
       'Filtering songs shorter than ${_configService.lengthLimitMilliseconds ~/ 1000}s',
     );
-    final filteredFiles = <SongCompanion>[];
-    for (final file in mp3Files) {
-      final info = await MetadataRetriever.fromFile(File(file.path));
-      if (info.trackDuration! >= _configService.lengthLimitMilliseconds) {
-        final fileName = file.path.split(Paths.downloadPath).last;
-        final displayName = fileName.split('.mp3').first;
 
-        filteredFiles.add(
-          SongCompanion.insert(
-            path: fileName,
-            name: displayName,
-            artist: '',
-            timeAdded: Value(file.statSync().modified),
-          ),
-        );
-      }
-    }
-    return filteredFiles;
+    final futures = mp3Files.map((f) {
+      return Future(() async {
+        try {
+          final file = File(f.path);
+          final info = await MetadataRetriever.fromFile(file).timeout(
+            5.seconds,
+            onTimeout: () {
+              throw TimeoutException('Metadata retrieval timeout');
+            },
+          );
+          final duration = info.trackDuration ?? 0;
+          if (duration >= _configService.lengthLimitMilliseconds) {
+            return await makeCompanion(f);
+          } else {
+            return null;
+          }
+        } catch (e) {
+          _logService.log('Metadata read failed for ${f.path}: $e', .error);
+          return null;
+        }
+      });
+    });
+
+    final results = await Future.wait(futures);
+    return results.whereType<SongCompanion>().toList();
   }
 }

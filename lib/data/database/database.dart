@@ -21,7 +21,7 @@ class MusicDatabase extends _$MusicDatabase {
   MusicDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 1;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'database');
@@ -31,7 +31,10 @@ class MusicDatabase extends _$MusicDatabase {
 
   Future<List<AlbumSongData>> get allAlbumSongs => select(albumSong).get();
 
-  Future<List<SongData>> get allSongs => (select(song).join([
+  Future<List<SongData>> get allSongs =>
+      (select(song)..where((s) => s.deleted.equals(false))).get();
+
+  Future<List<SongData>> get allSongsWithAlbumJoin => (select(song).join([
     innerJoin(albumSong, albumSong.trackId.equalsExp(song.id), useColumns: false),
     innerJoin(album, album.id.equalsExp(albumSong.albumId), useColumns: false),
   ])..where(song.deleted.equals(false))).map((row) => row.readTable(song)).get();
