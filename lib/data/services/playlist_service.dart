@@ -133,21 +133,21 @@ class PlaylistService {
     return (_playlist[newIndex], null, null);
   }
 
-  void savePlaylist(int currentID) {
-    _database.delete(_database.playlist).go().then((_) {
-      _logService.log('Saving playlist ($playlistName): $playlist, current: $currentID');
+  Future<void> savePlaylist(int currentID) async {
+    await _database.delete(_database.playlist).go();
+    _logService.log('Saving playlist ($playlistName): $playlist, current: $currentID');
 
-      final data = _playlist.map(
-        (e) => <String, Object?>{
-          'list_name': playlistName!.trim(),
-          'song_id': e,
-          'is_current': e == currentID ? 1 : 0,
-        },
+    await _database.batch((batch) {
+      batch.insertAll(
+        _database.playlist,
+        _playlist.map((e) {
+          return PlaylistCompanion.insert(
+            listName: playlistName!.trim(),
+            songId: e,
+            isCurrent: Value(e == currentID),
+          );
+        }),
       );
-
-      _database.batch((batch) {
-        batch.insertAll(_database.playlist, (data).map(PlaylistData.fromJson));
-      });
     });
   }
 

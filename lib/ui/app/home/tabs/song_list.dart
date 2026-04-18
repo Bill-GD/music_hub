@@ -26,6 +26,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
   final playlistService = get<PlaylistService>(),
       songService = get<SongService>(),
       configService = get<ConfigService>();
+  final songListScrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -169,75 +170,76 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
               songService.sortAllSongs();
               if (context.mounted) setState(() {});
             },
-            child: Scrollbar(
-              interactive: true,
-              thumbVisibility: true,
-              radius: const .circular(16),
-              thickness: min(songService.songs.length ~/ 3, 8).toDouble(),
-              child: ListView.builder(
-                itemCount: songService.songs.length,
-                itemBuilder: (context, songIndex) => ListTile(
-                  contentPadding: const .symmetric(horizontal: 4),
-                  leading: Column(
-                    mainAxisAlignment: .center,
-                    children: [
-                      Padding(
-                        padding: const .only(left: 12),
-                        child: Icon(
-                          Icons.music_note_rounded,
-                          color: context.colorScheme.primary,
+            child: PrimaryScrollController(
+              controller: songListScrollController,
+              child: Scrollbar(
+                interactive: true,
+                thumbVisibility: true,
+                radius: const .circular(16),
+                thickness: min(songService.songs.length ~/ 3, 8).toDouble(),
+                child: ListView.builder(
+                  itemCount: songService.songs.length,
+                  itemBuilder: (context, songIndex) => ListTile(
+                    contentPadding: const .symmetric(horizontal: 4),
+                    leading: Column(
+                      mainAxisAlignment: .center,
+                      children: [
+                        Padding(
+                          padding: const .only(left: 12),
+                          child: Icon(
+                            Icons.music_note_rounded,
+                            color: context.colorScheme.primary,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  title: Text(
-                    songService.songs[songIndex].name,
-                    overflow: .ellipsis,
-                    style: const TextStyle(fontWeight: .w600),
-                  ),
-                  subtitle: Text(
-                    songService.songs[songIndex].artist,
-                    overflow: .ellipsis,
-                    style: TextStyle(color: Colors.grey[600], fontWeight: .w400),
-                  ),
-                  onTap: () async {
-                    playlistService.registerPlaylist(
-                      'All songs',
-                      songService.songs.map((e) => e.id).toList(),
-                      songService.songs[songIndex].id,
-                    );
-                    await Navigator.of(
-                      context,
-                    ).push(await getMusicPlayerRoute(songService.songs[songIndex].id));
-                    setState(() {});
-                  },
-                  trailing: Row(
-                    mainAxisSize: .min,
-                    children: [
-                      Visibility(
-                        visible: configService.currentSortOption == .mostPlayed,
-                        child: Text('${songService.songs[songIndex].timeListened}'),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.more_vert_rounded),
-                        onPressed: () async {
-                          await context.showSongOptionsMenu(
-                            songID: songService.songs[songIndex].id,
-                            options: [
-                              SongInfoOption(
-                                songID: songService.songs[songIndex].id,
-                                updateCallback: () {
-                                  setState(() {});
-                                },
-                              ),
-                              DeleteSongOption(
-                                songID: songService.songs[songIndex].id,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
+                    title: Text(
+                      songService.songs[songIndex].name,
+                      overflow: .ellipsis,
+                      style: const TextStyle(fontWeight: .w600),
+                    ),
+                    subtitle: Text(
+                      songService.songs[songIndex].artist,
+                      overflow: .ellipsis,
+                      style: TextStyle(color: Colors.grey[600], fontWeight: .w400),
+                    ),
+                    onTap: () async {
+                      playlistService.registerPlaylist(
+                        'All songs',
+                        songService.songs.map((e) => e.id).toList(),
+                        songService.songs[songIndex].id,
+                      );
+                      await Navigator.of(
+                        context,
+                      ).push(await getMusicPlayerRoute(songService.songs[songIndex].id));
+                      setState(() {});
+                    },
+                    trailing: Row(
+                      mainAxisSize: .min,
+                      children: [
+                        Visibility(
+                          visible: configService.currentSortOption == .mostPlayed,
+                          child: Text('${songService.songs[songIndex].timeListened}'),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.more_vert_rounded),
+                          onPressed: () async {
+                            await context.showSongOptionsMenu(
+                              songID: songService.songs[songIndex].id,
+                              options: [
+                                SongInfoOption(
+                                  songID: songService.songs[songIndex].id,
+                                  updateCallback: () {
+                                    setState(() {});
+                                  },
+                                ),
+                                DeleteSongOption(songID: songService.songs[songIndex].id),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

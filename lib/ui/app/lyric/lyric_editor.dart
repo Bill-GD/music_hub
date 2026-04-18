@@ -134,7 +134,6 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
     );
 
     logService.log('Editing lyric for ${song.id}');
-    debugPrint('Lyric info \n$lyric');
     setState(() {});
   }
 
