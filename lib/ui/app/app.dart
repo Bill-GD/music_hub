@@ -76,7 +76,7 @@ class _MusicHubAppState extends State<MusicHubApp> {
               title: Constants.appName,
               home: ChangeNotifierProvider(
                 create: (_) => HomeViewModel(),
-                child: HomeScreen(viewModel: context.read()),
+                child: HomeScreen(),
               ),
             );
           },

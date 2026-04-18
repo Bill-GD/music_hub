@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
+import 'package:music_hub/data/services/player_service.dart';
+import 'package:music_hub/data/services/playlist_service.dart';
+import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/home/drawer.dart';
 import 'package:music_hub/ui/app/home/home_view_model.dart';
 import 'package:music_hub/ui/app/home/tabs/album_list.dart';
@@ -18,17 +22,20 @@ import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals.dart';
+import 'package:music_hub/utils/utils.dart';
 
 class HomeScreen extends StatefulWidget {
-  final HomeViewModel viewModel;
-
-  const HomeScreen({super.key, required this.viewModel});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  final playerService = get<PlayerService>(),
+      playlistService = get<PlaylistService>(),
+      songService = get<SongService>();
+
   late final animController = AnimationController(
     duration: 300.ms,
     reverseDuration: 300.ms,
@@ -38,32 +45,33 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    widget.viewModel.playerService.playing
+    playerService.playing
         ? animController.forward(from: 0)
         : animController.reverse(from: 1);
 
-    widget.viewModel.checkStoragePermission().then((storagePermissionStatus) async {
-      if (!storagePermissionStatus.isGranted && mounted) {
+    Future.microtask(() async {
+      if (!mounted) return;
+      final vm = context.read<HomeViewModel>();
+
+      var status = await vm.checkStoragePermission();
+
+      if (!status.isGranted && mounted) {
         await showDialog(
           context: context,
           builder: (_) => StoragePermissionDialog(),
           barrierDismissible: false,
         );
 
-        storagePermissionStatus = await Permission.manageExternalStorage.status;
+        status = await Permission.manageExternalStorage.status;
       }
-      await widget.viewModel.load();
+      await vm.load();
     });
 
-    widget.viewModel.playerService.onPlayingChange.listen((playing) {
-      if (playing) {
-        animController.forward(from: 0);
-      } else {
-        animController.reverse(from: 1);
-      }
-    });
+    Future.microtask(() async {
+      if (!mounted) return;
+      final vm = context.read<HomeViewModel>();
 
-    widget.viewModel.checkNewVersion().then((result) {
+      final result = await vm.checkNewVersion();
       if (result.$1 && mounted) {
         context.showPopupMessage(
           title: 'New version available',
@@ -73,21 +81,33 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         );
       }
     });
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
-    widget.viewModel.playerService.player.dispose();
+    playerService.onPlayingChange.listen((playing) {
+      if (playing) {
+        animController.forward(from: 0);
+      } else {
+        animController.reverse(from: 1);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final vm = widget.viewModel;
+    final vm = context.read<HomeViewModel>();
 
     return ListenableBuilder(
       listenable: vm,
-      builder: (context, _) {
+      child: StretchingOverscrollIndicator(
+        axisDirection: .right,
+        child: TabBarView(
+          children: const [
+            SongList(), //
+            ArtistList(),
+            AlbumList(),
+          ],
+        ),
+      ),
+      builder: (context, child) {
         return SafeArea(
           child: DefaultTabController(
             length: 3,
@@ -148,16 +168,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               drawer: const HomeDrawer(),
               body: vm.loading
                   ? const Center(child: CircularProgressIndicator())
-                  : StretchingOverscrollIndicator(
-                      axisDirection: .right,
-                      child: TabBarView(
-                        children: const [
-                          SongList(), //
-                          ArtistList(),
-                          AlbumList(),
-                        ],
-                      ),
-                    ),
+                  : child!,
               // mini player
               bottomNavigationBar: ValueListenableBuilder(
                 valueListenable: Globals.showMinimizedPlayer,
@@ -199,8 +210,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                               ),
                             ),
                             title: Text(
-                              vm.songService.currentSongID >= 0 && !vm.loading
-                                  ? '${vm.songService.getSong(vm.songService.currentSongID)?.name}'
+                              songService.currentSongID >= 0 && !vm.loading
+                                  ? '${songService.getSong(songService.currentSongID)?.name}'
                                   : 'None',
                               overflow: .ellipsis,
                               style: const TextStyle(
@@ -209,8 +220,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                               ),
                             ),
                             subtitle: Text(
-                              vm.songService.currentSongID >= 0 && !vm.loading
-                                  ? '${vm.songService.getSong(vm.songService.currentSongID)?.artist}'
+                              songService.currentSongID >= 0 && !vm.loading
+                                  ? '${songService.getSong(songService.currentSongID)?.artist}'
                                   : 'None',
                             ),
                             onTap: vm.loading
@@ -218,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 : () async {
                                     await Navigator.of(context).push(
                                       await getMusicPlayerRoute(
-                                        vm.songService.currentSongID,
+                                        songService.currentSongID,
                                       ),
                                     );
                                     setState(() {});
@@ -227,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         ),
                       ),
                       IconButton(
-                        onPressed: () => vm.playerService.skipToPrevious(),
+                        onPressed: () => playerService.skipToPrevious(),
                         icon: Icon(
                           Icons.skip_previous_rounded,
                           color: context.colorScheme.primary,
@@ -240,19 +251,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           CircularProgressIndicator(
                             strokeWidth: 2,
                             value:
-                                vm.playerService.currentDuration /
-                                vm.playerService.totalDuration,
+                                playerService.currentDuration /
+                                playerService.totalDuration,
                           ),
                           IconButton(
                             onPressed: () {
                               if (Globals.setDuplicate) {
-                                vm.playerService.setPlayerSong(
-                                  vm.songService.currentSongID,
-                                );
+                                playerService.setPlayerSong(songService.currentSongID);
                               } else {
-                                vm.playerService.playing
-                                    ? vm.playerService.pause()
-                                    : vm.playerService.play();
+                                playerService.playing
+                                    ? playerService.pause()
+                                    : playerService.play();
                               }
                               setState(() {});
                             },
@@ -269,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         ],
                       ),
                       IconButton(
-                        onPressed: () => vm.playerService.skipToNext(),
+                        onPressed: () => playerService.skipToNext(),
                         icon: Icon(
                           Icons.skip_next_rounded,
                           color: context.colorScheme.primary,

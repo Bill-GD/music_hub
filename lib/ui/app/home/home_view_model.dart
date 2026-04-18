@@ -14,9 +14,9 @@ import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/utils.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  final playerService = get<PlayerService>(),
-      playlistService = get<PlaylistService>(),
-      songService = get<SongService>(),
+  final _playerService = get<PlayerService>(),
+      _playlistService = get<PlaylistService>(),
+      _songService = get<SongService>(),
       _logService = get<LogService>(),
       _configService = get<ConfigService>(),
       _backupService = get<BackupService>(),
@@ -25,12 +25,18 @@ class HomeViewModel extends ChangeNotifier {
   bool loading = true;
 
   HomeViewModel() {
-    playerService.player.processingStateStream.listen((state) {
+    _playerService.player.processingStateStream.listen((state) {
       notifyListeners();
     });
-    playerService.player.positionStream.listen((current) {
+    _playerService.player.positionStream.listen((current) {
       notifyListeners();
     });
+  }
+
+  @override
+  void dispose() {
+    _playerService.player.dispose();
+    super.dispose();
   }
 
   Future<PermissionStatus> checkStoragePermission() async {
@@ -50,13 +56,13 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> load() async {
     await loadData();
-    songService.sortAllSongs();
+    _songService.sortAllSongs();
 
     if (_configService.backupOnLaunch) {
       _backupService.backupData();
     }
-    await playlistService.recoverSavedPlaylist();
-    Globals.showMinimizedPlayer.value = songService.hasSong(songService.currentSongID);
+    await _playlistService.recoverSavedPlaylist();
+    Globals.showMinimizedPlayer.value = _songService.hasSong(_songService.currentSongID);
 
     _logService.log('App is ready');
     loading = false;
