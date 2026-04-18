@@ -9,11 +9,11 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'package:music_hub/app.dart';
+import 'package:music_hub/data/database/database.dart';
 import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/artist_service.dart';
 import 'package:music_hub/data/services/backup_service.dart';
 import 'package:music_hub/data/services/config_service.dart';
-import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
@@ -25,6 +25,7 @@ import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';
+import 'package:music_hub/utils/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +43,10 @@ void main() async {
   );
 
   GetIt.I.registerSingleton(ConfigService());
-  GetIt.I.registerSingleton(await DatabaseService.create(path: Paths.dbPath));
+
+  await MusicDatabase.migrateDatabase(Paths.oldDbPath);
+  GetIt.I.registerSingleton(MusicDatabase());
+
   GetIt.I.registerSingleton(SongService());
   GetIt.I.registerSingleton(AlbumService());
   GetIt.I.registerSingleton(ArtistService());
@@ -66,7 +70,6 @@ void main() async {
   await GetIt.I<ConfigService>().loadConfig();
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-
   GetIt.I.registerSingleton(navigatorKey);
 
   PlatformDispatcher.instance.onError = (e, s) {

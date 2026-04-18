@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:music_hub/data/database/database.dart';
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
@@ -38,10 +39,9 @@ class _AddAlbumState extends State<AddAlbum> {
           IconButton(
             onPressed: canAdd
                 ? () async {
-                    await Album(
-                      name: albumNameController.text,
-                      timeAdded: DateTime.now(),
-                    ).insert();
+                    await Album.insert(
+                      AlbumCompanion.insert(name: albumNameController.text),
+                    );
                     await albumService.updateAlbumList();
                     if (context.mounted) Navigator.of(context).pop();
                   }

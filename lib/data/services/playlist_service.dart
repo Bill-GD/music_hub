@@ -1,12 +1,12 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:drift/drift.dart';
 import 'package:just_audio/just_audio.dart';
 
+import 'package:music_hub/data/database/database.dart';
 import 'package:music_hub/data/services/config_service.dart';
-import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
-import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/globals.dart';
 import 'package:music_hub/utils/utils.dart';
@@ -16,7 +16,7 @@ class PlaylistService {
       _configService = get<ConfigService>(),
       _playerService = get<PlayerService>(),
       _songService = get<SongService>(),
-      _databaseService = get<DatabaseService>();
+      _database = get<MusicDatabase>();
 
   /// Only keep track of IDs
   final List<int> _playlist = [];
@@ -150,7 +150,7 @@ class PlaylistService {
   }
 
   void savePlaylist(int currentID) {
-    _databaseService.db.delete(TableNames.playlistTable).then((_) {
+    _database.delete(_database.playlist).go().then((_) {
       _logService.log('Saving playlist ($playlistName): $playlist, current: $currentID');
 
       final data = _playlist.map(
@@ -161,9 +161,9 @@ class PlaylistService {
         },
       );
 
-      for (final e in data) {
-        _databaseService.db.insert(TableNames.playlistTable, e);
-      }
+      _database.batch((batch) {
+        batch.insertAll(_database.playlist, (data).map(PlaylistData.fromJson));
+      });
     });
   }
 
@@ -172,36 +172,34 @@ class PlaylistService {
 
     _logService.log('Update current ID of saved: $oldID -> $newID');
 
-    _databaseService.db.update(
-      TableNames.playlistTable,
-      {'is_current': 0},
-      where: 'song_id = ?',
-      whereArgs: [oldID],
-    );
-    _databaseService.db.update(
-      TableNames.playlistTable,
-      {'is_current': 1},
-      where: 'song_id = ?',
-      whereArgs: [newID],
-    );
+    _database.batch((batch) {
+      batch.update(
+        _database.playlist,
+        PlaylistCompanion(isCurrent: Value(false)),
+        where: (pl) => pl.songId.equals(oldID),
+      );
+      batch.update(
+        _database.playlist,
+        PlaylistCompanion(isCurrent: Value(true)),
+        where: (pl) => pl.songId.equals(newID),
+      );
+    });
   }
 
   Future<void> recoverSavedPlaylist() async {
-    final res = await _databaseService.db.query(TableNames.playlistTable, orderBy: 'id');
+    final res = await _database.savedPlaylist;
     if (res.isEmpty) {
       return _logService.log('No saved playlist');
     }
 
-    final currentID =
-        res.firstWhereOrNull((e) => (e['is_current'] as int) == 1)?['song_id'] as int? ??
-        -1;
+    final currentID = res.firstWhereOrNull((e) => e.isCurrent)?.songId ?? -1;
     if (currentID < 0) {
       return _logService.log('There is no current song', .error);
     }
 
-    final songList = res.map((e) => e['song_id'] as int).toList();
+    final songList = res.map((e) => e.songId).toList();
     _logService.log(
-      'Recovered playlist (${res[0]['list_name']}): $songList, current: $currentID',
+      'Recovered playlist (${res[0].listName}): $songList, current: $currentID',
     );
 
     _songService.currentSongID = currentID;
@@ -209,7 +207,7 @@ class PlaylistService {
     Globals.setDuplicate = true;
 
     await registerPlaylist(
-      '${res[0]['list_name'] ?? '[null]'}'.trim(),
+      res[0].listName.trim(),
       songList,
       currentID,
       saveList: false,

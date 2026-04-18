@@ -1,14 +1,13 @@
+import 'package:music_hub/data/database/database.dart';
 import 'package:music_hub/data/models/album.dart';
-import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
-import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
 
 class AlbumService {
   final _logService = get<LogService>(),
-      _databaseService = get<DatabaseService>(),
+      _database = get<MusicDatabase>(),
       _songService = get<SongService>();
 
   final List<Album> _albums = [];
@@ -17,34 +16,21 @@ class AlbumService {
 
   Future<void> updateAlbumList() async {
     _logService.log('Updating album list');
-    final savedAlbums = (await _databaseService.db.query(
-      TableNames.albumTable,
-    )).map(Album.fromJson).toList();
     _albums.clear();
+    final savedAlbums = (await _database.allAlbums).map(Album.fromData).toList();
 
     if (savedAlbums.isEmpty) {
       _logService.log("No album exists, creating default album 'Unknown'");
-      final unknown = Album(name: 'Unknown', id: -1, timeAdded: DateTime.now())
-        ..songs = _songService.idList
-        ..insert();
-      _albums.add(unknown);
+      _database.into(_database.album).insert(AlbumCompanion.insert(name: 'Unknown'));
+      _albums.addAll((await _database.allAlbums).map(Album.fromData));
       return;
     }
 
     final allSongs = _songService.songs;
 
     for (final a in savedAlbums) {
-      var s = await _databaseService.db.query(
-        TableNames.albumSongsTable,
-        where: 'album_id = ?',
-        whereArgs: [a.id],
-        columns: ['track_order', 'track_id'],
-        orderBy: 'track_order',
-      );
-      // LogHandler.log('$s');
-      final idList = s
-          .map((e) => e['track_id'] as int)
-          .where((e) => _songService.hasSong(e));
+      var s = await _database.albumSongs(a.id);
+      final idList = s.map((e) => e.trackId).where((e) => _songService.hasSong(e));
       for (final id in idList) {
         final addingSongIdx = allSongs.indexWhere((e) => e.id == id);
         if (addingSongIdx < 0 || allSongs[addingSongIdx].hasAlbum) continue;

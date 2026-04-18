@@ -10,7 +10,7 @@ T get<T extends Object>() {
 
 /// Load/Reload all song data
 Future<void> loadData() async {
-  await get<SongService>().updateSongList();
+  await get<SongService>().loadSongs();
   get<ArtistService>().updateArtistList();
   await get<AlbumService>().updateAlbumList();
 }

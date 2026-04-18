@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:music_hub/data/database/database.dart';
 import 'package:music_hub/data/services/config_service.dart';
-import 'package:music_hub/data/services/database_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/utils.dart';
@@ -10,7 +10,7 @@ import 'package:music_hub/utils/utils.dart';
 class BackupService {
   final _configService = get<ConfigService>(),
       _logService = get<LogService>(),
-      _databaseService = get<DatabaseService>();
+      _database = get<MusicDatabase>();
 
   BackupService() {
     final buDir = Directory(Paths.backupPath);
@@ -44,9 +44,9 @@ class BackupService {
 
     _logService.log('Backing up data to: ${bu.path}');
     final data = {
-      'songs': await _databaseService.db.query(TableNames.songTable),
-      'albums': await _databaseService.db.query(TableNames.albumTable),
-      'album_songs': await _databaseService.db.query(TableNames.albumSongsTable),
+      'songs': await _database.allSongs,
+      'albums': await _database.allAlbums,
+      'album_songs': await _database.allAlbumSongs,
     };
 
     bu.writeAsStringSync(jsonEncode(data));
@@ -64,7 +64,7 @@ class BackupService {
   Future<void> recoverBackup(File bu) async {
     _logService.log('Recovering backup data from: ${bu.path}');
 
-    if (!File(Paths.dbPath).existsSync()) {
+    if (!File(Paths.oldDbPath).existsSync()) {
       _logService.log('Database files should exists after app launched.', .error);
       // DatabaseHandler.init(); // may init again, will see
     }
@@ -76,15 +76,22 @@ class BackupService {
 
     final json = jsonDecode(backupContent) as Map<String, dynamic>;
 
-    await _databaseService.clearAllData();
-    for (final o in json['songs']!) {
-      await _databaseService.db.insert(TableNames.songTable, o);
-    }
-    for (final o in json['albums']!) {
-      await _databaseService.db.insert(TableNames.albumTable, o);
-    }
-    for (final o in json['album_songs']!) {
-      await _databaseService.db.insert(TableNames.albumSongsTable, o);
-    }
+    await _database.clearAllData();
+    await _database.batch((batch) {
+      batch.insertAll(
+        _database.song,
+        (json['songs']! as Iterable<Map<String, dynamic>>).map(SongData.fromJson),
+      );
+      batch.insertAll(
+        _database.album,
+        (json['albums']! as Iterable<Map<String, dynamic>>).map(AlbumData.fromJson),
+      );
+      batch.insertAll(
+        _database.albumSong,
+        (json['album_songs']! as Iterable<Map<String, dynamic>>).map(
+          AlbumSongData.fromJson,
+        ),
+      );
+    });
   }
 }

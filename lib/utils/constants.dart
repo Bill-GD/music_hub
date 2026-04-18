@@ -24,14 +24,14 @@ abstract final class Paths {
   static const lyricPath = '/storage/emulated/0/Lyrics/';
 
   static late final String storagePath;
-  static late final String dbPath;
+  static late final String oldDbPath;
   static late final String logPath;
 
   static Future<void> init() async {
     storagePath = (await getExternalStorageDirectory())?.parent.path ?? '';
 
     logPath = '$storagePath/files/log.txt';
-    dbPath = '$storagePath/database/database.db';
+    oldDbPath = '$storagePath/database/database.db';
 
     final lyricDir = Directory(lyricPath);
     if (!lyricDir.existsSync()) lyricDir.createSync(recursive: true);

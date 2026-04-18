@@ -12,7 +12,6 @@ dependencies:
   connectivity_plus: ^7.0.0
   shared_preferences: ^2.5.3
   flutter_dotenv: ^6.0.0
-  sqflite: ^2.4.2
   url_launcher: ^6.3.2
   provider: ^6.1.5+1
   get_it: ^9.1.1
@@ -28,6 +27,8 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  drift: ^2.32.1
+  drift_flutter: ^0.3.0
 
 dependency_overrides:
   flutter_media_metadata:
@@ -40,6 +41,8 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   import_sorter: ^4.6.0
+  drift_dev: ^2.32.1
+  build_runner: ^2.13.1
 
 import_sorter:
   comments: false

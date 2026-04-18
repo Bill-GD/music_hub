@@ -10,3 +10,4 @@
   + Switched to `dio` from `http`
   + Switched to MVVM: views/screens have their own view models
 - Updated Android & signing config
+- Migrated from `sqflite` to `drift` ORM

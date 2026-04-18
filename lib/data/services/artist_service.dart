@@ -5,8 +5,7 @@ import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/utils/utils.dart';
 
 class ArtistService {
-  final _logService = get<LogService>();
-  final _songService = get<SongService>();
+  final _logService = get<LogService>(), _songService = get<SongService>();
 
   Map<String, int> _artists = {};
 
