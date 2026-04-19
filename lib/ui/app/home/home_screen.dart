@@ -6,15 +6,15 @@ import 'package:provider/provider.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/playlist_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
-import 'package:music_hub/ui/app/home/drawer.dart';
 import 'package:music_hub/ui/app/home/home_view_model.dart';
+import 'package:music_hub/ui/app/home/permission/storage_permission.dart';
+import 'package:music_hub/ui/app/home/search/search.dart';
+import 'package:music_hub/ui/app/home/search/search_view_model.dart';
 import 'package:music_hub/ui/app/home/tabs/album_list.dart';
 import 'package:music_hub/ui/app/home/tabs/artist_list.dart';
 import 'package:music_hub/ui/app/home/tabs/song_list.dart';
-import 'package:music_hub/ui/app/permission/storage_permission.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
-import 'package:music_hub/ui/app/search/search.dart';
-import 'package:music_hub/ui/app/search/search_view_model.dart';
+import 'package:music_hub/ui/app/sidebar/drawer.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
@@ -61,15 +61,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           builder: (_) => StoragePermissionDialog(),
           barrierDismissible: false,
         );
-
         status = await Permission.manageExternalStorage.status;
       }
 
-      final loadingSnackMessage = ValueNotifier('Loading...');
       context.showCustomSnackBar(
         SnackBar(
           content: ValueListenableBuilder(
-            valueListenable: loadingSnackMessage,
+            valueListenable: vm.loadingSnackMessage,
             builder: (_, value, _) => Text(value),
           ),
           behavior: .floating,
@@ -78,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           persist: true,
         ),
       );
-      await vm.load(updateToast: (msg) => loadingSnackMessage.value = msg);
+      await vm.load(updateToast: (msg) => vm.loadingSnackMessage.value = msg);
       context.hideSnackBar();
     });
 
@@ -104,6 +102,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         animController.reverse(from: 1);
       }
     });
+  }
+
+  @override
+  void dispose() {
+    animController.dispose();
+    super.dispose();
   }
 
   @override

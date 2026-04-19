@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'package:music_hub/data/services/config_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
-import 'package:music_hub/ui/app/settings/about.dart';
-import 'package:music_hub/ui/app/settings/backup.dart';
-import 'package:music_hub/ui/app/settings/theme_setting.dart';
+import 'package:music_hub/ui/app/sidebar/settings/about.dart';
+import 'package:music_hub/ui/app/sidebar/settings/backup.dart';
+import 'package:music_hub/ui/app/sidebar/settings/theme_setting.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';

@@ -22,6 +22,7 @@ class HomeViewModel extends ChangeNotifier {
       _backupService = get<BackupService>(),
       _githubService = get<GithubService>();
 
+  final loadingSnackMessage = ValueNotifier('Loading...');
   bool loading = true;
 
   HomeViewModel() {
@@ -36,6 +37,7 @@ class HomeViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _playerService.player.dispose();
+    loadingSnackMessage.dispose();
     super.dispose();
   }
 

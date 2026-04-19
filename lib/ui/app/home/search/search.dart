@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:music_hub/ui/app/home/search/search_view_model.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
-import 'package:music_hub/ui/app/search/search_view_model.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
 

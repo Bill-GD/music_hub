@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:music_hub/ui/app/downloader/downloader_view_model.dart';
+import 'package:music_hub/ui/app/sidebar/downloader/downloader_view_model.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/button.dart';

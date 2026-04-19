@@ -9,7 +9,7 @@ import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/data/services/lyric_service.dart';
 import 'package:music_hub/data/services/player_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
-import 'package:music_hub/ui/app/lyric/lyric_editor.dart';
+import 'package:music_hub/ui/app/player/lyric/lyric_editor.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart';

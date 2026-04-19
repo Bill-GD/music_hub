@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:music_hub/ui/app/downloader/downloader_screen.dart';
-import 'package:music_hub/ui/app/downloader/downloader_view_model.dart';
-import 'package:music_hub/ui/app/settings/setting.dart';
+import 'package:music_hub/ui/app/sidebar/downloader/downloader_screen.dart';
+import 'package:music_hub/ui/app/sidebar/downloader/downloader_view_model.dart';
+import 'package:music_hub/ui/app/sidebar/settings/setting.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart';

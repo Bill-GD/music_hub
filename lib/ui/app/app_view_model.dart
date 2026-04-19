@@ -21,10 +21,7 @@ class AppViewModel extends ChangeNotifier {
     connectionSubscription = Connectivity().onConnectivityChanged.listen((
       newResults,
     ) async {
-      final connectivityResult = newResults;
-      Globals.isInternetConnected.value = !connectivityResult.contains(
-        ConnectivityResult.none,
-      );
+      Globals.isInternetConnected.value = !newResults.contains(ConnectivityResult.none);
       _logService.log(
         'Internet connectivity: ${Globals.isInternetConnected.value ? 'on' : 'off'}',
       );

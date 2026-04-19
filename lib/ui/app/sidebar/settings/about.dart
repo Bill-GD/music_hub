@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
-import 'package:music_hub/ui/app/settings/version_list.dart';
+import 'package:music_hub/ui/app/sidebar/settings/version_list.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';
