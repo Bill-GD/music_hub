@@ -64,7 +64,22 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
         status = await Permission.manageExternalStorage.status;
       }
-      await vm.load();
+
+      final loadingSnackMessage = ValueNotifier('Loading...');
+      context.showCustomSnackBar(
+        SnackBar(
+          content: ValueListenableBuilder(
+            valueListenable: loadingSnackMessage,
+            builder: (_, value, _) => Text(value),
+          ),
+          behavior: .floating,
+          margin: const .only(bottom: 10, left: 15, right: 15),
+          shape: RoundedRectangleBorder(borderRadius: .circular(15)),
+          persist: true,
+        ),
+      );
+      await vm.load(updateToast: (msg) => loadingSnackMessage.value = msg);
+      context.hideSnackBar();
     });
 
     Future.microtask(() async {

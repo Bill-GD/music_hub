@@ -54,16 +54,13 @@ void main() async {
   GetIt.I.registerSingleton(LyricService());
   GetIt.I.registerSingleton(GithubService());
   GetIt.I.registerSingleton(
-    await (() async {
-      final handler = await AudioService.init(
-        builder: () => PlayerService(),
-        config: const AudioServiceConfig(
-          androidNotificationChannelId: 'com.billgd.music_hub.channel.audio',
-          androidNotificationChannelName: Constants.appName,
-        ),
-      );
-      return handler;
-    })(),
+    await AudioService.init(
+      builder: () => PlayerService(),
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'com.billgd.music_hub.channel.audio',
+        androidNotificationChannelName: Constants.appName,
+      ),
+    ),
   );
 
   await GetIt.I<ConfigService>().loadConfig();

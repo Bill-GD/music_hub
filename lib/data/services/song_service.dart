@@ -58,14 +58,16 @@ class SongService {
   }
 
   /// Updates list of all songs
-  Future<void> loadSongs() async {
-    final storageSongs = await _getSongsFromStorage();
+  Future<void> loadSongs({void Function(String text)? updateToast}) async {
+    final storageSongs = await _getSongsFromStorage(updateToast: updateToast);
+    updateToast?.call('Fetching saved songs');
     final savedSongs = await _database.allSongs;
 
     int updateCount = 0;
 
     _logService.log('Updating saved song data');
     for (int i = 0; i < savedSongs.length; i++) {
+      updateToast?.call('Updating song: ${i + 1}/${savedSongs.length}');
       final matchingSong = storageSongs.firstWhereOrNull(
         (e) => e.path.value == savedSongs[i].path,
       );
@@ -97,7 +99,9 @@ class SongService {
     _logService.log('Loaded songs: $updateCount updates, $insertCount inserts');
   }
 
-  Future<List<SongCompanion>> _getSongsFromStorage() async {
+  Future<List<SongCompanion>> _getSongsFromStorage({
+    void Function(String text)? updateToast,
+  }) async {
     final downloadDir = Directory(Paths.downloadPath);
     _logService.log('Getting mp3 files from: ${downloadDir.path}');
 
@@ -129,6 +133,7 @@ class SongService {
       'Filtering songs shorter than ${_configService.lengthLimitMilliseconds ~/ 1000}s',
     );
 
+    int count = 0;
     final futures = mp3Files.map((f) {
       return Future(() async {
         try {
@@ -140,11 +145,12 @@ class SongService {
             },
           );
           final duration = info.trackDuration ?? 0;
+          SongCompanion? res;
           if (duration >= _configService.lengthLimitMilliseconds) {
-            return await makeCompanion(f);
-          } else {
-            return null;
+            res = await makeCompanion(f);
           }
+          updateToast?.call('Reading metadata: ${++count}/${mp3Files.length}');
+          return res;
         } catch (e) {
           _logService.log('Metadata read failed for ${f.path}: $e', .error);
           return null;

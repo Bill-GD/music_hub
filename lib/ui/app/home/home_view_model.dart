@@ -54,13 +54,14 @@ class HomeViewModel extends ChangeNotifier {
     return storagePermissionStatus;
   }
 
-  Future<void> load() async {
-    await loadData();
+  Future<void> load({void Function(String text)? updateToast}) async {
+    await loadData(updateToast: updateToast);
     _songService.sortAllSongs();
 
     if (_configService.backupOnLaunch) {
       _backupService.backupData();
     }
+    updateToast?.call('Recovering saved playlist');
     await _playlistService.recoverSavedPlaylist();
     Globals.showMinimizedPlayer.value = _songService.hasSong(_songService.currentSongID);
 

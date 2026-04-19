@@ -9,10 +9,10 @@ T get<T extends Object>() {
 }
 
 /// Load/Reload all song data
-Future<void> loadData() async {
-  await get<SongService>().loadSongs();
-  get<ArtistService>().updateArtistList();
-  await get<AlbumService>().updateAlbumList();
+Future<void> loadData({void Function(String text)? updateToast}) async {
+  await get<SongService>().loadSongs(updateToast: updateToast);
+  get<ArtistService>().updateArtistList(updateToast: updateToast);
+  await get<AlbumService>().updateAlbumList(updateToast: updateToast);
 }
 
 String sanitizeFilePath(String path) {

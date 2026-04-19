@@ -14,12 +14,13 @@ class AlbumService {
 
   List<Album> get albums => List.from(_albums);
 
-  Future<void> updateAlbumList() async {
+  Future<void> updateAlbumList({void Function(String text)? updateToast}) async {
     _logService.log('Updating album list');
     _albums.clear();
     final savedAlbums = (await _database.allAlbums).map(Album.fromData).toList();
 
     if (savedAlbums.isEmpty) {
+      updateToast?.call('Creating default album');
       _logService.log("No album exists, creating default album 'Unknown'");
       _database.into(_database.album).insert(AlbumCompanion.insert(name: 'Unknown'));
       _albums.addAll((await _database.allAlbums).map(Album.fromData));
@@ -28,8 +29,10 @@ class AlbumService {
 
     final allSongs = _songService.songs;
 
+    int i = 0;
     for (final a in savedAlbums) {
-      var s = await _database.albumSongs(a.id);
+      updateToast?.call('Fetching album songs: ${++i}/${savedAlbums.length}');
+      List<AlbumSongData> s = await _database.albumSongs(a.id);
       final idList = s.map((e) => e.trackId).where((e) => _songService.hasSong(e));
       for (final id in idList) {
         final addingSongIdx = allSongs.indexWhere((e) => e.id == id);

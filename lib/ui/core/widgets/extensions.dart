@@ -11,7 +11,7 @@ import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
 
 extension WidgetWithContext on BuildContext {
-  void showToast(String msg) {
+  void showToast(String msg, {bool persist = false}) {
     ScaffoldMessenger.of(this)
       ..hideCurrentSnackBar()
       ..showSnackBar(
@@ -21,9 +21,19 @@ extension WidgetWithContext on BuildContext {
           margin: const .only(bottom: 10, left: 15, right: 15),
           shape: RoundedRectangleBorder(borderRadius: .circular(15)),
           showCloseIcon: true,
-          persist: false,
+          persist: persist,
         ),
       );
+  }
+
+  void showCustomSnackBar(SnackBar snackbar) {
+    ScaffoldMessenger.of(this)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackbar);
+  }
+
+  void hideSnackBar() {
+    ScaffoldMessenger.of(this).hideCurrentSnackBar();
   }
 
   Future<void> showLogPopup(String title) async {

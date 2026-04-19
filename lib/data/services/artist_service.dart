@@ -11,15 +11,22 @@ class ArtistService {
 
   Map<String, int> get artists => Map.from(_artists);
 
-  void updateArtistList() {
+  void updateArtistList({void Function(String text)? updateToast}) {
     _logService.log('Updating artist list');
     final allSongs = _songService.songs;
 
-    final unsortedArtists = <String, int>{}
-      ..addAll({
-        for (final song in allSongs)
-          song.artist: allSongs.where((s) => s.artist == song.artist).length,
-      });
+    final unsortedArtists = <String, int>{};
+    final artists = allSongs.map((s) => s.artist).toSet();
+
+    for (int i = 0; i < artists.length; i++) {
+      updateToast?.call('Updating artist list: ${i + 1}/${artists.length}');
+      final artist = artists.elementAt(i);
+      unsortedArtists.putIfAbsent(
+        artist,
+        () => allSongs.where((s) => s.artist == artist).length,
+      );
+    }
+
     _artists = SplayTreeMap.from(
       unsortedArtists,
       (key1, key2) => key1.toLowerCase().compareTo(key2.toLowerCase()),
