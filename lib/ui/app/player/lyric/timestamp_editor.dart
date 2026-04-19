@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/hold_gesture.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
