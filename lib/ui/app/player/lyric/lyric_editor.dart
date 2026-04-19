@@ -157,7 +157,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_rounded),
             onPressed: () {
-              if (!hasChanged) return Navigator.of(context).pop();
+              if (!hasChanged) return context.popRoute();
 
               context
                   .showActionDialog<bool>(
@@ -169,18 +169,18 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                     actions: [
                       TextButton(
                         child: const Text('No'),
-                        onPressed: () => Navigator.of(context).pop(false),
+                        onPressed: () => context.popRoute(false),
                       ),
                       TextButton(
                         child: const Text('Yes'),
-                        onPressed: () => Navigator.of(context).pop(true),
+                        onPressed: () => context.popRoute(true),
                       ),
                     ],
                   )
                   .then((value) {
                     if (value != true) return;
                     logService.log('Discarded lyric changes');
-                    Navigator.of(context).pop();
+                    context.popRoute();
                   });
             },
           ),
@@ -201,11 +201,11 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                             actions: [
                               TextButton(
                                 child: const Text('No'),
-                                onPressed: () => Navigator.of(context).pop(false),
+                                onPressed: () => context.popRoute(false),
                               ),
                               TextButton(
                                 child: const Text('Yes'),
-                                onPressed: () => Navigator.of(context).pop(true),
+                                onPressed: () => context.popRoute(true),
                               ),
                             ],
                           )
@@ -218,7 +218,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                             lyricService.addLyric(lyric);
                             songService.lyricChangedController.add(null);
                             setState(() => hasChanged = false);
-                            // Navigator.of(context).pop();
+                            // context.popRoute();
                           });
                     }
                   : null,
@@ -233,9 +233,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                   icon: Icon(Icons.add_rounded, color: context.iconColor()),
                   label: Text('Add', style: TextStyle(color: context.iconColor())),
                   style: ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(
-                      context.colorScheme.surface,
-                    ),
+                    backgroundColor: WidgetStatePropertyAll(context.colorScheme.surface),
                     side: WidgetStatePropertyAll(
                       BorderSide(color: context.colorScheme.surface),
                     ),
@@ -250,70 +248,72 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                   icon: Icon(Icons.edit, color: context.iconColor(), size: 20),
                   label: Text('Type', style: TextStyle(color: context.iconColor())),
                   style: ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(
-                      context.colorScheme.surface,
-                    ),
+                    backgroundColor: WidgetStatePropertyAll(context.colorScheme.surface),
                     side: WidgetStatePropertyAll(
                       BorderSide(color: context.colorScheme.surface),
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push<String>(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (_, _, _) {
-                          return TypeLyric(
-                            lines: configService.appendLyric
-                                ? []
-                                : lyric.list.map((e) {
-                                    String line = e.line;
-                                    if (line.isEmpty) line = ' ';
-                                    return line;
-                                  }).toList(),
-                            // : File(Globals.lyricPath + lyric.path).readAsLinesSync(),
-                          );
-                        },
-                        transitionsBuilder: (context, anim1, _, child) {
-                          return SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(0, -1),
-                              end: const Offset(0, 0),
-                            ).animate(anim1.drive(CurveTween(curve: Curves.decelerate))),
-                            child: child,
-                          );
-                        },
-                      ),
-                    ).then((value) {
-                      if (value == null) return;
-                      final lines =
-                          value //
-                              .split('\n')
-                              .where((e) => e.isNotEmpty)
-                              .toList();
+                    context
+                        .pushRoute<String>(
+                          PageRouteBuilder(
+                            pageBuilder: (_, _, _) {
+                              return TypeLyric(
+                                lines: configService.appendLyric
+                                    ? []
+                                    : lyric.list.map((e) {
+                                        String line = e.line;
+                                        if (line.isEmpty) line = ' ';
+                                        return line;
+                                      }).toList(),
+                                // : File(Globals.lyricPath + lyric.path).readAsLinesSync(),
+                              );
+                            },
+                            transitionsBuilder: (context, anim1, _, child) {
+                              return SlideTransition(
+                                position:
+                                    Tween<Offset>(
+                                      begin: const Offset(0, -1),
+                                      end: const Offset(0, 0),
+                                    ).animate(
+                                      anim1.drive(CurveTween(curve: Curves.decelerate)),
+                                    ),
+                                child: child,
+                              );
+                            },
+                          ),
+                        )
+                        .then((value) {
+                          if (value == null) return;
+                          final lines =
+                              value //
+                                  .split('\n')
+                                  .where((e) => e.isNotEmpty)
+                                  .toList();
 
-                      if (!configService.appendLyric) {
-                        final count = min(lines.length, lyric.list.length);
-                        final isShorten = count < lyric.list.length;
+                          if (!configService.appendLyric) {
+                            final count = min(lines.length, lyric.list.length);
+                            final isShorten = count < lyric.list.length;
 
-                        for (int i = 0; i < count; i++) {
-                          lyric.list[i] = LyricItem(
-                            timestamp: lyric.list[i].timestamp,
-                            line: lines[i],
-                          );
-                        }
-                        lines.removeRange(0, count);
-                        if (isShorten) {
-                          lyric.list.removeRange(count, lyric.list.length);
-                        }
-                      }
-                      addLyricItems(lines);
-                      // for (final line in lines) {
-                      //   addNewLyricItem(line);
-                      // }
+                            for (int i = 0; i < count; i++) {
+                              lyric.list[i] = LyricItem(
+                                timestamp: lyric.list[i].timestamp,
+                                line: lines[i],
+                              );
+                            }
+                            lines.removeRange(0, count);
+                            if (isShorten) {
+                              lyric.list.removeRange(count, lyric.list.length);
+                            }
+                          }
+                          addLyricItems(lines);
+                          // for (final line in lines) {
+                          //   addNewLyricItem(line);
+                          // }
 
-                      updateList();
-                      setState(() => hasChanged = true);
-                    });
+                          updateList();
+                          setState(() => hasChanged = true);
+                        });
                   },
                 ),
               ],
@@ -337,10 +337,7 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                   controller: lineEditController,
                   autofocus: true,
                   suffixIcon: IconButton(
-                    icon: Icon(
-                      Icons.check_rounded,
-                      color: context.colorScheme.primary,
-                    ),
+                    icon: Icon(Icons.check_rounded, color: context.colorScheme.primary),
                     onPressed: () {
                       isEditing = false;
                       if (!hasChanged) {
@@ -377,28 +374,29 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                       .toList();
                   final timestamp = (parts[0], parts[1], parts[2] * 10);
 
-                  Navigator.push<List<int>>(
-                    context,
-                    DialogRoute(
-                      context: context,
-                      builder: (context) => TimestampEditor(timestamp: timestamp),
-                    ),
-                  ).then((value) {
-                    if (value == null) return;
-                    hasChanged = timestamp != (value[0], value[1], value[2]);
-                    if (!hasChanged) return;
+                  context
+                      .pushRoute<List<int>>(
+                        DialogRoute(
+                          context: context,
+                          builder: (context) => TimestampEditor(timestamp: timestamp),
+                        ),
+                      )
+                      .then((value) {
+                        if (value == null) return;
+                        hasChanged = timestamp != (value[0], value[1], value[2]);
+                        if (!hasChanged) return;
 
-                    lyric.list[index] = LyricItem(
-                      timestamp: Duration(
-                        minutes: value[0],
-                        seconds: value[1],
-                        milliseconds: value[2],
-                      ),
-                      line: item.line,
-                    );
-                    updateList();
-                    setState(() {});
-                  });
+                        lyric.list[index] = LyricItem(
+                          timestamp: Duration(
+                            minutes: value[0],
+                            seconds: value[1],
+                            milliseconds: value[2],
+                          ),
+                          line: item.line,
+                        );
+                        updateList();
+                        setState(() {});
+                      });
                 },
                 child: Text(item.timestamp.toLyricTimestamp()),
               ),
@@ -445,11 +443,11 @@ class _LyricEditorState extends State<LyricEditor> with SingleTickerProviderStat
                             actions: [
                               TextButton(
                                 child: const Text('No'),
-                                onPressed: () => Navigator.of(context).pop(false),
+                                onPressed: () => context.popRoute(false),
                               ),
                               TextButton(
                                 child: const Text('Yes'),
-                                onPressed: () => Navigator.of(context).pop(true),
+                                onPressed: () => context.popRoute(true),
                               ),
                             ],
                           )

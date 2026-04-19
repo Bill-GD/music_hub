@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:music_hub/data/database/database.dart';
 import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/services/album_service.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/utils.dart';
 
@@ -27,7 +28,7 @@ class _AddAlbumState extends State<AddAlbum> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 40),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: context.popRoute,
         ),
         centerTitle: true,
         title: const Text(
@@ -43,7 +44,7 @@ class _AddAlbumState extends State<AddAlbum> {
                       AlbumCompanion.insert(name: albumNameController.text),
                     );
                     await albumService.updateAlbumList();
-                    if (context.mounted) Navigator.of(context).pop();
+                    if (context.mounted) context.popRoute();
                   }
                 : null,
             icon: const Icon(Icons.check_rounded, size: 30),

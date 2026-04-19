@@ -57,7 +57,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                     songService.songs.map((e) => e.id).toList(),
                     randomSong,
                   );
-                  await Navigator.of(context).push(await getMusicPlayerRoute(randomSong));
+                  await context.pushRoute(await getMusicPlayerRoute(randomSong));
                   setState(() {});
                 },
               ),
@@ -209,9 +209,7 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                         songService.songs.map((e) => e.id).toList(),
                         songService.songs[songIndex].id,
                       );
-                      await Navigator.of(
-                        context,
-                      ).push(await getMusicPlayerRoute(songService.songs[songIndex].id));
+                      await context.pushRoute(await getMusicPlayerRoute(songService.songs[songIndex].id));
                       setState(() {});
                     },
                     trailing: Row(

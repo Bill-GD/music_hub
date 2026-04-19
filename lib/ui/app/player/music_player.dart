@@ -213,7 +213,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
               leading: IconButton(
                 icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 40),
                 onPressed: () async {
-                  if (context.mounted) Navigator.of(context).pop();
+                  if (context.mounted) context.popRoute();
                 },
               ),
               actions: [
@@ -288,7 +288,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                                 text: 'Add lyric',
                                 outline: true,
                                 onPressed: () {
-                                  Navigator.of(context).push(
+                                  context.pushRoute(
                                     MaterialPageRoute(
                                       builder: (context) => LyricEditor(songID: song.id),
                                     ),
@@ -327,7 +327,7 @@ class _MusicPlayerState extends State<MusicPlayer> with TickerProviderStateMixin
                   InkWell(
                     borderRadius: .circular(5),
                     onTap: () {
-                      Navigator.of(context).push(
+                      context.pushRoute(
                         CupertinoModalPopupRoute(
                           builder: (context) => const PlaylistSheet(),
                         ),

@@ -161,7 +161,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               subtitle: const Text('Customize the app\'s theme'),
               trailing: const Icon(CupertinoIcons.right_chevron),
               onTap: () {
-                Navigator.of(context).push(
+                context.pushRoute(
                   PageRouteBuilder(
                     pageBuilder: (_, _, _) => const ThemeSetting(),
                     transitionsBuilder: (context, anim, _, child) {
@@ -182,7 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               subtitle: const Text('Save and restore app data'),
               trailing: const Icon(CupertinoIcons.right_chevron),
               onTap: () {
-                Navigator.of(context).push(
+                context.pushRoute(
                   PageRouteBuilder(
                     pageBuilder: (_, _, _) => const BackupScreen(),
                     transitionsBuilder: (context, anim1, _, child) {
@@ -231,7 +231,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               subtitle: Text(Constants.appVersion),
               trailing: const Icon(CupertinoIcons.right_chevron),
               onTap: () {
-                Navigator.of(context).push(
+                context.pushRoute(
                   PageRouteBuilder(
                     pageBuilder: (_, _, _) => const AboutScreen(),
                     transitionsBuilder: (context, anim, _, child) {

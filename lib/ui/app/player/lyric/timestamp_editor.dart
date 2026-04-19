@@ -159,13 +159,13 @@ class _TimestampEditorState extends State<TimestampEditor> {
       actions: [
         TextButton(
           child: const Text('Cancel'),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.popRoute(),
         ),
         TextButton(
           child: const Text('Save'),
           onPressed: () {
             get<LogService>().log('Edited timestamp: ${widget.timestamp} -> $edit');
-            Navigator.of(context).pop(edit);
+            context.popRoute(edit);
           },
         ),
       ],

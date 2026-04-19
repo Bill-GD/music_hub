@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:music_hub/data/services/github_service.dart';
 import 'package:music_hub/data/services/log_service.dart';
 import 'package:music_hub/ui/app/sidebar/settings/version_dialog.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
@@ -43,7 +44,7 @@ class _VersionListState extends State<VersionList> {
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.popRoute(),
         ),
         title: const Text(
           'Version list',
@@ -89,7 +90,7 @@ class _VersionListState extends State<VersionList> {
                           IconButton(
                             icon: const Icon(Icons.file_present_rounded),
                             onPressed: () {
-                              Navigator.of(context).push(RawDialogRoute(
+                              context.pushRoute(RawDialogRoute(
                                 transitionDuration: 300.ms,
                                 barrierDismissible: true,
                                 barrierLabel: '',
@@ -112,7 +113,7 @@ class _VersionListState extends State<VersionList> {
                         IconButton(
                           icon: const Icon(Icons.logo_dev_rounded),
                           onPressed: () {
-                            Navigator.of(context).push(RawDialogRoute(
+                            context.pushRoute(RawDialogRoute(
                               transitionDuration: 300.ms,
                               barrierDismissible: true,
                               barrierLabel: '',

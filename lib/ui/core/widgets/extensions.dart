@@ -10,7 +10,7 @@ import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
 
-extension WidgetWithContext on BuildContext {
+extension ContextExtenstion on BuildContext {
   void showToast(String msg, {bool persist = false}) {
     ScaffoldMessenger.of(this)
       ..hideCurrentSnackBar()
@@ -34,6 +34,18 @@ extension WidgetWithContext on BuildContext {
 
   void hideSnackBar() {
     ScaffoldMessenger.of(this).hideCurrentSnackBar();
+  }
+
+  Future<T?> pushRoute<T extends Object?>(Route<T> route) {
+    return Navigator.of(this).push(route);
+  }
+
+  void popRoute<T extends Object?>([T? result]) {
+    return Navigator.of(this).pop(result);
+  }
+
+  Future<T?> pushReplacement<T extends Object?>(Route<T> route, {Object? result}) {
+    return Navigator.of(this).pushReplacement(route, result: result);
   }
 
   Future<void> showLogPopup(String title) async {
@@ -88,7 +100,7 @@ extension WidgetWithContext on BuildContext {
       contentFontSize: 16,
       centerContent: false,
       time: 300.ms,
-      actions: [TextButton(onPressed: Navigator.of(this).pop, child: const Text('OK'))],
+      actions: [TextButton(onPressed: popRoute, child: const Text('OK'))],
     );
   }
 
@@ -173,7 +185,7 @@ extension WidgetWithContext on BuildContext {
       time: time,
       actions: [
         TextButton(
-          onPressed: enableButton ? () => Navigator.of(this).pop() : null,
+          onPressed: enableButton ? popRoute : null,
           child: const Text('OK'),
         ),
       ],

@@ -27,7 +27,7 @@ class _AboutScreenState extends State<AboutScreen> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_rounded),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.popRoute(),
           ),
           title: const Text('About', style: TextStyle(fontWeight: .w700)),
           centerTitle: true,
@@ -56,7 +56,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     onTap: () {
                       if (!Globals.isInternetConnected.value) return;
 
-                      Navigator.of(context).push(
+                      context.pushRoute(
                         PageRouteBuilder(
                           transitionDuration: 300.ms,
                           barrierDismissible: true,

@@ -53,7 +53,7 @@ class _SongInfoState extends State<SongInfo> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 40),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.popRoute(),
           ),
           title: const Text('Edit song info', style: TextStyle(fontWeight: .w700)),
           centerTitle: true,
@@ -83,7 +83,7 @@ class _SongInfoState extends State<SongInfo> {
 
                       // setState(() => hasChanges = false);
                       if (context.mounted) {
-                        Navigator.of(context).pop(hasChanges);
+                        context.popRoute(hasChanges);
                       }
                     }
                   : null,

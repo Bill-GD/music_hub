@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:music_hub/ui/app/home/search/search_view_model.dart';
 import 'package:music_hub/ui/app/player/music_player.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
 
 class SearchScreen extends StatefulWidget {
-  final SearchViewModel viewModel;
+  final SearchViewModel viewModel = SearchViewModel();
 
-  const SearchScreen({super.key, required this.viewModel});
+  SearchScreen({super.key});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -25,7 +26,7 @@ class _SearchScreenState extends State<SearchScreen> {
           backgroundColor: context.colorScheme.surface,
           leading: IconButton(
             icon: const Icon(Icons.keyboard_arrow_up_rounded, size: 40),
-            onPressed: Navigator.of(context).pop,
+            onPressed: context.popRoute,
           ),
           title: Input(
             autofocus: true,
@@ -65,9 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       vm.songService.idList,
                       song.id,
                     );
-                    await Navigator.of(
-                      context,
-                    ).pushReplacement(await getMusicPlayerRoute(song.id));
+                    await context.pushReplacement(await getMusicPlayerRoute(song.id));
                   },
                 );
               },

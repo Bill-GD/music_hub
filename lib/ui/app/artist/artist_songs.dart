@@ -49,7 +49,7 @@ class _ArtistSongsState extends State<ArtistSongs> {
           backgroundColor: context.colorScheme.surface,
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.popRoute(),
             icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 40),
           ),
           centerTitle: true,
@@ -91,9 +91,7 @@ class _ArtistSongsState extends State<ArtistSongs> {
                             songs.map((e) => e.id).toList(),
                             randomSong,
                           );
-                          await Navigator.of(
-                            context,
-                          ).push(await getMusicPlayerRoute(randomSong));
+                          await context.pushRoute(await getMusicPlayerRoute(randomSong));
                         },
                 ),
                 TextButton.icon(
@@ -123,9 +121,7 @@ class _ArtistSongsState extends State<ArtistSongs> {
                             songs.map((e) => e.id).toList(),
                             first,
                           );
-                          await Navigator.of(
-                            context,
-                          ).push(await getMusicPlayerRoute(first));
+                          await context.pushRoute(await getMusicPlayerRoute(first));
                         },
                 ),
               ],
@@ -161,9 +157,7 @@ class _ArtistSongsState extends State<ArtistSongs> {
                         songs.map((e) => e.id).toList(),
                         songs[songIndex].id,
                       );
-                      await Navigator.of(
-                        context,
-                      ).push(await getMusicPlayerRoute(songs[songIndex].id));
+                      await context.pushRoute(await getMusicPlayerRoute(songs[songIndex].id));
                       setState(() {});
                     },
                     trailing: IconButton(
@@ -183,7 +177,7 @@ class _ArtistSongsState extends State<ArtistSongs> {
                         );
                         getSongs();
                         if (songs.isEmpty && context.mounted) {
-                          Navigator.of(context).pop();
+                          context.popRoute();
                         } else {
                           setState(() {});
                         }

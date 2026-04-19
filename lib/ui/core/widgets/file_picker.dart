@@ -28,8 +28,7 @@ class FilePicker extends StatefulWidget {
     required Directory rootDirectory,
     List<String> allowedExtensions = const [],
   }) async {
-    return await Navigator.push(
-      context,
+    return await context.pushRoute(
       PageRouteBuilder(
         pageBuilder: (context, _, _) => FilePicker._internal(
           rootDirectory: rootDirectory,
@@ -54,8 +53,7 @@ class FilePicker extends StatefulWidget {
     required BuildContext context,
     required Directory rootDirectory,
   }) async {
-    return await Navigator.push(
-      context,
+    return await context.pushRoute(
       PageRouteBuilder(
         pageBuilder: (context, _, _) => FilePicker._internal(
           rootDirectory: rootDirectory,
@@ -180,7 +178,7 @@ class _FilePickerState extends State<FilePicker> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           surfaceTintColor: Colors.transparent,
           title: const Text('Storage'),
-          leading: CloseButton(onPressed: Navigator.of(context).pop),
+          leading: CloseButton(onPressed: context.popRoute),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +304,7 @@ class _FilePickerState extends State<FilePicker> {
       setState(() {});
     } else {
       // LogHandler.log('Selected file: $currentRootPath$entity');
-      Navigator.of(context).pop(currentRootPath + fileEntities[index]);
+      context.popRoute(currentRootPath + fileEntities[index]);
     }
   }
 }

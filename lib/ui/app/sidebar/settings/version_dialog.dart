@@ -200,7 +200,7 @@ class _VersionDialogState extends State<VersionDialog> {
         contentPadding: const .only(left: 20, right: 20, top: 20),
         actionsAlignment: .spaceEvenly,
         actions: [
-          TextButton(onPressed: Navigator.of(context).pop, child: const Text('OK')),
+          TextButton(onPressed: context.popRoute, child: const Text('OK')),
           TextButton(
             onPressed: () async {
               final uri = Uri.parse(

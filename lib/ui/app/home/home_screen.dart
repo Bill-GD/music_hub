@@ -9,7 +9,6 @@ import 'package:music_hub/data/services/song_service.dart';
 import 'package:music_hub/ui/app/home/home_view_model.dart';
 import 'package:music_hub/ui/app/home/permission/storage_permission.dart';
 import 'package:music_hub/ui/app/home/search/search.dart';
-import 'package:music_hub/ui/app/home/search/search_view_model.dart';
 import 'package:music_hub/ui/app/home/tabs/album_list.dart';
 import 'package:music_hub/ui/app/home/tabs/artist_list.dart';
 import 'package:music_hub/ui/app/home/tabs/song_list.dart';
@@ -144,11 +143,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     Size.fromHeight(AppBar().preferredSize.height * 0.65),
                   ),
                   onTap: () async {
-                    await Navigator.of(context).push(
+                    await context.pushRoute(
                       PageRouteBuilder(
-                        pageBuilder: (context, _, _) {
-                          return SearchScreen(viewModel: SearchViewModel());
-                        },
+                        pageBuilder: (_, _, _) => SearchScreen(),
                         transitionDuration: 400.ms,
                         transitionsBuilder: (_, anim, _, child) {
                           return SlideTransition(
@@ -246,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             onTap: vm.loading
                                 ? null
                                 : () async {
-                                    await Navigator.of(context).push(
+                                    await context.pushRoute(
                                       await getMusicPlayerRoute(
                                         songService.currentSongID,
                                       ),

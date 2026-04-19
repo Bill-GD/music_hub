@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
 
 class TypeLyric extends StatefulWidget {
@@ -23,7 +24,7 @@ class _TypeLyricState extends State<TypeLyric> {
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_rounded),
-            onPressed: Navigator.of(context).pop,
+            onPressed: context.popRoute,
           ),
           title: const Text('Type lyric'),
           centerTitle: true,
@@ -31,7 +32,7 @@ class _TypeLyricState extends State<TypeLyric> {
             IconButton(
               icon: const Icon(Icons.check_rounded),
               onPressed: () {
-                Navigator.of(context).pop(lyricController.text);
+                context.popRoute(lyricController.text);
               },
             ),
           ],

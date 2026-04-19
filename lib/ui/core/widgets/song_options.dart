@@ -34,7 +34,7 @@ class SongInfoOption extends StatelessWidget {
         style: TextStyle(fontSize: FontSize.small, fontWeight: .w600),
       ),
       onTap: () async {
-        final needsUpdate = await Navigator.of(context).push(
+        final needsUpdate = await context.pushRoute(
           PageRouteBuilder<bool>(
             transitionDuration: 400.ms,
             transitionsBuilder: (_, anim, _, child) {
@@ -99,7 +99,7 @@ class DeleteSongOption extends StatelessWidget {
           actions: [
             TextButton(
               child: const Text('No'),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => context.popRoute(),
             ),
             TextButton(
               child: const Text('Yes'),
@@ -112,7 +112,7 @@ class DeleteSongOption extends StatelessWidget {
                 await song.delete();
                 File(Paths.downloadPath + song.path).deleteSync();
                 songDeleted = true;
-                if (context.mounted) Navigator.of(context).pop();
+                if (context.mounted) context.popRoute();
               },
             ),
           ],

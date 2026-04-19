@@ -64,7 +64,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
           backgroundColor: context.colorScheme.surface,
           surfaceTintColor: Colors.transparent,
           leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: context.popRoute,
             icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 40),
           ),
           centerTitle: true,
@@ -95,7 +95,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                         style: TextStyle(fontSize: FontSize.small, fontWeight: .w600),
                       ),
                       onTap: () async {
-                        bool? needsUpdate = await Navigator.of(context).push(
+                        bool? needsUpdate = await context.pushRoute(
                           PageRouteBuilder<bool>(
                             transitionDuration: 400.ms,
                             transitionsBuilder: (_, anim, _, child) {
@@ -114,7 +114,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                           setState(() {
                             albumService.updateAlbumList();
                           });
-                          if (context.mounted) Navigator.of(context).pop();
+                          if (context.mounted) context.popRoute();
                         }
                       },
                     ),
@@ -146,7 +146,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                             time: 300.ms,
                             actions: [
                               TextButton(
-                                onPressed: Navigator.of(context).pop,
+                                onPressed: context.popRoute,
                                 child: const Text('No'),
                               ),
                               TextButton(
@@ -156,15 +156,15 @@ class _AlbumSongsState extends State<AlbumSongs> {
                                       .firstWhereOrNull((a) => a.id == widget.albumID)
                                       ?.delete();
                                   await albumService.updateAlbumList();
-                                  if (context.mounted) Navigator.of(context).pop(true);
+                                  if (context.mounted) context.popRoute(true);
                                 },
                                 child: const Text('Yes'),
                               ),
                             ],
                           );
                           if (deleteAlbum && context.mounted) {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
+                            context.popRoute();
+                            context.popRoute();
                           }
                         },
                       ),
@@ -207,9 +207,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                             songs.map((e) => e.id).toList(),
                             randomSong,
                           );
-                          await Navigator.of(
-                            context,
-                          ).push(await getMusicPlayerRoute(randomSong));
+                          await context.pushRoute(await getMusicPlayerRoute(randomSong));
                         },
                 ),
                 TextButton.icon(
@@ -239,9 +237,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                             songs.map((e) => e.id).toList(),
                             first,
                           );
-                          await Navigator.of(
-                            context,
-                          ).push(await getMusicPlayerRoute(first));
+                          await context.pushRoute(await getMusicPlayerRoute(first));
                         },
                 ),
               ],
@@ -353,7 +349,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
           songs.map((e) => e.id).toList(),
           song.id,
         );
-        await Navigator.of(context).push(await getMusicPlayerRoute(song.id));
+        await context.pushRoute(await getMusicPlayerRoute(song.id));
         setState(() {});
       },
       trailing: IconButton(
@@ -391,22 +387,22 @@ class _AlbumSongsState extends State<AlbumSongs> {
                       time: 300.ms,
                       actions: [
                         TextButton(
+                          onPressed: context.popRoute,
                           child: const Text('No'),
-                          onPressed: () => Navigator.of(context).pop(),
                         ),
                         TextButton(
                           child: const Text('Yes'),
                           onPressed: () async {
                             songRemoved = true;
                             await song.removeFromPlaylist(widget.albumID);
-                            if (mounted) Navigator.of(context).pop();
+                            if (mounted) context.popRoute();
                           },
                         ),
                       ],
                     );
                     if (songRemoved) {
                       await albumService.updateAlbumList();
-                      if (mounted) Navigator.of(context).pop();
+                      if (mounted) context.popRoute();
                     }
                   },
                 ),

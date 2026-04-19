@@ -50,7 +50,7 @@ class _AlbumInfoState extends State<AlbumInfo> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 40),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.popRoute(),
           ),
           title: const Text('Edit album info', style: TextStyle(fontWeight: .w700)),
           centerTitle: true,
@@ -67,7 +67,7 @@ class _AlbumInfoState extends State<AlbumInfo> {
                       await album.update();
 
                       if (context.mounted) {
-                        Navigator.of(context).pop(true);
+                        context.popRoute(true);
                       }
                     }
                   : null,

@@ -42,7 +42,7 @@ class _BackupScreenState extends State<BackupScreen> {
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.keyboard_arrow_left_rounded, size: 40),
-            onPressed: Navigator.of(context).pop,
+            onPressed: context.popRoute,
           ),
         ),
         body: Column(
@@ -69,11 +69,11 @@ class _BackupScreenState extends State<BackupScreen> {
                         barrierDismissible: false,
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
+                            onPressed: () => context.popRoute(),
                             child: const Text('No'),
                           ),
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
+                            onPressed: () => context.popRoute(true),
                             child: const Text('Yes'),
                           ),
                         ],
@@ -108,11 +108,11 @@ class _BackupScreenState extends State<BackupScreen> {
                         time: 300.ms,
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
+                            onPressed: () => context.popRoute(),
                             child: const Text('No'),
                           ),
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
+                            onPressed: () => context.popRoute(true),
                             child: const Text('Yes'),
                           ),
                         ],
@@ -178,11 +178,11 @@ class _BackupScreenState extends State<BackupScreen> {
                                 time: 300.ms,
                                 actions: [
                                   TextButton(
-                                    onPressed: () => Navigator.of(context).pop(),
+                                    onPressed: () => context.popRoute(),
                                     child: const Text('No'),
                                   ),
                                   TextButton(
-                                    onPressed: () => Navigator.of(context).pop(true),
+                                    onPressed: () => context.popRoute(true),
                                     child: const Text('Yes'),
                                   ),
                                 ],
@@ -210,11 +210,11 @@ class _BackupScreenState extends State<BackupScreen> {
                                 time: 300.ms,
                                 actions: [
                                   TextButton(
-                                    onPressed: () => Navigator.of(context).pop(),
+                                    onPressed: () => context.popRoute(),
                                     child: const Text('No'),
                                   ),
                                   TextButton(
-                                    onPressed: () => Navigator.of(context).pop(true),
+                                    onPressed: () => context.popRoute(true),
                                     child: const Text('Yes'),
                                   ),
                                 ],

@@ -18,7 +18,7 @@ class _ThemeSettingState extends State<ThemeSetting> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_rounded),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.popRoute(),
           ),
           title: const Text('Theme', style: TextStyle(fontWeight: .w700)),
           centerTitle: true,

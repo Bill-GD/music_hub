@@ -203,7 +203,7 @@ class _LyricStripState extends State<LyricStrip> {
           child: IconButton(
             icon: const Icon(Icons.edit_note_rounded),
             onPressed: () {
-              Navigator.of(context).push(
+              context.pushRoute(
                 MaterialPageRoute(
                   builder: (context) => LyricEditor(songID: currentSongID),
                 ),
@@ -226,7 +226,7 @@ class _LyricStripState extends State<LyricStrip> {
                     actions: [
                       TextButton(
                         child: const Text('No'),
-                        onPressed: () => Navigator.of(context).pop(false),
+                        onPressed: () => context.popRoute(false),
                       ),
                       TextButton(
                         child: const Text('Yes'),
@@ -237,7 +237,7 @@ class _LyricStripState extends State<LyricStrip> {
                             song.lyricPath = '';
                             song.update();
                           }
-                          Navigator.of(context).pop(true);
+                          context.popRoute(true);
                         },
                       ),
                     ],

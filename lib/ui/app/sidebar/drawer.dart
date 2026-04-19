@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:music_hub/ui/app/sidebar/downloader/downloader_screen.dart';
 import 'package:music_hub/ui/app/sidebar/downloader/downloader_view_model.dart';
-import 'package:music_hub/ui/app/sidebar/settings/setting.dart';
+import 'package:music_hub/ui/app/sidebar/settings/settings.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart';
@@ -48,13 +48,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       style: TextStyle(fontSize: FontSize.mediumSmall),
                     ),
                     onTap: () {
-                      Navigator.push(
-                        context,
+                      context.pushRoute(
                         PageRouteBuilder(
-                          pageBuilder: (_, _, _) {
-                            return const SettingsScreen();
-                          },
-                          transitionsBuilder: (context, anim1, _, child) {
+                          pageBuilder: (_, _, _) => const SettingsScreen(),
+                          transitionsBuilder: (_, anim1, _, child) {
                             return SlideTransition(
                               position:
                                   Tween<Offset>(
@@ -70,7 +67,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       );
                     },
                   ),
-                  _listItemDivider(),
+                  _ListItemDivider(),
                   ListTile(
                     shape: RoundedRectangleBorder(borderRadius: .circular(30)),
                     leading: Icon(Icons.download_rounded, color: context.iconColor()),
@@ -80,7 +77,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     ),
                     onTap: () {
                       // context.showToast('Downloader disabled');
-                      Navigator.of(context).push<bool>(
+                      context.pushRoute<bool>(
                         PageRouteBuilder(
                           pageBuilder: (_, _, _) {
                             return MusicDownloaderScreen(
@@ -103,10 +100,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       );
                     },
                   ),
-                  _listItemDivider(),
+                  _ListItemDivider(),
                   ListTile(
                     shape: RoundedRectangleBorder(borderRadius: .circular(30)),
-                    leading: FaIcon(FaIconData(Icons.logo_dev), color: context.iconColor()),
+                    leading: FaIcon(
+                      FaIconData(Icons.logo_dev),
+                      color: context.iconColor(),
+                    ),
                     title: const Text(
                       'Log',
                       style: TextStyle(fontSize: FontSize.mediumSmall),
@@ -125,4 +125,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 }
 
-Divider _listItemDivider() => const Divider(indent: 20, endIndent: 20);
+class _ListItemDivider extends StatelessWidget {
+  @override
+  Widget build(context) {
+    return const Divider(indent: 20, endIndent: 20);
+  }
+}

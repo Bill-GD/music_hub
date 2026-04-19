@@ -4,6 +4,7 @@ import 'package:music_hub/data/models/album.dart';
 import 'package:music_hub/data/models/song.dart';
 import 'package:music_hub/data/services/album_service.dart';
 import 'package:music_hub/data/services/song_service.dart';
+import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/ui/core/widgets/input.dart';
 import 'package:music_hub/utils/extensions.dart';
 import 'package:music_hub/utils/utils.dart';
@@ -44,7 +45,7 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: context.popRoute,
           icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 40),
         ),
         centerTitle: true,
@@ -69,7 +70,7 @@ class _AddAlbumSongState extends State<AddAlbumSong> {
                     await album.update();
                     await unknown.update();
                     await albumService.updateAlbumList();
-                    if (context.mounted) Navigator.of(context).pop();
+                    if (context.mounted) context.popRoute();
                   }
                 : null,
             icon: const Icon(Icons.check_rounded, size: 30),
