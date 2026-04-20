@@ -11,6 +11,8 @@
   + Switched to `dio` from `http`
   + Switched to MVVM: some views/screens have their own view models (will continue migrating)
   + Migrated from `sqflite` to `drift` ORM
+- UI/Screen changes:
+  + Updated downloader UI & error messages
 - Changed dev build activating commit message to match release build
 - Added timeout to metadata retrieval, avoiding stalling by corrupted files
 - Added/Updated view models for root app & home screen

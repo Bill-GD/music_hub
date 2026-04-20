@@ -166,8 +166,22 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
         Expanded(
           child: RefreshIndicator(
             onRefresh: () async {
-              await loadData();
+              final loadingSnackMessage = ValueNotifier('Loading...');
+              context.showCustomSnackBar(
+                SnackBar(
+                  content: ValueListenableBuilder(
+                    valueListenable: loadingSnackMessage,
+                    builder: (_, value, _) => Text(value),
+                  ),
+                  behavior: .floating,
+                  margin: const .only(bottom: 10, left: 15, right: 15),
+                  shape: RoundedRectangleBorder(borderRadius: .circular(15)),
+                  persist: true,
+                ),
+              );
+              await loadData(updateToast: (msg) => loadingSnackMessage.value = msg);
               songService.sortAllSongs();
+              context.hideSnackBar();
               if (context.mounted) setState(() {});
             },
             child: PrimaryScrollController(
@@ -209,7 +223,9 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
                         songService.songs.map((e) => e.id).toList(),
                         songService.songs[songIndex].id,
                       );
-                      await context.pushRoute(await getMusicPlayerRoute(songService.songs[songIndex].id));
+                      await context.pushRoute(
+                        await getMusicPlayerRoute(songService.songs[songIndex].id),
+                      );
                       setState(() {});
                     },
                     trailing: Row(

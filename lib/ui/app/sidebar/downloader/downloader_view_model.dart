@@ -25,8 +25,16 @@ class DownloaderViewModel extends ChangeNotifier {
 
   final _logService = get<LogService>(), _dio = get<Dio>();
   final _baseSoundcloudApiUrl = 'https://api-v2.soundcloud.com';
-  final _cancelToken = CancelToken();
   final urlController = TextEditingController();
+
+  CancelToken _cancelToken = CancelToken();
+
+  CancelToken get cancelToken {
+    if (_cancelToken.isCancelled) {
+      _cancelToken = CancelToken();
+    }
+    return _cancelToken;
+  }
 
   bool _isGettingData = false, _isDownloading = false, _hasDownloaded = false;
   String? errorText;
@@ -54,6 +62,12 @@ class DownloaderViewModel extends ChangeNotifier {
   double get percentage => clampDouble(_received / _total, 0, 1);
 
   String get percentageString => '${(_received / _total * 100).toStringAsPrecision(3)}%';
+
+  @override
+  void dispose() {
+    urlController.dispose();
+    super.dispose();
+  }
 
   void progressCallback(int received, int total) {
     _received = received;
@@ -101,8 +115,8 @@ class DownloaderViewModel extends ChangeNotifier {
     final isFromSoundCloud = url.contains('soundcloud.com');
 
     if (isFromSoundCloud) {
-      // await _getSoundCloudSongData(url);
-      await Future.delayed(3.seconds);
+      await _getSoundCloudSongData(url);
+      // await Future.delayed(3.seconds);
     } else {
       await _downloadYoutube(url);
     }
@@ -115,16 +129,16 @@ class DownloaderViewModel extends ChangeNotifier {
   void cancelDownload() {
     _isDownloading = false;
     _hasDownloaded = false;
-    _cancelToken.cancel('User cancelled');
+    cancelToken.cancel('User cancelled');
     notifyListeners();
   }
 
-  void _failsDownload() {
+  void _failsDownload([Exception? error]) {
     _isDownloading = false;
     _hasDownloaded = false;
     notifyListeners();
-    final err = Exception("Audio stream can't be downloaded.");
-    _cancelToken.cancel(err);
+    final err = error ?? Exception("Audio stream can't be downloaded.");
+    cancelToken.cancel(err);
     throw err;
   }
 
@@ -166,22 +180,32 @@ class DownloaderViewModel extends ChangeNotifier {
     _logService.log('Saving to: ${file.absolute.path}');
 
     final timeoutTimer = Timer(10.seconds, () {
-      if (_received <= 0) _failsDownload();
+      if (_received <= 0) {
+        if (file.existsSync()) file.deleteSync();
+        _failsDownload(Exception('Timed out without having downloaded anything'));
+      }
     });
 
-    await _dio.download(
-      streamInfo.url.toString(),
-      file.absolute.path,
-      onReceiveProgress: (received, total) {
-        timeoutTimer.cancel();
-        progressCallback(received, total);
-      },
-      cancelToken: _cancelToken,
-    );
+    try {
+      await _dio.download(
+        streamInfo.url.toString(),
+        file.absolute.path,
+        onReceiveProgress: (received, total) {
+          timeoutTimer.cancel();
+          progressCallback(received, total);
+        },
+        cancelToken: cancelToken,
+      );
+    } on Exception catch (e) {
+      timeoutTimer.cancel();
+      if (file.existsSync()) file.deleteSync();
+      _failsDownload(e);
+    }
 
     if (_received <= 0) {
       timeoutTimer.cancel();
-      _failsDownload();
+      if (file.existsSync()) file.deleteSync();
+      _failsDownload(Exception("Dio couldn't download"));
     }
 
     timeoutTimer.cancel();

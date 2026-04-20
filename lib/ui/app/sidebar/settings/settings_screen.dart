@@ -10,19 +10,19 @@ import 'package:music_hub/utils/constants.dart';
 import 'package:music_hub/utils/extensions.dart';
 
 class SettingsScreen extends StatefulWidget {
-  final viewModel = SettingsViewModel();
+  final SettingsViewModel viewModel;
 
-  SettingsScreen({super.key});
+  const SettingsScreen({super.key, required this.viewModel});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  SettingsViewModel get vm => widget.viewModel;
+
   @override
   Widget build(BuildContext context) {
-    final vm = widget.viewModel;
-
     return SafeArea(
       child: ListenableBuilder(
         listenable: vm,

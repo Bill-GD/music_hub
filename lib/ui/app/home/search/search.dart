@@ -16,10 +16,10 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  SearchViewModel get vm => widget.viewModel;
+
   @override
   Widget build(BuildContext context) {
-    final vm = widget.viewModel;
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

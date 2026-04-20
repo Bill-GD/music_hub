@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:music_hub/ui/app/sidebar/downloader/downloader_screen.dart';
 import 'package:music_hub/ui/app/sidebar/downloader/downloader_view_model.dart';
 import 'package:music_hub/ui/app/sidebar/settings/settings_screen.dart';
+import 'package:music_hub/ui/app/sidebar/settings/settings_view_model.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
 import 'package:music_hub/utils/constants.dart';
@@ -50,7 +51,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     onTap: () {
                       context.pushRoute(
                         PageRouteBuilder(
-                          pageBuilder: (_, _, _) => SettingsScreen(),
+                          pageBuilder: (_, _, _) {
+                            return SettingsScreen(viewModel: SettingsViewModel());
+                          },
                           transitionsBuilder: (_, anim1, _, child) {
                             return SlideTransition(
                               position:

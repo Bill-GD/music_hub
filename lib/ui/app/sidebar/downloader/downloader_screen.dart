@@ -19,18 +19,12 @@ class MusicDownloaderScreen extends StatefulWidget {
 }
 
 class MusicDownloaderScreenState extends State<MusicDownloaderScreen> {
-  late final vm = widget.viewModel;
+  DownloaderViewModel get vm => widget.viewModel;
 
   void popCallback() {
     if (vm.downloading) {
       return context.showToast('App is downloading music, please wait');
     }
-  }
-
-  @override
-  void dispose() {
-    vm.urlController.dispose();
-    super.dispose();
   }
 
   @override
@@ -41,16 +35,14 @@ class MusicDownloaderScreenState extends State<MusicDownloaderScreen> {
         return SafeArea(
           child: PopScope(
             canPop: !vm.downloading,
-            onPopInvokedWithResult: (_, _) {
-              popCallback();
-            },
+            onPopInvokedWithResult: (_, _) => popCallback(),
             child: Scaffold(
               appBar: AppBar(
                 leading: IconButton(
                   icon: const Icon(Icons.arrow_back_ios_rounded),
                   onPressed: () {
                     popCallback();
-                    if (!vm.downloading) Navigator.pop(context);
+                    if (!vm.downloading) context.popRoute();
                   },
                 ),
                 centerTitle: true,
@@ -119,7 +111,7 @@ class MusicDownloaderScreenState extends State<MusicDownloaderScreen> {
                             ),
                             Button(
                               text: 'Get song data',
-                              disabled: !vm.canFetchData || !connected,
+                              disabled: !vm.canFetchData || !connected || vm.downloading,
                               onPressed: () {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 vm.getData();
@@ -219,7 +211,7 @@ class MusicDownloaderScreenState extends State<MusicDownloaderScreen> {
 
                                   Button(
                                     text: 'Cancel download',
-                                    disabled: vm.downloading,
+                                    disabled: !vm.downloading,
                                     onPressed: vm.cancelDownload,
                                   ),
                                 ],
