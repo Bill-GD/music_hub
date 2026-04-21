@@ -12,6 +12,7 @@ import 'package:music_hub/ui/app/player/music_player.dart';
 import 'package:music_hub/ui/core/theme/extensions.dart';
 import 'package:music_hub/ui/core/theme/font_size.dart';
 import 'package:music_hub/ui/core/widgets/extensions.dart';
+import 'package:music_hub/ui/core/widgets/loading_snackbar.dart';
 import 'package:music_hub/ui/core/widgets/song_options.dart';
 import 'package:music_hub/utils/utils.dart';
 
@@ -22,7 +23,7 @@ class SongList extends StatefulWidget {
   State<SongList> createState() => _SongListState();
 }
 
-class _SongListState extends State<SongList> with TickerProviderStateMixin {
+class _SongListState extends State<SongList> {
   final playlistService = get<PlaylistService>(),
       songService = get<SongService>(),
       configService = get<ConfigService>();
@@ -167,21 +168,11 @@ class _SongListState extends State<SongList> with TickerProviderStateMixin {
           child: RefreshIndicator(
             onRefresh: () async {
               final loadingSnackMessage = ValueNotifier('Loading...');
-              context.showCustomSnackBar(
-                SnackBar(
-                  content: ValueListenableBuilder(
-                    valueListenable: loadingSnackMessage,
-                    builder: (_, value, _) => Text(value),
-                  ),
-                  behavior: .floating,
-                  margin: const .only(bottom: 10, left: 15, right: 15),
-                  shape: RoundedRectangleBorder(borderRadius: .circular(15)),
-                  persist: true,
-                ),
-              );
+              context.showCustomSnackBar(LoadingSnackbar(loadingSnackMessage));
               await loadData(updateToast: (msg) => loadingSnackMessage.value = msg);
               songService.sortAllSongs();
               context.hideSnackBar();
+              loadingSnackMessage.dispose();
               if (context.mounted) setState(() {});
             },
             child: PrimaryScrollController(
